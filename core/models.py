@@ -1,18 +1,28 @@
+from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import User
+from django.urls import reverse
+# from django.contrib.auth.models import User as U
 
-class Office(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    address = models.TextField()
-    status = models.BooleanField(default=True)
+from django.contrib.auth.models import AbstractUser
+from django.utils.translation import gettext_lazy as _
+
+
+OFFICE_CHOICES = (
+    ('Head Office', 'Head Office'),
+    ('Uttara Branch', 'Uttara Branch'),
+    ('Mirpur Branch', 'Mirpur Branch'),
+)
+
+
+class User(AbstractUser):
+    office = models.CharField(_('Office'), max_length=20, choices=OFFICE_CHOICES)
 
     def __str__(self):
-        return self.name
+        return self.username
 
 
 class Department(models.Model):
-    office = models.ForeignKey(Office, models.CASCADE)
+    office = models.ForeignKey(User, models.CASCADE)
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField() 
     status = models.BooleanField(default=True)
@@ -20,23 +30,37 @@ class Department(models.Model):
     def __str__(self):
         return self.name
     
+    def get_update_url(self):
+        return reverse("core:department-edit", kwargs={"pk": self.pk})
+    
+    def get_delete_url(self):
+        return reverse("core:department-delete", kwargs={"pk": self.pk})
+    
 
 class Category(models.Model):
     department = models.ForeignKey(Department, models.CASCADE)
     name = models.CharField(max_length=100, unique=True)
     status = models.BooleanField(default=True)
 
+    class Meta:
+        verbose_name_plural = 'Categories'
+    
+    
     def __str__(self):
         return self.name
     
-    class Meta:
-        verbose_name_plural = 'Categories'
+    def get_update_url(self):
+        return reverse("core:category-edit", kwargs={"pk": self.pk})
+    
+    def get_delete_url(self):
+        return reverse("core:category-delete", kwargs={"pk": self.pk})
+    
 
 
 class Product(models.Model):
     category = models.ForeignKey(Category, models.CASCADE)
     name = models.CharField(max_length=100, unique=True)
-    stock = models.PositiveIntegerField()
+    price = models.FloatField()
     description = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, models.CASCADE)
@@ -45,8 +69,11 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    # def get_absolute_url(self):
-    #     return reverse("core:product-list", kwargs={"pk": self.pk})
+    def get_update_url(self):
+        return reverse("core:product-edit", kwargs={"pk": self.pk})
+    
+    def get_delete_url(self):
+        return reverse("core:product-delete", kwargs={"pk": self.pk})
     
     
     
