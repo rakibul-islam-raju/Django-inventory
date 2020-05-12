@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'grappelli',
 
     'core',
+    'purchase',
 ]
 
 SITE_ID = 1
@@ -162,6 +163,8 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_FORMS = {'signup': 'core.forms.MyCustomSignupForm'}
 AUTH_USER_MODEL = 'core.User'
 
+
+
 # email backend
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST = 'smtp.gmail.com'
@@ -169,3 +172,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_USE_TLS = True
 # EMAIL_HOST_USER = 'rakibul.islam44109@gmail.com'
 # EMAIL_HOST_PASSWORD = 'BornIn190796'
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'

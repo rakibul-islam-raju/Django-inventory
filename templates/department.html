@@ -1,0 +1,68 @@
+{% extends './base.html' %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+
+<main>
+    <div class="container-fluid">
+        <ol class="breadcrumb mb-4">
+            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+            <li class="breadcrumb-item active">Department</li>
+        </ol>
+        <div class="card mb-4">
+            <h5 class="card-header">{{title|title}}</h5>
+            <div class="card-body">
+                <div class="Product-form">
+                    <form action="" method=POST>
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                        <a href="{% url 'core:department' %}" class="btn btn-secondary" type="submit">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <h5 class="card-header">{{title|title}}</h5>
+            <div class="card-body">
+                <div class="department-list">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for department in departments %}
+                                    <tr>
+                                        <td>{{ department.id }}</td>
+                                        <td>{{ department.name }}</td>
+                                        <td>
+                                            {% if request.user.is_staff %}
+                                            <a href="{{ department.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
+                                            <a href="{{ department.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+{% endblock body %}

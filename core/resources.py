@@ -6,4 +6,4 @@ class ProductResource(resources.ModelResource):
 
     class Meta:
         model = Product
-        fields = ['name', 'price', 'owner', 'status', 'description']
+        fields = ['name', 'category', 'price', 'added_by', 'status', 'description']

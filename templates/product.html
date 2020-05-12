@@ -1,0 +1,65 @@
+{% extends './base.html' %}
+
+{% block body %}
+
+<div class="container-fluid">
+    {% comment %} <h4 class="mt-4"><Dashb></Dashb>oard</h4> {% endcomment %}
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active"><a href="{% url 'core:home' %}">Dashboard</a></li>
+        <li class="breadcrumb-item active">Products</li>
+    </ol>
+    <div class="card mb-4">
+        <div class="card-header"><i class="fas fa-table mr-1"></i>Product List</div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Department</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Office</th>
+                            <th>Added by</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Department</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Office</th>
+                            <th>Added by</th>
+                            <th>Action</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% for product in products %}
+                            <tr>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.category.name }}</td>
+                                <td>{{ product.category.department.name }}</td>
+                                <td>{{ product.price }}</td>
+                                <td>{{ product.quantity }}</td>
+                                <td>{{ product.office }}</td>
+                                <td>{{ product.added_by }}</td>
+                                <td>
+                                    {% if request.user.is_staff %}
+                                    <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
+                                    <a href="{{ product.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

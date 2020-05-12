@@ -1,30 +1,32 @@
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
-# from django.contrib.auth.models import User as U
 
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
 
-OFFICE_CHOICES = (
-    ('Head Office', 'Head Office'),
-    ('Uttara Branch', 'Uttara Branch'),
-    ('Mirpur Branch', 'Mirpur Branch'),
-)
+class Office(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    email = models.EmailField()
+    phone = models.IntegerField()
+    address = models.TextField()
+
+    def __str__(self):
+        return self.name
 
 
 class User(AbstractUser):
-    office = models.CharField(_('Office'), max_length=20, choices=OFFICE_CHOICES)
+    office = models.OneToOneField(Office, on_delete=models.CASCADE, to_field='name', blank=True, null=True)
 
     def __str__(self):
-        return self.username
+        return str(self.office)
 
 
 class Department(models.Model):
     office = models.ForeignKey(User, models.CASCADE)
     name = models.CharField(max_length=100, unique=True)
-    description = models.TextField() 
+    description = models.TextField(blank=True, null=True) 
     status = models.BooleanField(default=True)
 
     def __str__(self):
@@ -45,7 +47,6 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = 'Categories'
     
-    
     def __str__(self):
         return self.name
     
@@ -54,16 +55,34 @@ class Category(models.Model):
     
     def get_delete_url(self):
         return reverse("core:category-delete", kwargs={"pk": self.pk})
+
+
+class Warehouse(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
+    status = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
     
+    def get_update_url(self):
+        return reverse("core:warehouse-edit", kwargs={"pk": self.pk})
+    
+    def get_delete_url(self):
+        return reverse("core:warehouse-delete", kwargs={"pk": self.pk})
 
 
 class Product(models.Model):
     category = models.ForeignKey(Category, models.CASCADE)
+    warehouse = models.ForeignKey(Warehouse, models.CASCADE, related_name='inventory_product')
+    office = models.ForeignKey(User, models.CASCADE)
+
     name = models.CharField(max_length=100, unique=True)
-    price = models.FloatField()
-    description = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    owner = models.ForeignKey(User, models.CASCADE)
+    price = models.DecimalField(decimal_places=2, max_digits=8)
+    quantity = models.PositiveIntegerField()
+    description = models.TextField(blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
+    added_by = models.CharField(max_length=100)
     status = models.BooleanField(default=True)
 
     def __str__(self):
@@ -74,7 +93,4 @@ class Product(models.Model):
     
     def get_delete_url(self):
         return reverse("core:product-delete", kwargs={"pk": self.pk})
-    
-    
-    
     
