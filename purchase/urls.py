@@ -7,7 +7,7 @@ from .views import (CreateSupplierView,
 
                     CreatePurchaseView,
                     PurchaseProductList,
-                    # PurchaseProductUpdateView,
+                    PurchaseProductUpdateView,
                     PurchaseProductDeleteView,
                     )
 
@@ -19,7 +19,7 @@ urlpatterns = [
     path('supplier/delete/<pk>/', staff_member_required(SupplireDeleteView.as_view()), name='supplier-delete'),
     
     path('purchase/create/', staff_member_required(CreatePurchaseView.as_view()), name='purchase-create'),
-    # path('purchase/edit/<pk>/', staff_member_required(PurchaseProductUpdateView.as_view()), name='purchase-edit'),
+    path('purchase/edit/<pk>/', staff_member_required(PurchaseProductUpdateView.as_view()), name='purchase-edit'),
     path('purchase/delete/<pk>/', staff_member_required(PurchaseProductDeleteView.as_view()), name='purchase-delete'),
-    path('purchase/products/', staff_member_required(PurchaseProductList.as_view()), name='product'),
+    path('purchase/product/', staff_member_required(PurchaseProductList.as_view()), name='product'),
 ]

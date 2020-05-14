@@ -78,7 +78,8 @@ class Product(models.Model):
     office = models.ForeignKey(User, models.CASCADE)
 
     name = models.CharField(max_length=100, unique=True)
-    price = models.DecimalField(decimal_places=2, max_digits=8)
+    supplier_price = models.DecimalField(decimal_places=2, max_digits=8)
+    sell_price = models.DecimalField(decimal_places=2, max_digits=8)
     quantity = models.PositiveIntegerField()
     description = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)

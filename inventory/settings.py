@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
     'core',
     'purchase',
+    'sell',
 ]
 
 SITE_ID = 1

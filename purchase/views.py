@@ -68,7 +68,7 @@ class SupplierUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return reverse(self.success_url)
     
 
-class PurchaseProductUpdateView(SuccessMessageMixin, UpdateView):
+class PurchaseProductUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = PurchaseProduct
     form_class = PurchaseProductForm
     template_name = 'purchase/product-create.html'

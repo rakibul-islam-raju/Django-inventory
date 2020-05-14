@@ -49,12 +49,13 @@ class ProductCreateView(View):
         if form.is_valid():
             category = form.cleaned_data.get('category')
             name = form.cleaned_data.get('name')
-            price = form.cleaned_data.get('price')
+            supplier_price= form.cleaned_data.get('supplier_price')
+            sell_price = form.cleaned_data.get('sell_price')
             description = form.cleaned_data.get('description')
             quantity = form.cleaned_data.get('quantity')
             warehouse = form.cleaned_data.get('warehouse')
             office = self.request.user
-            new_dept = Product(category=category, name=name, price=price, description=description, added_by=added_by, quantity=quantity, office=office, warehouse=warehouse)
+            new_dept = Product(category=category, name=name, supplier_price=supplier_price, sell_price=sell_price, description=description, added_by=added_by, quantity=quantity, office=office, warehouse=warehouse)
             new_dept.save()
             messages.success(self.request, 'Product added successfully')
             return redirect('/')
