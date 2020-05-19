@@ -4,8 +4,8 @@ from django.urls import reverse
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, View, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import DeptForm, CategotyForm, ProductForm, WarehouseForm
-from .models import Department, Category, Product, Warehouse
+from .models import Department, Category, Product, Warehouse, Bank, BankTransaction
+from .forms import DeptForm, CategotyForm, ProductForm, WarehouseForm, BankForm, BankTransactionForm
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -119,6 +119,40 @@ class WarehouseCreateView(SuccessMessageMixin, CreateView):
         return reverse(self.success_url)
 
 
+class BankCreateView(SuccessMessageMixin, CreateView):
+    model = Bank
+    template_name = 'bank.html'
+    form_class = BankForm
+    success_url = 'core:bank'
+    success_message = "%(name)s was created successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["banks"] = Bank.objects.filter(status=True)
+        context["title"] = 'Add new bank'
+        return context
+    
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+
+class TransactionCreateView(SuccessMessageMixin, CreateView):
+    model = BankTransaction
+    template_name = 'transaction.html'
+    form_class = BankTransactionForm
+    success_url = 'core:transaction'
+    success_message = "Transaction was created successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["transactions"] = BankTransaction.objects.filter(status=True)
+        context["title"] = 'Add new transaction'
+        return context
+    
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+
 # >=========== update views =============>
 
 
@@ -206,6 +240,40 @@ class WarehouseUpdateView(SuccessMessageMixin, UpdateView):
         return reverse(self.success_url)
 
 
+class BankUpdateView(SuccessMessageMixin, UpdateView):
+    model = Bank
+    template_name = 'bank.html'
+    form_class = BankForm
+    success_url = 'core:bank'
+    success_message = "%(name)s was Updated successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["banks"] = Bank.objects.filter(status=True)
+        context["title"] = 'Edit bank'
+        return context
+    
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+
+class TransactionUpdateView(SuccessMessageMixin, UpdateView):
+    model = BankTransaction
+    template_name = 'transaction.html'
+    form_class = BankTransactionForm
+    success_url = 'core:transaction'
+    success_message = "Transaction was Updated successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["transactions"] = BankTransaction.objects.filter(status=True)
+        context["title"] = 'Edit transaction'
+        return context
+    
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+
 # >=================== delete views ===============>
 
 
@@ -259,9 +327,29 @@ class CategoryDeleteView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessage
 
 class WarehouseDeleteView(SuccessMessageMixin, DeleteView):
     model = Warehouse
-    template_name = 'warehouse.html'
+    template_name = 'delete.html'
     success_url = 'core:home'
     success_message = "%(name)s was deleted successfully"
+    
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+
+class BankDeleteView(SuccessMessageMixin, DeleteView):
+    model = Bank
+    template_name = 'delete.html'
+    success_url = 'core:bank'
+    success_message = "%(name)s was deleted successfully"
+    
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+
+class TransactionDeleteView(SuccessMessageMixin, DeleteView):
+    model = BankTransaction
+    template_name = 'delete.html'
+    success_url = 'core:transaction'
+    success_message = "%(transaction_type)s was deleted successfully"
     
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)

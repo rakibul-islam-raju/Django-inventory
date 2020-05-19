@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from import_export.admin import ImportExportModelAdmin, ExportActionMixin
 from .resources import ProductResource
-from .models import Office, Department, Category, Product, User, Warehouse
+from .models import Office, Department, Category, Product, User, Warehouse, Bank, BankTransaction
 
 
 class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
@@ -45,4 +45,5 @@ admin.site.register(Category)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Warehouse)
-# admin.site.register(User)
+admin.site.register(Bank)
+admin.site.register(BankTransaction)

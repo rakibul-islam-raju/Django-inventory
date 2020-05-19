@@ -109,3 +109,49 @@ class Product(models.Model):
     def get_delete_url(self):
         return reverse("core:product-delete", kwargs={"pk": self.pk})
     
+
+class Bank(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    ac_name = models.CharField(max_length=100)
+    ac_number = models.DecimalField(decimal_places=0, max_digits=20)
+    branch = models.CharField(max_length=100)
+    status = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+    
+    def get_update_url(self):
+        return reverse("core:bank-edit", kwargs={"pk": self.pk})
+    
+    def get_delete_url(self):
+        return reverse("core:bank-delete", kwargs={"pk": self.pk})
+    
+
+account_type_choices = (
+    ('C', 'Credit'),
+    ('D', 'Debit')
+)
+
+transaction_type_choices = (
+    ('W', 'Withdraw'),
+    ('D', 'Deposite')
+)
+
+class BankTransaction(models.Model):
+    bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
+
+    date = models.DateField()
+    account_type = models.CharField(choices=account_type_choices, max_length=1)
+    description = models.TextField(blank=True, null=True)
+    transaction_type = models.CharField(max_length=1, choices=transaction_type_choices)
+    amount = models.FloatField()
+    status = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.account_type
+    
+    def get_update_url(self):
+        return reverse("core:transaction-edit", kwargs={"pk": self.pk})
+    
+    def get_delete_url(self):
+        return reverse("core:transaction-delete", kwargs={"pk": self.pk})

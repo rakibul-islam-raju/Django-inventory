@@ -19,6 +19,14 @@ from .views import (HomeView,
                     WarehouseCreateView,
                     WarehouseUpdateView,
                     WarehouseDeleteView,
+
+                    BankCreateView,
+                    BankUpdateView,
+                    BankDeleteView,
+
+                    TransactionCreateView,
+                    TransactionUpdateView,
+                    TransactionDeleteView,
                     )
 
 app_name = 'core'
@@ -42,4 +50,12 @@ urlpatterns = [
     path('warehouse/', staff_member_required(WarehouseCreateView.as_view()), name='warehouse'),
     path('warehouse/<pk>', staff_member_required(WarehouseUpdateView.as_view()), name='warehouse-edit'),
     path('warehouse/delete/<pk>', staff_member_required(WarehouseDeleteView.as_view()), name='warehouse-delete'),
+
+    path('bank/', staff_member_required(BankCreateView.as_view()), name='bank'),
+    path('bank/<pk>/', staff_member_required(BankUpdateView.as_view()), name='bank-edit'),
+    path('bank/delete/<pk>/', staff_member_required(BankDeleteView.as_view()), name='bank-delete'),
+    
+    path('transaction/', staff_member_required(TransactionCreateView.as_view()), name='transaction'),
+    path('transaction/<pk>/', staff_member_required(TransactionUpdateView.as_view()), name='transaction-edit'),
+    path('transaction/delete/<pk>/', staff_member_required(TransactionDeleteView.as_view()), name='transaction-delete'),
 ]
