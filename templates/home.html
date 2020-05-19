@@ -59,7 +59,6 @@
                             <th>Sell Price</th>
                             <th>Quantity</th>
                             <th>Office</th>
-                            <th>Added by</th>
                             {% comment %} <th>Action</th> {% endcomment %}
                         </tr>
                     </thead>
@@ -72,7 +71,6 @@
                             <th>Sell Price</th>
                             <th>Quantity</th>
                             <th>Office</th>
-                            <th>Added by</th>
                             {% comment %} <th>Action</th> {% endcomment %}
                         </tr>
                     </tfoot>
@@ -86,7 +84,6 @@
                                 <td>{{ product.sell_price }}</td>
                                 <td>{{ product.quantity }}</td>
                                 <td>{{ product.office }}</td>
-                                <td>{{ product.added_by }}</td>
                                 {% comment %} <td>
                                     {% if request.user.is_staff %}
                                     <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>

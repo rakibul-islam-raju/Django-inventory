@@ -55,6 +55,7 @@ class ProductCreateView(View):
             quantity = form.cleaned_data.get('quantity')
             warehouse = form.cleaned_data.get('warehouse')
             office = self.request.user
+            
             new_dept = Product(category=category, name=name, supplier_price=supplier_price, sell_price=sell_price, description=description, added_by=added_by, quantity=quantity, office=office, warehouse=warehouse)
             new_dept.save()
             messages.success(self.request, 'Product added successfully')
@@ -73,7 +74,7 @@ class DeparmentCreateView(SuccessMessageMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = 'Add new department'
+        context["title"] = 'Create new department'
         context["departments"] = Department.objects.filter(status=True)
         return context
 

@@ -15,7 +15,16 @@
                 <div class="category-form">
                     <form action="" method=POST>
                         {% csrf_token %}
-                        {{ form|crispy }}
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    {{ form.department|as_crispy_field }}
+                                </div>
+                                <div class="col">
+                                    {{ form.name|as_crispy_field }}
+                                </div>
+                            </div>
+                        </div>
                         <button class="btn btn-primary" type="submit">Submit</button>
                         <a href="{% url 'core:category' %}" class="btn btn-secondary" type="submit">Cancel</a>
                     </form>

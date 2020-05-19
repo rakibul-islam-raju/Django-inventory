@@ -7,25 +7,39 @@
     <div class="container-fluid">
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Customers</li>
+            <li class="breadcrumb-item active">Suppliers</li>
         </ol>
         <div class="card mb-4">
-            <h5 class="card-header">Add New Customer</h5>
-            {{title}}
+            <h5 class="card-header">{{title|title}}</h5>
             <div class="card-body">
-                <div class="customer-form">
+                <div class="supplier-form">
                     <form action="" method=POST>
                         {% csrf_token %}
-                        {{ form|crispy }}
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    {{ form.name|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-4">
+                                    {{ form.phone|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-4">
+                                    {{ form.email|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-6">
+                                    {{ form.address|as_crispy_field }}
+                                </div>
+                            </div>
+                        </div>
                         <button class="btn btn-primary" type="submit">Submit</button>
-                        <a href="{% url 'purchase:customer' %}" class="btn btn-secondary" type="submit">Cancel</a>
+                        <a href="{% url 'purchase:supplier' %}" class="btn btn-secondary" type="submit">Cancel</a>
                     </form>
                 </div>
             </div>
         </div>
 
         <div class="card mb-4">
-            <h5 class="card-header">All Customers List</h5>
+            <h5 class="card-header">All Suppliers List</h5>
             <div class="card-body">
                 <div class="department-list">
                     <div class="table-responsive">
@@ -49,16 +63,16 @@
                                 </tr>
                             </tfoot>
                             <tbody>
-                                {% for customer in customers %}
+                                {% for supplier in suppliers %}
                                     <tr>
-                                        <td>{{ customer.id }}</td>
-                                        <td>{{ customer.name }}</td>
-                                        <td>{{ customer.email }}</td>
-                                        <td>{{ customer.phone }}</td>
+                                        <td>{{ supplier.id }}</td>
+                                        <td>{{ supplier.name }}</td>
+                                        <td>{{ supplier.email }}</td>
+                                        <td>{{ supplier.phone }}</td>
                                         <td>
                                             {% if request.user.is_staff %}
-                                            <a href="{{ customer.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
-                                            <a href="{{ customer.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
+                                            <a href="{{ supplier.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
+                                            <a href="{{ supplier.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
                                             {% endif %}
                                         </td>
                                     </tr>

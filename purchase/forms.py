@@ -8,10 +8,17 @@ class SupplierForm(forms.ModelForm):
         model = Supplier
         fields = ['name', 'email', 'phone', 'address']
 
+        widgets = {
+            'address': forms.Textarea(attrs={'rows': '2'}),
+        }
+
 
 class PurchaseProductForm(forms.ModelForm):
 
     class Meta:
         model = PurchaseProduct
-        fields = '__all__'
-        # fields = ['name', 'price', 'quantity', 'description', 'warehouse']
+        fields = ['name', 'price', 'quantity', 'description', 'warehouse', 'supplier']
+
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': '2'}),
+        }

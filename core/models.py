@@ -31,10 +31,10 @@ class Department(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def get_update_url(self):
         return reverse("core:department-edit", kwargs={"pk": self.pk})
-    
+
     def get_delete_url(self):
         return reverse("core:department-delete", kwargs={"pk": self.pk})
     
@@ -78,8 +78,8 @@ class Product(models.Model):
     office = models.ForeignKey(User, models.CASCADE)
 
     name = models.CharField(max_length=100, unique=True)
-    supplier_price = models.DecimalField(decimal_places=2, max_digits=8)
-    sell_price = models.DecimalField(decimal_places=2, max_digits=8)
+    supplier_price = models.FloatField()
+    sell_price = models.FloatField()
     quantity = models.PositiveIntegerField()
     description = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
@@ -88,6 +88,20 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_profit_per_product(self):
+        if self.sell_price > self.supplier_price:
+            profit = self.sell_price - self.supplier_price
+            result = (profit / self.supplier_price) * 100
+            result = round(result, 2)
+            return result
+    
+    def get_loss_per_product(self):
+        if self.sell_price < self.supplier_price:
+            loss = self.supplier_price - self.sell_price
+            result = (loss / self.supplier_price) * 100
+            result = round(result, 2)
+            return result
 
     def get_update_url(self):
         return reverse("core:product-edit", kwargs={"pk": self.pk})

@@ -21,6 +21,7 @@
                             <th>Supplier Price</th>
                             <th>Sell Price</th>
                             <th>Quantity</th>
+                            <th>Profit/Loss</th>
                             <th>Office</th>
                             <th>Added by</th>
                             <th>Action</th>
@@ -34,6 +35,7 @@
                             <th>Supplier Price</th>
                             <th>Sell Price</th>
                             <th>Quantity</th>
+                            <th>Profit/Loss</th>
                             <th>Office</th>
                             <th>Added by</th>
                             <th>Action</th>
@@ -48,6 +50,14 @@
                                 <td>{{ product.supplier_price }}</td>
                                 <td>{{ product.sell_price }}</td>
                                 <td>{{ product.quantity }}</td>
+                                <td>
+                                    {% if product.get_profit_per_product %}
+                                    <i class="fa fa-thumbs-up text-success"></i> {{ product.get_profit_per_product }}%
+                                    {% endif %}
+                                    {% if product.get_loss_per_product %}
+                                    <i class="fa fa-thumbs-down text-warning"></i> {{ product.get_loss_per_product }}%
+                                    {% endif %}
+                                </td>
                                 <td>{{ product.office }}</td>
                                 <td>{{ product.added_by }}</td>
                                 <td>

@@ -22,11 +22,13 @@ class Supplier(models.Model):
 
 class PurchaseProduct(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     quantity = models.PositiveIntegerField()
     description = models.TextField(blank=True, null=True)
+    
     added_by = models.CharField(max_length=100)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
     status = models.BooleanField(default=True)

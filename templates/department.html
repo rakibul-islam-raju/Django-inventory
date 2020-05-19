@@ -15,7 +15,18 @@
                 <div class="Product-form">
                     <form action="" method=POST>
                         {% csrf_token %}
-                        {{ form|crispy }}
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-6">
+                                    {{ form.name|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    {{ form.description|as_crispy_field }}
+                                </div>
+                            </div>
+                        </div>
                         <button class="btn btn-primary" type="submit">Submit</button>
                         <a href="{% url 'core:department' %}" class="btn btn-secondary" type="submit">Cancel</a>
                     </form>
@@ -23,11 +34,11 @@
             </div>
         </div>
         <div class="card mb-4">
-            <h5 class="card-header">{{title|title}}</h5>
+            <h5 class="card-header">All Department List</h5>
             <div class="card-body">
                 <div class="department-list">
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>ID</th>

@@ -6,11 +6,19 @@ class CustomerForm(forms.ModelForm):
 
     class Meta:
         model = Customer
-        fields = '__all__'
+        fields = ['name', 'email', 'phone', 'address']
+
+        widgets = {
+            'address': forms.Textarea(attrs={'rows': '2'}),
+        }
 
 
 class SellProductForm(forms.ModelForm):
 
     class Meta:
         model = SellProduct
-        fields = '__all__'
+        fields = ['name', 'price', 'quantity', 'description', 'warehouse', 'customer']
+
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': '2'}),
+        }
