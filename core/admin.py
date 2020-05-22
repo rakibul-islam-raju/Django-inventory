@@ -34,16 +34,41 @@ class UserAdmin(admin.ModelAdmin):
 #     inlines = [ProductAdmin]
 
 
-class CategoryAdmin(admin.StackedInline):
-    model = Category
-    inlines = [ProductAdmin]
+class CategoryAdmin(admin.ModelAdmin):
+    # model = Category
+    list_display = ['name', 'department', 'status']
+    list_filter = ['department']
+    search_fields = ['name']
+
+
+class DepartmentAdmin(admin.ModelAdmin):
+    list_display = ['name', 'office', 'status']
+    list_filter = ['office']
+    search_fields = ['name']
+
+
+class WarehouseAdmin(admin.ModelAdmin):
+    list_display = ['name', 'description', 'status']
+    search_fields = ['name']
+
+
+class BankAdmin(admin.ModelAdmin):
+    list_display = ['name', 'ac_name', 'ac_number', 'branch', 'status']
+    search_fields = ['name', 'ac_name', 'ac_number', 'branch']
+    list_filter = ['branch']
+
+
+class BankTransactionAdmin(admin.ModelAdmin):
+    list_display = ['account_type', 'transaction_type', 'amount', 'bank', 'date', 'status']
+    list_filter = ['account_type', 'transaction_type', 'bank', 'date', 'status']
+    date_hierarchy = 'date'
 
 
 admin.site.register(Office)
-admin.site.register(Department)
-admin.site.register(Category)
+admin.site.register(Department, DepartmentAdmin)
+admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(User, UserAdmin)
-admin.site.register(Warehouse)
-admin.site.register(Bank)
-admin.site.register(BankTransaction)
+admin.site.register(Warehouse, WarehouseAdmin)
+admin.site.register(Bank, BankAdmin)
+admin.site.register(BankTransaction, BankTransactionAdmin)

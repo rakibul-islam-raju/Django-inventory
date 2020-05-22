@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
 
     'django.contrib.admin',
+    'grappelli',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -47,7 +48,6 @@ INSTALLED_APPS = [
 
     'crispy_forms',
     'import_export',
-    'grappelli',
 
     'core',
     'purchase',
