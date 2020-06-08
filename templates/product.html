@@ -15,6 +15,7 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
+                            <th>Code</th>
                             <th>Name</th>
                             <th>Category</th>
                             <th>Department</th>
@@ -29,6 +30,7 @@
                     </thead>
                     <tfoot>
                         <tr>
+                            <th>Code</th>
                             <th>Name</th>
                             <th>Category</th>
                             <th>Department</th>
@@ -44,12 +46,14 @@
                     <tbody>
                         {% for product in products %}
                             <tr>
+                                <td>{{ product.get_unique_number }}</td>
                                 <td>{{ product.name }}</td>
                                 <td>{{ product.category.name }}</td>
                                 <td>{{ product.category.department.name }}</td>
                                 <td>{{ product.supplier_price }}</td>
                                 <td>{{ product.sell_price }}</td>
                                 <td>{{ product.quantity }}</td>
+                                
                                 <td>
                                     {% if product.get_profit_per_product %}
                                     <i class="fa fa-thumbs-up text-success"></i> {{ product.get_profit_per_product }}%

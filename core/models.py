@@ -2,8 +2,16 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.validators import UnicodeUsernameValidator
+
+from datetime import date
+import barcode
+import qrcode
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
 class Office(models.Model):
@@ -17,7 +25,36 @@ class Office(models.Model):
 
 
 class User(AbstractUser):
-    office = models.OneToOneField(Office, on_delete=models.CASCADE, to_field='name', blank=True, null=True)
+    username_validator = UnicodeUsernameValidator()
+
+    username = models.CharField(
+        _('username'),
+        max_length=150,
+        unique=True,
+        help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
+        validators=[username_validator],
+        error_messages={
+            'unique': _("A user with that username already exists."),
+        },
+    )
+    first_name = models.CharField(_('first name'), max_length=30, blank=True)
+    last_name = models.CharField(_('last name'), max_length=150, blank=True)
+    office = models.ForeignKey(Office, on_delete=models.CASCADE, to_field='name', blank=True, null=True)
+    email = models.EmailField(_('email address'), blank=True)
+    is_staff = models.BooleanField(
+        _('staff status'),
+        default=False,
+        help_text=_('Designates whether the user can log into this admin site.'),
+    )
+    is_active = models.BooleanField(
+        _('active'),
+        default=True,
+        help_text=_(
+            'Designates whether this user should be treated as active. '
+            'Unselect this instead of deleting accounts.'
+        ),
+    )
+    date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     def __str__(self):
         return str(self.office)
@@ -78,6 +115,7 @@ class Product(models.Model):
     office = models.ForeignKey(User, models.CASCADE)
 
     name = models.CharField(max_length=100, unique=True)
+    qr_code = models.ImageField(upload_to='qrcodes', blank=True, null=True)
     supplier_price = models.FloatField()
     sell_price = models.FloatField()
     quantity = models.PositiveIntegerField()
@@ -108,6 +146,20 @@ class Product(models.Model):
     
     def get_delete_url(self):
         return reverse("core:product-delete", kwargs={"pk": self.pk})
+
+    def get_unique_number(self):
+        cat = str(self.category.name)
+        ware = str(self.warehouse.name)
+        name = str(self.name)
+        _id = str(self.id)
+        d = date.today()
+        d = d.strftime("%d%m%y")
+
+        unique_number = cat[0] + ware[0] + name[0] + _id + '-' + d
+        unique_number = unique_number.upper()
+
+        return unique_number
+
     
 
 class Bank(models.Model):

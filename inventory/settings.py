@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'core',
     'purchase',
     'sell',
+    'users',
 ]
 
 SITE_ID = 1
@@ -156,12 +157,16 @@ IMPORT_EXPORT_USE_TRANSACTIONS = True
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+
 # ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = settings.LOGIN_URL
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+
 # allauth signup customization
 ACCOUNT_FORMS = {'signup': 'core.forms.MyCustomSignupForm'}
+
 AUTH_USER_MODEL = 'core.User'
 
 

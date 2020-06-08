@@ -5,7 +5,7 @@ from django.views.generic import CreateView, ListView, UpdateView, DeleteView, V
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from .models import Department, Category, Product, Warehouse, Bank, BankTransaction
-from .forms import DeptForm, CategotyForm, ProductForm, WarehouseForm, BankForm, BankTransactionForm
+from .forms import DeptForm, CategoryForm, ProductForm, WarehouseForm, BankForm, BankTransactionForm
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -89,7 +89,7 @@ class DeparmentCreateView(SuccessMessageMixin, CreateView):
 class CategoryCreateView(SuccessMessageMixin, CreateView):
     model = Category
     template_name = 'category.html'
-    form_class = CategotyForm
+    form_class = CategoryForm
     success_url = 'core:category'
     success_message = "%(name)s was created successfully"
 
@@ -203,7 +203,7 @@ class DepartmentUpdateView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessa
 
 class CategoryUpdateView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = Category
-    form_class = CategotyForm
+    form_class = CategoryForm
     template_name = 'category.html'
     success_url = 'core:category'
     success_message = "%(name)s was updated successfully"

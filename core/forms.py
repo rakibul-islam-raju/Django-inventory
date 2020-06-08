@@ -7,12 +7,14 @@ from allauth.account.forms import SignupForm
 offices = Office.objects.all()
 # offices = offices.name
 
+
 class MyCustomSignupForm(SignupForm):
     office = forms.ModelChoiceField(offices)
 
     def save(self, request):
         user = super(MyCustomSignupForm, self).save(request)
-        user.office = self.cleaned_data['office']
+        office = self.cleaned_data['office']
+        user.office = office
         user.save()
         return user
 
@@ -27,7 +29,7 @@ class DeptForm(forms.ModelForm):
         }
 
 
-class CategotyForm(forms.ModelForm):
+class CategoryForm(forms.ModelForm):
 
     class Meta:
         model = Category
