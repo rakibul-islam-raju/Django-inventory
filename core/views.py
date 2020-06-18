@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.contrib import messages
 from django.urls import reverse
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView, View, TemplateView
@@ -6,9 +7,20 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from .models import Department, Category, Product, Warehouse, Bank, BankTransaction
 from .forms import DeptForm, CategoryForm, ProductForm, WarehouseForm, BankForm, BankTransactionForm
+from sell.models import Customer, SellProduct
+from purchase.models import Supplier, PurchaseProduct
+from .resources import ProductResource
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
+
+
+def download_product_csv(request):
+    product_resource = ProductResource()
+    dataset = product_resource.export()
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="product.csv"'
+    return response
 
 
 class HomeView(TemplateView):
@@ -16,7 +28,14 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["products"] = Product.objects.filter(status=True)
+        products = Product.objects.filter(status=True)
+        context["products"] = products
+
+        context["total_products"] = products.count()
+        context["total_customer"] = Customer.objects.filter(status=True).count()
+        context["total_supplier"] = Supplier.objects.filter(status=True).count()
+        context["total_sell"] = SellProduct.objects.all().count()
+        context["total_Purchase"] = PurchaseProduct.objects.all().count()
         return context
 
 

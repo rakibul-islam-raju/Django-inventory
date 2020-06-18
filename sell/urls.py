@@ -5,6 +5,7 @@ from .views import (SellProductListView,
                     SellProductCreateView,
                     SellProductUpdateView,
                     SellProductDeleteView,
+                    SingleCustomerView,
 
                     CustomerCreateView,
                     CustomerUpdateView,
@@ -15,6 +16,7 @@ app_name = 'sell'
 
 urlpatterns = [
     path('customer/', staff_member_required(CustomerCreateView.as_view()), name='customer'),
+    path('customer/<int:pk>/', staff_member_required(SingleCustomerView.as_view()), name='single-customer'),
     path('customer/<pk>/', staff_member_required(CustomerUpdateView.as_view()), name='customer-edit'),
     path('customer/delete/<pk>/', staff_member_required(CustomerDeleteView.as_view()), name='customer-delete'),
 

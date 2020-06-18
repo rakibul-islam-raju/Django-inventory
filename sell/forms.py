@@ -17,7 +17,8 @@ class SellProductForm(forms.ModelForm):
 
     class Meta:
         model = SellProduct
-        fields = ['name', 'price', 'quantity', 'description', 'warehouse', 'customer']
+        # fields = ['warehouse', 'customer', 'product', 'status', 'description']
+        fields = ['warehouse', 'customer','product', 'price', 'quantity', 'status', 'description']
 
         widgets = {
             'description': forms.Textarea(attrs={'rows': '2'}),

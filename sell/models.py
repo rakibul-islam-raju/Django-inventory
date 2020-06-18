@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from core.models import Warehouse
+from core.models import Warehouse, Product
 
 
 class Customer(models.Model):
@@ -21,19 +21,26 @@ class Customer(models.Model):
 
 
 class SellProduct(models.Model):
+    STATUS = (
+        ('Pending', 'Pending'),
+        ('Out for delivery', 'Out for delivery'),
+        ('Delivered', 'Delivered')
+    )
+    
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
 
-    name = models.CharField(max_length=100)
-    price = models.DecimalField(decimal_places=2, max_digits=8)
+
     quantity = models.PositiveIntegerField()
+    price = models.DecimalField(decimal_places=2, max_digits=8)
     description = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
-    added_by = models.CharField(max_length=100)
-    status = models.BooleanField(default=True)
+    # added_by = models.CharField(max_length=100)
+    status = models.CharField(max_length=100, choices=STATUS)
 
     def __str__(self):
-        return self.name
+        return f'{self.customer.name}\'s order'
 
     def get_total_price(self):
         result = self.price * self.quantity

@@ -15,22 +15,22 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
+                            <th>Product</th>
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Customer</th>
-                            <th>Warehouse</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th>ID</th>
-                            <th>Name</th>
+                            <th>Product</th>
                             <th>Price</th>
                             <th>Quantity</th>
                             <th>Customer</th>
-                            <th>Warehouse</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </tfoot>
@@ -38,11 +38,11 @@
                         {% for product in products %}
                             <tr>
                                 <td>{{ product.id }}</td>
-                                <td>{{ product.name }}</td>
+                                <td>{{ product.product.name }}</td>
                                 <td>{{ product.price }}</td>
                                 <td>{{ product.quantity }}</td>
                                 <td>{{ product.customer }}</td>
-                                <td>{{ product.warehouse }}</td>
+                                <td>{{ product.status }}</td>
                                 <td>
                                     {% if request.user.is_staff %}
                                     <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>

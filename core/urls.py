@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from .views import (HomeView,
 
+                    download_product_csv,
+
                     ProductView,
                     ProductCreateView,
                     ProductUpdateView,
@@ -33,6 +35,8 @@ app_name = 'core'
 
 urlpatterns = [
     path('', login_required(HomeView.as_view()), name='home'),
+
+    path('download_product_csv', staff_member_required(download_product_csv), name='product-download-csv'),
 
     path('product/', staff_member_required(ProductView.as_view()), name='product'),
     path('product/create/', staff_member_required(ProductCreateView.as_view()), name='product-create'),
