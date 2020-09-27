@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from core.models import Warehouse, User
+from core.models import Warehouse, User, Category
 
 
 class Supplier(models.Model):
@@ -9,6 +9,7 @@ class Supplier(models.Model):
     phone = models.IntegerField()
     address = models.TextField()
     status = models.BooleanField(default=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -21,6 +22,7 @@ class Supplier(models.Model):
 
 
 class PurchaseProduct(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
 
@@ -32,6 +34,8 @@ class PurchaseProduct(models.Model):
     added_by = models.CharField(max_length=100)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
     status = models.BooleanField(default=True)
+    date_updated = models.DateTimeField(auto_now=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name

@@ -9,5 +9,6 @@
         "markdown"
     ],
 
-    "emmet.triggerExpansionOnTab": true
+    "emmet.triggerExpansionOnTab": true,
+    "python.pythonPath": "venv/bin/python"
 }

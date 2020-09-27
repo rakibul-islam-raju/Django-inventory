@@ -16,9 +16,11 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 class Office(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    email = models.EmailField()
-    phone = models.IntegerField()
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=20, unique=True, blank=True, null=True)
     address = models.TextField()
+    status = models.BooleanField(default=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -40,7 +42,7 @@ class User(AbstractUser):
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
     office = models.ForeignKey(Office, on_delete=models.CASCADE, to_field='name', blank=True, null=True)
-    email = models.EmailField(_('email address'), blank=True)
+    email = models.EmailField(_('email address'), blank=True, unique=True)
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
@@ -61,10 +63,11 @@ class User(AbstractUser):
 
 
 class Department(models.Model):
-    office = models.ForeignKey(User, models.CASCADE)
+    office = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True) 
     status = models.BooleanField(default=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -77,9 +80,10 @@ class Department(models.Model):
     
 
 class Category(models.Model):
-    department = models.ForeignKey(Department, models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, unique=True)
     status = models.BooleanField(default=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name_plural = 'Categories'
@@ -95,9 +99,10 @@ class Category(models.Model):
 
 
 class Warehouse(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
     status = models.BooleanField(default=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -110,19 +115,21 @@ class Warehouse(models.Model):
 
 
 class Product(models.Model):
-    category = models.ForeignKey(Category, models.CASCADE)
-    warehouse = models.ForeignKey(Warehouse, models.CASCADE, related_name='inventory_product')
-    office = models.ForeignKey(User, models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='inventory_product')
+    office = models.ForeignKey(Office, on_delete=models.CASCADE)
 
     name = models.CharField(max_length=100, unique=True)
     qr_code = models.ImageField(upload_to='qrcodes', blank=True, null=True)
-    supplier_price = models.FloatField()
-    sell_price = models.FloatField()
-    quantity = models.PositiveIntegerField()
+    supplier_price = models.FloatField(null=True, blank=True)
+    sell_price = models.FloatField(default=00.0)
+    quantity = models.PositiveIntegerField(null=True, blank=True)
     description = models.TextField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
     added_by = models.CharField(max_length=100)
     status = models.BooleanField(default=True)
+    date_updated = models.DateTimeField(auto_now=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -135,11 +142,14 @@ class Product(models.Model):
             return result
     
     def get_loss_per_product(self):
-        if self.sell_price < self.supplier_price:
-            loss = self.supplier_price - self.sell_price
-            result = (loss / self.supplier_price) * 100
-            result = round(result, 2)
-            return result
+        if self.sell_price:
+            if self.sell_price < self.supplier_price:
+                loss = self.supplier_price - self.sell_price
+                result = (loss / self.supplier_price) * 100
+                result = round(result, 2)
+                return result
+        else:
+            return 0
 
     def get_update_url(self):
         return reverse("core:product-edit", kwargs={"pk": self.pk})
@@ -168,6 +178,7 @@ class Bank(models.Model):
     ac_number = models.DecimalField(decimal_places=0, max_digits=20)
     branch = models.CharField(max_length=100)
     status = models.BooleanField(default=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -179,17 +190,17 @@ class Bank(models.Model):
         return reverse("core:bank-delete", kwargs={"pk": self.pk})
     
 
-account_type_choices = (
-    ('C', 'Credit'),
-    ('D', 'Debit')
-)
-
-transaction_type_choices = (
-    ('W', 'Withdraw'),
-    ('D', 'Deposite')
-)
-
 class BankTransaction(models.Model):
+    account_type_choices = (
+        ('C', 'Credit'),
+        ('D', 'Debit')
+    )
+
+    transaction_type_choices = (
+        ('W', 'Withdraw'),
+        ('D', 'Deposite')
+    )
+
     bank = models.ForeignKey(Bank, on_delete=models.CASCADE)
 
     date = models.DateField()
@@ -198,6 +209,8 @@ class BankTransaction(models.Model):
     transaction_type = models.CharField(max_length=1, choices=transaction_type_choices)
     amount = models.FloatField()
     status = models.BooleanField(default=True)
+    date_updated = models.DateTimeField(auto_now=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.account_type

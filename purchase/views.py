@@ -7,6 +7,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 from .models import Supplier, PurchaseProduct
 from .forms import SupplierForm, PurchaseProductForm
 
+from core.models import Product, Office
+
 # from django.contrib.auth import get_user_model
 # User = get_user_model()
 
@@ -48,8 +50,6 @@ class CreatePurchaseView(SuccessMessageMixin, View):
 
     def post(self, *args, **kwargs):
         form = PurchaseProductForm(self.request.POST or None)
-        # added_by = User.objects.get(username=self.request.user.username)
-        # added_by = added_by.username
 
         if form.is_valid():
             name = form.cleaned_data.get('name')
@@ -58,9 +58,33 @@ class CreatePurchaseView(SuccessMessageMixin, View):
             description = form.cleaned_data.get('description')
             warehouse = form.cleaned_data.get('warehouse')
             supplier = form.cleaned_data.get('supplier')
+            category = form.cleaned_data.get('category')
+
+            office = Office.objects.get(name=self.request.user.office.name)
             
-            new_purchase = PurchaseProduct(name=name, price=price, quantity=quantity, description=description, warehouse=warehouse, supplier=supplier)
+            new_purchase = PurchaseProduct(
+                name=name,
+                price=price,
+                quantity=quantity,
+                description=description,
+                warehouse=warehouse,
+                supplier=supplier,
+                category=category
+            )
+
+            new_product = Product(
+                category=category,
+                warehouse=warehouse,
+                office=office,
+                name=name,
+                supplier_price=price,
+                quantity=quantity,
+                description=description,
+                added_by=self.request.user.username
+            )
+
             new_purchase.save()
+            new_product.save()
             messages.success(self.request, 'Purchase added successfully')
             return redirect('purchase:product')
         else:

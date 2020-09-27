@@ -9,6 +9,7 @@ class Customer(models.Model):
     phone = models.DecimalField(decimal_places=0, max_digits=11)
     address = models.TextField()
     status = models.BooleanField(default=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -38,6 +39,8 @@ class SellProduct(models.Model):
     timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
     # added_by = models.CharField(max_length=100)
     status = models.CharField(max_length=100, choices=STATUS)
+    date_updated = models.DateTimeField(auto_now=True)
+    date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.customer.name}\'s order'
