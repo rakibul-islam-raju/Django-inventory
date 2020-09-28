@@ -61,7 +61,7 @@
                             <th>Sell Price</th>
                             <th>Quantity</th>
                             <th>Office</th>
-                            {% comment %} <th>Action</th> {% endcomment %}
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tfoot>
@@ -73,7 +73,7 @@
                             <th>Sell Price</th>
                             <th>Quantity</th>
                             <th>Office</th>
-                            {% comment %} <th>Action</th> {% endcomment %}
+                            <th>Action</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -86,6 +86,9 @@
                                 <td>{{ product.sell_price }}</td>
                                 <td>{{ product.quantity }}</td>
                                 <td>{{ product.office }}</td>
+                                <td>
+                                    <a class="btn btn-outline-primary btn-sm" href="{% url 'sell:sell-product' product.pk %}">Sell</a>
+                                </td>
                                 {% comment %} <td>
                                     {% if request.user.is_staff %}
                                     <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>

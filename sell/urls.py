@@ -9,12 +9,16 @@ from .views import (SellProductListView,
 
                     CustomerCreateView,
                     CustomerUpdateView,
-                    CustomerDeleteView
+                    CustomerDeleteView,
+
+                    SellProductItem
                     )
 
 app_name = 'sell'
 
 urlpatterns = [
+    path('sell/product/<int:pk>', staff_member_required(SellProductItem.as_view()), name='sell-product'),
+
     path('customer/', staff_member_required(CustomerCreateView.as_view()), name='customer'),
     path('customer/<int:pk>/', staff_member_required(SingleCustomerView.as_view()), name='single-customer'),
     path('customer/<pk>/', staff_member_required(CustomerUpdateView.as_view()), name='customer-edit'),

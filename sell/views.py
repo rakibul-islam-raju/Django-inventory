@@ -1,11 +1,11 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView, ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from .models import Customer, SellProduct
 from .forms import CustomerForm, SellProductForm
-from core.models import User
+from core.models import User, Product
 
 
 class SellProductListView(TemplateView):
@@ -15,6 +15,52 @@ class SellProductListView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["products"] = SellProduct.objects.all()
         return context
+
+
+class SellProductItem(SuccessMessageMixin, CreateView):
+    model = SellProduct
+    template_name = 'sell/product-create.html'
+    form_class = SellProductForm
+    success_url = 'sell:product'
+    success_message = "Order was created successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["products"] = SellProduct.objects.all()
+        return context
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+    def get(self, *args, **kwargs):
+        product_instance = get_object_or_404(Product, pk=self.kwargs['pk'])
+        form = SellProductForm(initial={
+            'warehouse': product_instance.warehouse,
+            'product': product_instance,
+            'price': product_instance.sell_price,
+            'quantity': product_instance.quantity
+            })
+        context = {
+            'form': form
+        }
+        return render(self.request, 'sell/product-create.html', context)
+        
+    def post(self, *args, **kwargs):
+        product_instance = get_object_or_404(Product, pk=self.kwargs['pk'])
+        form = SellProductForm(self.request.POST)
+        if form.is_valid():
+            quantity = form.cleaned_data.get('quantity')
+
+            print(quantity)
+            print(product_instance.quantity)
+
+            if quantity <= product_instance.quantity:
+                new_qntty = product_instance.quantity - quantity
+                product_instance.quantity = new_qntty
+                product_instance.save(update_fields=['quantity'])
+
+            form.save()
+            return redirect('sell:product')
 
 
 class SellProductCreateView(SuccessMessageMixin, CreateView):
