@@ -1,12 +1,28 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib import messages
 from django.urls import reverse
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView, View, TemplateView
+from django.views.generic import (View,
+                                ListView,
+                                CreateView,
+                                UpdateView,
+                                DeleteView,
+                                TemplateView)
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import Department, Category, Product, Warehouse, Bank, BankTransaction
-from .forms import DeptForm, CategoryForm, ProductForm, WarehouseForm, BankForm, BankTransactionForm
+from .models import (Department,
+                    Category,
+                    Product,
+                    Warehouse,
+                    Bank,
+                    BankTransaction)
+from .forms import (DeptForm,
+                    CategoryForm,
+                    ProductForm,
+                    WarehouseForm,
+                    BankForm,
+                    BankTransactionForm,
+                    UserPermissionForm)
 from sell.models import Customer, SellProduct
 from purchase.models import Supplier, PurchaseProduct
 from .resources import ProductResource
@@ -21,6 +37,33 @@ def download_product_csv(request):
     response = HttpResponse(dataset.csv, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="product.csv"'
     return response
+
+
+class UserManagement(View):
+    def get(self, *args, **kwargs):
+        users = User.objects.all()
+        context = {
+            'users': users
+        }
+        return render(self.request, 'user-management.html', context)
+
+
+class EditUserManagent(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+    model = User
+    form_class = UserPermissionForm
+    template_name = 'edit-user-management.html'
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
+    success_url = 'core:user-management'
+    success_message = "Changes saved successfully"
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+    
+    def test_func(self, *args, **kwargs):
+        if self.request.user.is_superuser:
+            return True
+        return False
 
 
 class HomeView(TemplateView):

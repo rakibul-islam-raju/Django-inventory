@@ -11,7 +11,7 @@ from .views import (SellProductListView,
                     CustomerUpdateView,
                     CustomerDeleteView,
 
-                    SellProductItem
+                    SellProductItem,
                     )
 
 app_name = 'sell'

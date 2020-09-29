@@ -3,6 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from .views import (HomeView,
 
+                    UserManagement,
+                    EditUserManagent,
+
                     download_product_csv,
 
                     ProductView,
@@ -35,6 +38,9 @@ app_name = 'core'
 
 urlpatterns = [
     path('', login_required(HomeView.as_view()), name='home'),
+
+    path('users/', staff_member_required(UserManagement.as_view()), name='user-management'),
+    path('users/edit/<username>/', staff_member_required(EditUserManagent.as_view()), name='edit-user-management'),
 
     path('download_product_csv', staff_member_required(download_product_csv), name='product-download-csv'),
 

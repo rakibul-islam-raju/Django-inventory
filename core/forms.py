@@ -5,7 +5,6 @@ from allauth.account.forms import SignupForm
 
 
 offices = Office.objects.all()
-# offices = offices.name
 
 
 class MyCustomSignupForm(SignupForm):
@@ -40,7 +39,13 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ['category', 'warehouse', 'name', 'quantity', 'supplier_price', 'sell_price', 'description']
+        fields = ['category',
+                'warehouse',
+                'name',
+                'quantity',
+                'supplier_price',
+                'sell_price',
+                'description']
         widgets = {
             'description': forms.Textarea(attrs={'rows': '2'}),
         }
@@ -76,3 +81,14 @@ class BankTransactionForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'rows': '2'}),
             'date': forms.TextInput(attrs={'type': 'date'})
         }
+
+class UserPermissionForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ['username',
+                'email',
+                'first_name',
+                'last_name',
+                'is_active',
+                'is_staff',]
