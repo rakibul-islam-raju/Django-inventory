@@ -27,10 +27,12 @@ from sell.models import Customer, SellProduct
 from purchase.models import Supplier, PurchaseProduct
 from .resources import ProductResource
 
+from django.contrib.auth.decorators import login_required
+
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-
+@login_required()
 def download_product_csv(request):
     product_resource = ProductResource()
     dataset = product_resource.export()
@@ -39,16 +41,26 @@ def download_product_csv(request):
     return response
 
 
-class UserManagement(View):
+class UserManagement(LoginRequiredMixin,
+                    UserPassesTestMixin,
+                    View):
     def get(self, *args, **kwargs):
         users = User.objects.all()
         context = {
             'users': users
         }
         return render(self.request, 'user-management.html', context)
+    
+    def test_func(self, *args, **kwargs):
+        if self.request.user.is_staff:
+            return True
+        return False
 
 
-class EditUserManagent(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+class EditUserManagent(LoginRequiredMixin,
+                    UserPassesTestMixin,
+                    SuccessMessageMixin,
+                    UpdateView):
     model = User
     form_class = UserPermissionForm
     template_name = 'edit-user-management.html'
@@ -65,8 +77,8 @@ class EditUserManagent(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMi
             return True
         return False
 
-
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin,
+            TemplateView):
     template_name = 'home.html'
 
     def get_context_data(self, **kwargs):
@@ -82,19 +94,28 @@ class HomeView(TemplateView):
         return context
 
 
-class ProductView(TemplateView):
+class ProductView(LoginRequiredMixin,
+                UserPassesTestMixin,
+                TemplateView):
     template_name = 'product.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["products"] = Product.objects.filter(status=True)
         return context
+
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
     
 
 # >=========== create views =============>
 
 
-class ProductCreateView(View):
+class ProductCreateView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        View):
     def get(self, *args, **kwargs):
         form = ProductForm()
         context = {
@@ -125,9 +146,17 @@ class ProductCreateView(View):
         else:
             messages.warning(self.request, 'Something went wrong')
             return redirect('/')
+    
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
 
 
-class DeparmentCreateView(SuccessMessageMixin, CreateView):
+class DeparmentCreateView(LoginRequiredMixin, 
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        CreateView):
     model = Department
     template_name = 'department.html'
     form_class = DeptForm
@@ -147,8 +176,16 @@ class DeparmentCreateView(SuccessMessageMixin, CreateView):
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
 
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
 
-class CategoryCreateView(SuccessMessageMixin, CreateView):
+
+class CategoryCreateView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        CreateView):
     model = Category
     template_name = 'category.html'
     form_class = CategoryForm
@@ -164,8 +201,16 @@ class CategoryCreateView(SuccessMessageMixin, CreateView):
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
 
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
 
-class WarehouseCreateView(SuccessMessageMixin, CreateView):
+
+class WarehouseCreateView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        CreateView):
     model = Warehouse
     template_name = 'warehouse.html'
     form_class = WarehouseForm
@@ -180,8 +225,16 @@ class WarehouseCreateView(SuccessMessageMixin, CreateView):
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
 
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
 
-class BankCreateView(SuccessMessageMixin, CreateView):
+
+class BankCreateView(LoginRequiredMixin,
+                    UserPassesTestMixin,
+                    SuccessMessageMixin,
+                    CreateView):
     model = Bank
     template_name = 'bank.html'
     form_class = BankForm
@@ -197,8 +250,16 @@ class BankCreateView(SuccessMessageMixin, CreateView):
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
 
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
 
-class TransactionCreateView(SuccessMessageMixin, CreateView):
+
+class TransactionCreateView(LoginRequiredMixin,
+                            UserPassesTestMixin,
+                            SuccessMessageMixin,
+                            CreateView):
     model = BankTransaction
     template_name = 'transaction.html'
     form_class = BankTransactionForm
@@ -214,11 +275,19 @@ class TransactionCreateView(SuccessMessageMixin, CreateView):
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
 
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
+
 
 # >=========== update views =============>
 
 
-class ProductUpdateView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'product_create.html'
@@ -234,13 +303,15 @@ class ProductUpdateView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessageM
         return reverse(self.success_url)
     
     def test_func(self):
-        product = self.get_object()
-        if self.request.user.username == product.added_by:
+        if self.request.user.is_staff:
             return True
         return False
 
 
-class DepartmentUpdateView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+class DepartmentUpdateView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        UpdateView):
     model = Department
     form_class = DeptForm
     template_name = 'department.html'
@@ -257,13 +328,15 @@ class DepartmentUpdateView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessa
         return reverse(self.success_url)
 
     def test_func(self):
-        department = self.get_object()
-        if self.request.user.username == department.office.username:
+        if self.request.user.is_staff:
             return True
         return False
 
 
-class CategoryUpdateView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+class CategoryUpdateView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        UpdateView):
     model = Category
     form_class = CategoryForm
     template_name = 'category.html'
@@ -280,13 +353,15 @@ class CategoryUpdateView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessage
         return reverse(self.success_url)
         
     def test_func(self):
-        category = self.get_object()
-        if self.request.user.username == category.department.office.username:
+        if self.request.user.is_staff:
             return True
         return False
 
 
-class WarehouseUpdateView(SuccessMessageMixin, UpdateView):
+class WarehouseUpdateView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        UpdateView):
     model = Warehouse
     template_name = 'warehouse.html'
     form_class = WarehouseForm
@@ -301,8 +376,16 @@ class WarehouseUpdateView(SuccessMessageMixin, UpdateView):
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
 
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
 
-class BankUpdateView(SuccessMessageMixin, UpdateView):
+
+class BankUpdateView(LoginRequiredMixin,
+                    UserPassesTestMixin,
+                    SuccessMessageMixin,
+                    UpdateView):
     model = Bank
     template_name = 'bank.html'
     form_class = BankForm
@@ -318,8 +401,16 @@ class BankUpdateView(SuccessMessageMixin, UpdateView):
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
 
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
 
-class TransactionUpdateView(SuccessMessageMixin, UpdateView):
+
+class TransactionUpdateView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        UpdateView):
     model = BankTransaction
     template_name = 'transaction.html'
     form_class = BankTransactionForm
@@ -335,11 +426,19 @@ class TransactionUpdateView(SuccessMessageMixin, UpdateView):
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
 
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
+
 
 # >=================== delete views ===============>
 
 
-class ProductDeleteView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin,
+                    UserPassesTestMixin,
+                    SuccessMessageMixin,
+                    DeleteView):
     model = Product
     template_name = 'delete.html'
     success_url = 'core:home'
@@ -349,13 +448,15 @@ class ProductDeleteView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessageM
         return reverse(self.success_url)
     
     def test_func(self):
-        product = self.get_object()
-        if self.request.user.username == product.added_by:
+        if self.request.user.is_superuser:
             return True
         return False
 
 
-class DepartmentDeleteView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+class DepartmentDeleteView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        DeleteView):
     model = Department
     template_name = 'delete.html'
     success_url = 'core:department'
@@ -365,13 +466,15 @@ class DepartmentDeleteView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessa
         return reverse(self.success_url)
     
     def test_func(self):
-        department = self.get_object()
-        if self.request.user.username == department.office.username:
+        if self.request.user.is_superuser:
             return True
         return False
 
 
-class CategoryDeleteView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessageMixin, DeleteView):
+class CategoryDeleteView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        DeleteView):
     model = Category
     template_name = 'delete.html'
     success_url = 'core:home'
@@ -381,8 +484,7 @@ class CategoryDeleteView(LoginRequiredMixin ,UserPassesTestMixin, SuccessMessage
         return reverse(self.success_url)
     
     def test_func(self):
-        category = self.get_object()
-        if self.request.user.username == category.department.office.username:
+        if self.request.user.is_superuser:
             return True
         return False
 
@@ -397,7 +499,10 @@ class WarehouseDeleteView(SuccessMessageMixin, DeleteView):
         return reverse(self.success_url)
 
 
-class BankDeleteView(SuccessMessageMixin, DeleteView):
+class BankDeleteView(LoginRequiredMixin,
+                    UserPassesTestMixin,
+                    SuccessMessageMixin,
+                    DeleteView):
     model = Bank
     template_name = 'delete.html'
     success_url = 'core:bank'
@@ -405,9 +510,17 @@ class BankDeleteView(SuccessMessageMixin, DeleteView):
     
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
+    
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
 
 
-class TransactionDeleteView(SuccessMessageMixin, DeleteView):
+class TransactionDeleteView(LoginRequiredMixin,
+                            UserPassesTestMixin,
+                            SuccessMessageMixin,
+                            DeleteView):
     model = BankTransaction
     template_name = 'delete.html'
     success_url = 'core:transaction'
@@ -415,3 +528,8 @@ class TransactionDeleteView(SuccessMessageMixin, DeleteView):
     
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
+    
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False

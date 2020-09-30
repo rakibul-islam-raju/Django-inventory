@@ -1,6 +1,4 @@
 from django.urls import path, include
-from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
 from .views import (HomeView,
 
                     UserManagement,
@@ -37,35 +35,35 @@ from .views import (HomeView,
 app_name = 'core'
 
 urlpatterns = [
-    path('', login_required(HomeView.as_view()), name='home'),
+    path('', HomeView.as_view(), name='home'),
 
-    path('users/', staff_member_required(UserManagement.as_view()), name='user-management'),
-    path('users/edit/<username>/', staff_member_required(EditUserManagent.as_view()), name='edit-user-management'),
+    path('users/', UserManagement.as_view(), name='user-management'),
+    path('users/edit/<username>/', EditUserManagent.as_view(), name='edit-user-management'),
 
-    path('download_product_csv', staff_member_required(download_product_csv), name='product-download-csv'),
+    path('download_product_csv', download_product_csv, name='product-download-csv'),
 
-    path('product/', staff_member_required(ProductView.as_view()), name='product'),
-    path('product/create/', staff_member_required(ProductCreateView.as_view()), name='product-create'),
-    path('product/edit/<pk>/', staff_member_required(ProductUpdateView.as_view()), name='product-edit'),
-    path('product/delete/<pk>/', staff_member_required(ProductDeleteView.as_view()), name='product-delete'),
+    path('product/', ProductView.as_view(), name='product'),
+    path('product/create/', ProductCreateView.as_view(), name='product-create'),
+    path('product/edit/<pk>/', ProductUpdateView.as_view(), name='product-edit'),
+    path('product/delete/<pk>/', ProductDeleteView.as_view(), name='product-delete'),
 
-    path('department/', staff_member_required(DeparmentCreateView.as_view()), name='department'),
-    path('department/<pk>/', staff_member_required(DepartmentUpdateView.as_view()), name='department-edit'),
-    path('department/delete/<pk>/', staff_member_required(DepartmentDeleteView.as_view()), name='department-delete'),
+    path('department/', DeparmentCreateView.as_view(), name='department'),
+    path('department/<pk>/', DepartmentUpdateView.as_view(), name='department-edit'),
+    path('department/delete/<pk>/', DepartmentDeleteView.as_view(), name='department-delete'),
 
-    path('category/', staff_member_required(CategoryCreateView.as_view()), name='category'),
-    path('category/<pk>/', staff_member_required(CategoryUpdateView.as_view()), name='category-edit'),
-    path('category/delete/<pk>/', staff_member_required(CategoryDeleteView.as_view()), name='category-delete'),
+    path('category/', CategoryCreateView.as_view(), name='category'),
+    path('category/<pk>/', CategoryUpdateView.as_view(), name='category-edit'),
+    path('category/delete/<pk>/', CategoryDeleteView.as_view(), name='category-delete'),
 
-    path('warehouse/', staff_member_required(WarehouseCreateView.as_view()), name='warehouse'),
-    path('warehouse/<pk>', staff_member_required(WarehouseUpdateView.as_view()), name='warehouse-edit'),
-    path('warehouse/delete/<pk>', staff_member_required(WarehouseDeleteView.as_view()), name='warehouse-delete'),
+    path('warehouse/', WarehouseCreateView.as_view(), name='warehouse'),
+    path('warehouse/<pk>', WarehouseUpdateView.as_view(), name='warehouse-edit'),
+    path('warehouse/delete/<pk>', WarehouseDeleteView.as_view(), name='warehouse-delete'),
 
-    path('bank/', staff_member_required(BankCreateView.as_view()), name='bank'),
-    path('bank/<pk>/', staff_member_required(BankUpdateView.as_view()), name='bank-edit'),
-    path('bank/delete/<pk>/', staff_member_required(BankDeleteView.as_view()), name='bank-delete'),
+    path('bank/', BankCreateView.as_view(), name='bank'),
+    path('bank/<pk>/', BankUpdateView.as_view(), name='bank-edit'),
+    path('bank/delete/<pk>/', BankDeleteView.as_view(), name='bank-delete'),
     
-    path('transaction/', staff_member_required(TransactionCreateView.as_view()), name='transaction'),
-    path('transaction/<pk>/', staff_member_required(TransactionUpdateView.as_view()), name='transaction-edit'),
-    path('transaction/delete/<pk>/', staff_member_required(TransactionDeleteView.as_view()), name='transaction-delete'),
+    path('transaction/', TransactionCreateView.as_view(), name='transaction'),
+    path('transaction/<pk>/', TransactionUpdateView.as_view(), name='transaction-edit'),
+    path('transaction/delete/<pk>/', TransactionDeleteView.as_view(), name='transaction-delete'),
 ]
