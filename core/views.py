@@ -137,9 +137,17 @@ class ProductCreateView(LoginRequiredMixin,
             description = form.cleaned_data.get('description')
             quantity = form.cleaned_data.get('quantity')
             warehouse = form.cleaned_data.get('warehouse')
-            office = self.request.user
+            office = self.request.user.office
             
-            new_dept = Product(category=category, name=name, supplier_price=supplier_price, sell_price=sell_price, description=description, added_by=added_by, quantity=quantity, office=office, warehouse=warehouse)
+            new_dept = Product(category=category,
+                            name=name,
+                            supplier_price=supplier_price,
+                            sell_price=sell_price,
+                            description=description,
+                            added_by=added_by,
+                            quantity=quantity,
+                            office=office,
+                            warehouse=warehouse)
             new_dept.save()
             messages.success(self.request, 'Product added successfully')
             return redirect('/')
@@ -489,7 +497,10 @@ class CategoryDeleteView(LoginRequiredMixin,
         return False
 
 
-class WarehouseDeleteView(SuccessMessageMixin, DeleteView):
+class WarehouseDeleteView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        DeleteView):
     model = Warehouse
     template_name = 'delete.html'
     success_url = 'core:home'
@@ -497,6 +508,11 @@ class WarehouseDeleteView(SuccessMessageMixin, DeleteView):
     
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
 
 
 class BankDeleteView(LoginRequiredMixin,

@@ -1,7 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.urls import reverse
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView, TemplateView, View
+from django.views.generic import (CreateView,
+                                ListView,
+                                UpdateView,
+                                DeleteView,
+                                TemplateView,
+                                View)
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from .models import Supplier, PurchaseProduct
@@ -13,16 +18,27 @@ from core.models import Product, Office
 # User = get_user_model()
 
 
-class PurchaseProductList(SuccessMessageMixin, TemplateView):
+class PurchaseProductList(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        TemplateView):
     template_name = 'purchase/product.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["products"] = PurchaseProduct.objects.filter(status=True)
         return context
+    
+    def test_func(self, *args, **kwargs):
+        if self.request.user.is_staff:
+            return True
+        return False
 
 
-class CreateSupplierView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class CreateSupplierView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        CreateView):
     model = Supplier
     template_name = 'purchase/supplier.html'
     form_class = SupplierForm
@@ -38,8 +54,16 @@ class CreateSupplierView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
 
+    def test_func(self, *args, **kwargs):
+        if self.request.user.is_staff:
+            return True
+        return False
 
-class CreatePurchaseView(SuccessMessageMixin, View):
+
+class CreatePurchaseView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        View):
     def get(self, *args, **kwargs):
         form = PurchaseProductForm()
         context = {
@@ -91,11 +115,19 @@ class CreatePurchaseView(SuccessMessageMixin, View):
             messages.warning(self.request, 'Invalid form value. Please try again')
             return redirect('purchase:purchase-create')
 
+    def test_func(self, *args, **kwargs):
+        if self.request.user.is_staff:
+            return True
+        return False
+
 
 # ============ Update views ============>
 
 
-class SupplierUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class SupplierUpdateView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        UpdateView):
     model = Supplier
     form_class = SupplierForm
     template_name = 'purchase/supplier.html'
@@ -111,8 +143,16 @@ class SupplierUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
     
+    def test_func(self, *args, **kwargs):
+        if self.request.user.is_staff:
+            return True
+        return False
+    
 
-class PurchaseProductUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class PurchaseProductUpdateView(LoginRequiredMixin,
+                                UserPassesTestMixin,
+                                SuccessMessageMixin,
+                                UpdateView):
     model = PurchaseProduct
     form_class = PurchaseProductForm
     template_name = 'purchase/product-create.html'
@@ -128,11 +168,19 @@ class PurchaseProductUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateV
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
 
+    def test_func(self, *args, **kwargs):
+        if self.request.user.is_staff:
+            return True
+        return False
+
 
 # ================= delete views ==================>
 
 
-class SupplireDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+class SupplireDeleteView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        DeleteView):
     model = Supplier
     template_name = 'delete.html'
     success_url = 'purchase:supplier'
@@ -141,8 +189,16 @@ class SupplireDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
 
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
 
-class PurchaseProductDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
+
+class PurchaseProductDeleteView(LoginRequiredMixin,
+                                UserPassesTestMixin,
+                                SuccessMessageMixin,
+                                DeleteView):
     model = PurchaseProduct
     template_name = 'delete.html'
     success_url = 'purchase:product'
@@ -150,3 +206,8 @@ class PurchaseProductDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteV
 
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False

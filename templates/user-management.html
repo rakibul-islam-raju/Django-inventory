@@ -35,8 +35,20 @@
                                         <td>{{ user.email }}</td>
                                         <td>{{ user.first_name }}</td>
                                         <td>{{ user.last_name }}</td>
-                                        <td>{{ user.is_active }}</td>
-                                        <td>{{ user.is_staff }}</td>
+                                        <td>
+                                        {% if  user.is_active %}
+                                            <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                                        {% else %}
+                                            <i class="fa fa-times-circle text-danger" aria-hidden="true"></i>
+                                        {% endif %}
+                                        </td>
+                                        <td>
+                                        {% if  user.is_staff %}
+                                            <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                                        {% else %}
+                                            <i class="fa fa-times-circle text-danger" aria-hidden="true"></i>
+                                        {% endif %}
+                                        </td>
                                         <td>
                                             <a href="{% url 'core:edit-user-management' user.username %}" class="btn btn-sm btn-outline-info">
                                                 <i class="fa fa-edit"></i>

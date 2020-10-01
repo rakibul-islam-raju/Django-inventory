@@ -7,20 +7,54 @@
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
             <li class="breadcrumb-item active">Sell</li>
-            <li class="breadcrumb-item active">Create New Sell</li>
+            <li class="breadcrumb-item active">New Sell</li>
         </ol>
         
         <div class="card mb-4">
-            <h5 class="card-header">Create New Sell</h5>
+            <h5 class="card-header">New Sell</h5>
             <div class="card-body">
                 <div class="Product-form">
                     <form action="" method=POST>
                         {% csrf_token %}
                         <div class="form-group">
-                                {{ form|crispy }}
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    {{ form.customer|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-4">
+                                    {{ form.product|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-4">
+                                    {{ form.warehouse|as_crispy_field }}
+                                </div>
                             </div>
-                        <button class="btn btn-primary" type="submit">Submit</button>
-                        <a class="btn btn-warning" href="{% url 'sell:sell-create' %}">Reset</a>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    {{ form.price|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-4">
+                                    {{ form.quantity|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-4">
+                                    {{ form.status|as_crispy_field }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    {{ form.description|as_crispy_field }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="buttons-right">
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                            <a class="btn btn-warning" href="{% url 'sell:sell-create' %}">Reset</a>
+                        </div>
                     </form>
                 </div>
             </div>

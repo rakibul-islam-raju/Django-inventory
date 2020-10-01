@@ -46,62 +46,131 @@
             </div>
         </div>
     </div>
-    <div class="card mb-4">
-        <div class="card-header"><i class="fas fa-table mr-1"></i>Product List</div>
-        <div class="card-body">
-            <a class="btn btn-primary btn-sm mb-2" href="{% url 'core:product-download-csv' %}">Download CSV</a>
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Department</th>
-                            <th>Category</th>
-                            <th>Product</th>
-                            <th>Supplier Price</th>
-                            <th>Sell Price</th>
-                            <th>Quantity</th>
-                            <th>Office</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Department</th>
-                            <th>Category</th>
-                            <th>Product</th>
-                            <th>Supplier Price</th>
-                            <th>Sell Price</th>
-                            <th>Quantity</th>
-                            <th>Office</th>
-                            <th>Action</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        {% for product in products %}
-                            <tr>
-                                <td>{{ product.category.department.name }}</td>
-                                <td>{{ product.category }}</td>
-                                <td>{{ product.name }}</td>
-                                <td>{{ product.supplier_price }}</td>
-                                <td>{{ product.sell_price }}</td>
-                                <td>{{ product.quantity }}</td>
-                                <td>{{ product.office }}</td>
-                                <td>
-                                    <a class="btn btn-outline-primary btn-sm" href="{% url 'sell:sell-product' product.pk %}">Sell</a>
-                                </td>
-                                {% comment %} <td>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header"><i class="fas fa-table mr-1"></i>Product List</div>
+                <div class="card-body">
+
+                    <div style="float:right">
+                        <a class="btn btn-primary btn-sm mb-3" href="{% url 'core:product-download-csv' %}">Download CSV</a>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Category</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Sell Price</th>
+
                                     {% if request.user.is_staff %}
-                                    <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
-                                    <a href="{{ product.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></a>
+                                        <th>Action</th>
                                     {% endif %}
-                                </td> {% endcomment %}
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Category</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Sell Price</th>
+
+                                    {% if request.user.is_staff %}
+                                        <th>Action</th>
+                                    {% endif %}
+
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for product in products %}
+                                    <tr>
+                                        <td>{{ product.category.department.name }}</td>
+                                        <td>{{ product.category }}</td>
+                                        <td>{{ product.name }}</td>
+                                        <td>{{ product.quantity }}</td>
+                                        <td>{{ product.sell_price }}</td>
+
+                                        {% if request.user.is_staff %}
+                                        <td>
+                                            <a class="btn btn-outline-primary btn-sm" href="{% url 'sell:sell-product' product.pk %}">Sell</a>
+                                        </td>
+                                        {% endif %}
+
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">Product Amount Chart</div>
+                <div class="card-body">
+                    <canvas id="myChart" height="410"></canvas>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 {% endblock body %}
+
+{% block extra_script %}
+
+    <script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: [
+                {% for product in products %}
+                    '{{product.name}}',
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Product by Amount',
+                data: [
+                    {% for product in products %}
+                    {{product.quantity}},
+                    {% endfor %}
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+    </script>
+
+{% endblock extra_script %}

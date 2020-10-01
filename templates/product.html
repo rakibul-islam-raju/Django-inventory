@@ -23,8 +23,6 @@
                             <th>Sell Price</th>
                             <th>Quantity</th>
                             <th>Profit/Loss</th>
-                            <th>Office</th>
-                            <th>Added by</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -38,8 +36,6 @@
                             <th>Sell Price</th>
                             <th>Quantity</th>
                             <th>Profit/Loss</th>
-                            <th>Office</th>
-                            <th>Added by</th>
                             <th>Action</th>
                         </tr>
                     </tfoot>
@@ -62,8 +58,6 @@
                                     <i class="fa fa-thumbs-down text-warning"></i> {{ product.get_loss_per_product }}%
                                     {% endif %}
                                 </td>
-                                <td>{{ product.office }}</td>
-                                <td>{{ product.added_by }}</td>
                                 <td>
                                     {% if request.user.is_staff %}
                                     <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
