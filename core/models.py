@@ -170,7 +170,6 @@ class Product(models.Model):
 
         return unique_number
 
-    
 
 class Bank(models.Model):
     name = models.CharField(max_length=100, unique=True)

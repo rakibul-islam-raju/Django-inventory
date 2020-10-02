@@ -2,14 +2,14 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from import_export.admin import ImportExportModelAdmin, ExportActionMixin
 from .resources import ProductResource
-from .models import Office, Department, Category, Product, User, Warehouse, Bank, BankTransaction
+from .models import *
 
 
 class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    def make_status_active(modeladmin, request, queryset):
+    def make_status_active(self, modeladmin, request, queryset):
         queryset.update(status=True)
 
-    def make_status_inactive(modeladmin, request, queryset):
+    def make_status_inactive(self, modeladmin, request, queryset):
         queryset.update(status=False)
 
     make_status_active.short_description = 'Update status to active'

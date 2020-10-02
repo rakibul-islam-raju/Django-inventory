@@ -11,6 +11,7 @@ urlpatterns = [
     path('', include('core.urls', namespace='core')),
     path('', include('purchase.urls', namespace='purchase')),
     path('', include('sell.urls', namespace='sell')),
+    path('', include('chalan.urls', namespace='chalan')),
     path('users/', include('users.urls', namespace='users')),
 ]
 
