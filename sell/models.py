@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from core.models import Warehouse, Product
+from core.models import Warehouse, Product, Chalan
 
 
 class Customer(models.Model):
@@ -28,9 +28,10 @@ class SellProduct(models.Model):
         ('Delivered', 'Delivered')
     )
     
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    warehouse = models.ForeignKey(Warehouse, null=True, on_delete=models.SET_NULL)
+    customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
+    chalan = models.ForeignKey(Chalan, null=True, on_delete=models.SET_NULL)
 
 
     quantity = models.PositiveIntegerField()

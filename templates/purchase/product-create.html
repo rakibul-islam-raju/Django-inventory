@@ -17,13 +17,16 @@
                         {% csrf_token %}
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-lg-4">
+                                <div class="col-lg-3">
+                                    {{form.chalan|as_crispy_field}}
+                                </div>
+                                <div class="col-lg-3">
                                     {{form.supplier|as_crispy_field}}
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-3">
                                     {{form.warehouse|as_crispy_field}}
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-3">
                                     {{form.category|as_crispy_field}}
                                 </div>
                             </div>
@@ -42,8 +45,11 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-primary" type="submit">Submit</button>
-                        <a class="btn btn-warning" href="{% url 'purchase:purchase-create' %}">Reset</a>
+
+                        <div class="buttons-right">
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                            <a class="btn btn-warning" href="{% url 'purchase:purchase-create' %}">Reset</a>
+                        </div>
                     </form>
                 </div>
             </div>

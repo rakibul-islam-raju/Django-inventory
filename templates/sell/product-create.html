@@ -14,17 +14,20 @@
             <h5 class="card-header">New Sell</h5>
             <div class="card-body">
                 <div class="Product-form">
-                    <form action="" method=POST>
+                    <form action="" method="POST">
                         {% csrf_token %}
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-lg-4">
+                                <div class="col-lg-3">
+                                    {{ form.chalan|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-3">
                                     {{ form.customer|as_crispy_field }}
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-3">
                                     {{ form.product|as_crispy_field }}
                                 </div>
-                                <div class="col-lg-4">
+                                <div class="col-lg-3">
                                     {{ form.warehouse|as_crispy_field }}
                                 </div>
                             </div>

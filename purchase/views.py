@@ -83,6 +83,7 @@ class CreatePurchaseView(LoginRequiredMixin,
             warehouse = form.cleaned_data.get('warehouse')
             supplier = form.cleaned_data.get('supplier')
             category = form.cleaned_data.get('category')
+            chalan = form.cleaned_data.get('chalan')
 
             office = Office.objects.get(name=self.request.user.office.name)
             
@@ -93,7 +94,8 @@ class CreatePurchaseView(LoginRequiredMixin,
                 description=description,
                 warehouse=warehouse,
                 supplier=supplier,
-                category=category
+                category=category,
+                chalan=chalan
             )
 
             new_product = Product(
@@ -101,6 +103,7 @@ class CreatePurchaseView(LoginRequiredMixin,
                 warehouse=warehouse,
                 office=office,
                 name=name,
+                chalan=chalan,
                 supplier_price=price,
                 quantity=quantity,
                 description=description,

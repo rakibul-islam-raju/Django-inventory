@@ -48,7 +48,7 @@
     </div>
 
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-7">
             <div class="card mb-4">
                 <div class="card-header"><i class="fas fa-table mr-1"></i>Product List</div>
                 <div class="card-body">
@@ -61,8 +61,7 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>Department</th>
-                                    <th>Category</th>
+                                    <th>Chalan</th>
                                     <th>Product</th>
                                     <th>Quantity</th>
                                     <th>Sell Price</th>
@@ -75,8 +74,7 @@
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th>Department</th>
-                                    <th>Category</th>
+                                    <th>Chalan</th>
                                     <th>Product</th>
                                     <th>Quantity</th>
                                     <th>Sell Price</th>
@@ -90,8 +88,7 @@
                             <tbody>
                                 {% for product in products %}
                                     <tr>
-                                        <td>{{ product.category.department.name }}</td>
-                                        <td>{{ product.category }}</td>
+                                        <td>{{ product.chalan }}</td>
                                         <td>{{ product.name }}</td>
                                         <td>{{ product.quantity }}</td>
                                         <td>{{ product.sell_price }}</td>
@@ -110,13 +107,52 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header">Product Amount Chart</div>
+        <div class="col-lg-5">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-table mr-1"></i>
+                    Chalan List
+                    <a class="btn btn-primary btn-sm buttons-right" href="{% url 'core:chalan' %}">New Chalan</a>
+                </div>
                 <div class="card-body">
-                    <canvas id="myChart" height="410"></canvas>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Chalans</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                {% for chalan in chalans %}
+                                <tr>
+                                    <td><a href="">{{ chalan.name }}</a></td>
+                                    <td>{{ chalan.description }}</td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
+
+            <div class="card mb-3 shadow">
+                <div class="card-header">
+                    <i class="fas fa-chart-pie"></i>
+                    Product Amount Chart
+                </div>
+                <div class="card-body">
+                    <canvas id="myChart" height="300"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            
         </div>
     </div>
 </div>

@@ -1,5 +1,13 @@
 from django import forms
-from .models import Office, Department, Category, Product, User, Warehouse, Bank, BankTransaction
+from .models import (Office,
+                    Department,
+                    Category,
+                    Product,
+                    User,
+                    Warehouse,
+                    Bank,
+                    BankTransaction,
+                    Chalan)
 
 from allauth.account.forms import SignupForm
 
@@ -41,6 +49,7 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = ['category',
                 'warehouse',
+                'chalan',
                 'name',
                 'quantity',
                 'supplier_price',
@@ -92,3 +101,13 @@ class UserPermissionForm(forms.ModelForm):
                 'last_name',
                 'is_active',
                 'is_staff',]
+
+
+class ChalanCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Chalan
+        fields = ['name', 'description']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': '2'}),
+        }

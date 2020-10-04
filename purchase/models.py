@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from core.models import Warehouse, User, Category
+from core.models import Warehouse, User, Category, Chalan
 
 
 class Supplier(models.Model):
@@ -22,9 +22,10 @@ class Supplier(models.Model):
 
 
 class PurchaseProduct(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
+    warehouse = models.ForeignKey(Warehouse, null=True, on_delete=models.SET_NULL)
+    supplier = models.ForeignKey(Supplier, null=True, on_delete=models.SET_NULL)
+    chalan = models.ForeignKey(Chalan, null=True, on_delete=models.SET_NULL)
 
     name = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=8, decimal_places=2)
@@ -49,6 +50,4 @@ class PurchaseProduct(models.Model):
     
     def get_delete_url(self):
         return reverse("purchase:purchase-delete", kwargs={"pk": self.pk})
-    
 
-    

@@ -6,7 +6,10 @@ class SupplierForm(forms.ModelForm):
 
     class Meta:
         model = Supplier
-        fields = ['name', 'email', 'phone', 'address']
+        fields = ['name',
+                'email',
+                'phone',
+                'address']
 
         widgets = {
             'address': forms.Textarea(attrs={'rows': '2'}),
@@ -17,7 +20,14 @@ class PurchaseProductForm(forms.ModelForm):
 
     class Meta:
         model = PurchaseProduct
-        fields = ['category', 'name', 'price', 'quantity', 'description', 'warehouse', 'supplier']
+        fields = ['category',
+                'chalan',
+                'name',
+                'price',
+                'quantity',
+                'description',
+                'warehouse',
+                'supplier']
 
         widgets = {
             'description': forms.Textarea(attrs={'rows': '2'}),

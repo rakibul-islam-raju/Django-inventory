@@ -6,6 +6,9 @@ from .views import (HomeView,
 
                     download_product_csv,
 
+                    ChalanCreateView,
+                    ChalanDetailView,
+
                     ProductView,
                     ProductCreateView,
                     ProductUpdateView,
@@ -41,6 +44,9 @@ urlpatterns = [
     path('users/edit/<username>/', EditUserManagent.as_view(), name='edit-user-management'),
 
     path('download_product_csv', download_product_csv, name='product-download-csv'),
+
+    path('chalan/', ChalanCreateView.as_view(), name='chalan'),
+    path('chalan/<int:pk>/', ChalanDetailView.as_view(), name='chalan-detail'),
 
     path('product/', ProductView.as_view(), name='product'),
     path('product/create/', ProductCreateView.as_view(), name='product-create'),

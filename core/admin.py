@@ -15,7 +15,14 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     make_status_active.short_description = 'Update status to active'
     make_status_inactive.short_description = 'Update status to inactive'
 
-    list_display = ['name', 'category', 'supplier_price', 'sell_price', 'quantity', 'added_by', 'office', 'status']
+    list_display = ['name',
+                    'category',
+                    'supplier_price',
+                    'sell_price',
+                    'quantity',
+                    'added_by',
+                    'office',
+                    'status']
     date_hierarchy = 'timestamp'
     list_display_links = ['name', 'added_by']
     search_fields = ['name']
@@ -64,6 +71,7 @@ class BankTransactionAdmin(admin.ModelAdmin):
     date_hierarchy = 'date'
 
 
+admin.site.register(Chalan)
 admin.site.register(Office)
 admin.site.register(Department, DepartmentAdmin)
 admin.site.register(Category, CategoryAdmin)

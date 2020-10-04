@@ -7,7 +7,8 @@ from django.views.generic import (View,
                                 CreateView,
                                 UpdateView,
                                 DeleteView,
-                                TemplateView)
+                                TemplateView,
+                                DetailView)
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from .models import (Department,
@@ -15,17 +16,20 @@ from .models import (Department,
                     Product,
                     Warehouse,
                     Bank,
-                    BankTransaction)
+                    BankTransaction,
+                    Chalan)
 from .forms import (DeptForm,
                     CategoryForm,
                     ProductForm,
                     WarehouseForm,
                     BankForm,
                     BankTransactionForm,
-                    UserPermissionForm)
+                    UserPermissionForm,
+                    ChalanCreateForm)
 from sell.models import Customer, SellProduct
 from purchase.models import Supplier, PurchaseProduct
 from .resources import ProductResource
+from .filters import ChalanFilter
 
 from django.contrib.auth.decorators import login_required
 
@@ -39,6 +43,24 @@ def download_product_csv(request):
     response = HttpResponse(dataset.csv, content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="product.csv"'
     return response
+
+
+class HomeView(LoginRequiredMixin,
+            TemplateView):
+    template_name = 'home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = Product.objects.filter(status=True)
+        context["products"] = products
+
+        context["total_products"] = products.count()
+        context["total_customer"] = Customer.objects.filter(status=True).count()
+        context["total_supplier"] = Supplier.objects.filter(status=True).count()
+        context["total_sell"] = SellProduct.objects.all().count()
+        context["total_Purchase"] = PurchaseProduct.objects.all().count()
+        context["chalans"] = Chalan.objects.filter(status=True)
+        return context
 
 
 class UserManagement(LoginRequiredMixin,
@@ -77,22 +99,6 @@ class EditUserManagent(LoginRequiredMixin,
             return True
         return False
 
-class HomeView(LoginRequiredMixin,
-            TemplateView):
-    template_name = 'home.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        products = Product.objects.filter(status=True)
-        context["products"] = products
-
-        context["total_products"] = products.count()
-        context["total_customer"] = Customer.objects.filter(status=True).count()
-        context["total_supplier"] = Supplier.objects.filter(status=True).count()
-        context["total_sell"] = SellProduct.objects.all().count()
-        context["total_Purchase"] = PurchaseProduct.objects.all().count()
-        return context
-
 
 class ProductView(LoginRequiredMixin,
                 UserPassesTestMixin,
@@ -108,10 +114,43 @@ class ProductView(LoginRequiredMixin,
         if self.request.user.is_staff:
             return True
         return False
-    
+
+# >>========== DetailView ==============>>
+
+class ChalanDetailView(DetailView):
+    model = Chalan
+    template_name = 'chalan/chalan_detail.html'
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context["filter"] = ChalanFilter(self.request.GET, queryset=Chalan.objects.all())
+    #     return context
 
 # >=========== create views =============>
 
+class ChalanCreateView(LoginRequiredMixin, 
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        CreateView):
+    model = Chalan
+    form_class = ChalanCreateForm
+    template_name = 'chalan/chalan_create.html'
+    success_url = 'core:chalan'
+    success_message = "%(name)s was created successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = 'Create New Chalan'
+        context["chalans"] = Chalan.objects.filter(status=True)
+        return context
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
 
 class ProductCreateView(LoginRequiredMixin,
                         UserPassesTestMixin,
