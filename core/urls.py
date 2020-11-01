@@ -8,6 +8,8 @@ from .views import (HomeView,
 
                     ChalanCreateView,
                     ChalanDetailView,
+                    ChalanUpdateView,
+                    ChalanDeleteView,
 
                     ProductView,
                     ProductCreateView,
@@ -47,6 +49,8 @@ urlpatterns = [
 
     path('chalan/', ChalanCreateView.as_view(), name='chalan'),
     path('chalan/<int:pk>/', ChalanDetailView.as_view(), name='chalan-detail'),
+    path('chalan-edit/<int:pk>/', ChalanUpdateView.as_view(), name='chalan-edit'),
+    path('chalan-delete/<int:pk>/', ChalanDeleteView.as_view(), name='chalan-delete'),
 
     path('product/', ProductView.as_view(), name='product'),
     path('product/create/', ProductCreateView.as_view(), name='product-create'),

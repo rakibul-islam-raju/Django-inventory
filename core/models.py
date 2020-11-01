@@ -123,9 +123,17 @@ class Chalan(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
-
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("core:chalan-detail", kwargs={"pk": self.pk})
+
+    def get_update_url(self):
+        return reverse("core:chalan-edit", kwargs={"pk": self.pk})
+    
+    def get_delete_url(self):
+        return reverse("core:chalan-delete", kwargs={"pk": self.pk})
 
 
 class Product(models.Model):

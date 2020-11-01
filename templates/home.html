@@ -61,7 +61,7 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>Chalan</th>
+                                    {% comment %} <th>Chalan</th> {% endcomment %}
                                     <th>Product</th>
                                     <th>Quantity</th>
                                     <th>Sell Price</th>
@@ -74,7 +74,7 @@
                             </thead>
                             <tfoot>
                                 <tr>
-                                    <th>Chalan</th>
+                                    {% comment %} <th>Chalan</th> {% endcomment %}
                                     <th>Product</th>
                                     <th>Quantity</th>
                                     <th>Sell Price</th>
@@ -88,7 +88,7 @@
                             <tbody>
                                 {% for product in products %}
                                     <tr>
-                                        <td>{{ product.chalan }}</td>
+                                        {% comment %} <td>{{ product.chalan }}</td> {% endcomment %}
                                         <td>{{ product.name }}</td>
                                         <td>{{ product.quantity }}</td>
                                         <td>{{ product.sell_price }}</td>
@@ -107,8 +107,11 @@
                 </div>
             </div>
         </div>
+
         <div class="col-lg-5">
-            <div class="card mb-3">
+
+        <!-- ========= Chalan List ===========  -->
+            {% comment %} <div class="card mb-3">
                 <div class="card-header">
                     <i class="fas fa-table mr-1"></i>
                     Chalan List
@@ -127,7 +130,7 @@
 
                                 {% for chalan in chalans %}
                                 <tr>
-                                    <td><a href="">{{ chalan.name }}</a></td>
+                                    <td><a href="{{ chalan.get_absolute_url }}">{{ chalan.name }}</a></td>
                                     <td>{{ chalan.description }}</td>
                                 </tr>
                                 {% endfor %}
@@ -136,7 +139,7 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            </div> {% endcomment %}
 
             <div class="card mb-3 shadow">
                 <div class="card-header">

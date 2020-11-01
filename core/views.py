@@ -121,11 +121,6 @@ class ChalanDetailView(DetailView):
     model = Chalan
     template_name = 'chalan/chalan_detail.html'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context["filter"] = ChalanFilter(self.request.GET, queryset=Chalan.objects.all())
-    #     return context
-
 # >=========== create views =============>
 
 class ChalanCreateView(LoginRequiredMixin, 
@@ -331,6 +326,31 @@ class TransactionCreateView(LoginRequiredMixin,
 # >=========== update views =============>
 
 
+class ChalanUpdateView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        UpdateView):
+    model = Chalan
+    form_class = ChalanCreateForm
+    template_name = 'chalan/chalan_create.html'
+    success_url = 'core:chalan'
+    success_message = "%(name)s was updated successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = 'Edit Chalan'
+        context["chalans"] = Chalan.objects.filter(status=True)
+        return context
+    
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+    
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
+
+
 class ProductUpdateView(LoginRequiredMixin,
                         UserPassesTestMixin,
                         SuccessMessageMixin,
@@ -480,6 +500,24 @@ class TransactionUpdateView(LoginRequiredMixin,
 
 
 # >=================== delete views ===============>
+
+
+class ChalanDeleteView(LoginRequiredMixin,
+                    UserPassesTestMixin,
+                    SuccessMessageMixin,
+                    DeleteView):
+    model = Chalan
+    template_name = 'delete.html'
+    success_url = 'core:chalan'
+    success_message = "%(name)s was deleted successfully"
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+    
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
 
 
 class ProductDeleteView(LoginRequiredMixin,

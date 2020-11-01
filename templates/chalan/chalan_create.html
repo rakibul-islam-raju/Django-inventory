@@ -59,14 +59,14 @@
                                 {% for chalan in chalans %}
                                     <tr>
                                         <td>{{ chalan.id }}</td>
-                                        <td>{{ chalan.name }}</td>
+                                        <td><a href="{{ chalan.get_absolute_url }}">{{ chalan.name }}</a></td>
                                         <td>{{ chalan.description }}</td>
                                         <td>{{ chalan.date_added|date }}</td>
                                         <td>
-                                            {% comment %} {% if request.user.is_staff %}
-                                            <a href="{{ customer.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
-                                            <a href="{{ customer.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
-                                            {% endif %} {% endcomment %}
+                                            {% if request.user.is_staff %}
+                                            <a href="{{ chalan.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
+                                            <a href="{{ chalan.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}
