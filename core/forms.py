@@ -12,16 +12,16 @@ from .models import (Office,
 from allauth.account.forms import SignupForm
 
 
-offices = Office.objects.all()
-
-
 class MyCustomSignupForm(SignupForm):
-    office = forms.ModelChoiceField(offices)
+    phone = forms.CharField(max_length=14,
+                            min_length=11,
+                            widget=forms.TextInput(attrs={'placeholder': 'Phone Number'})
+                        )
 
     def save(self, request):
         user = super(MyCustomSignupForm, self).save(request)
-        office = self.cleaned_data['office']
-        user.office = office
+        phone = self.cleaned_data['phone']
+        user.phone = phone
         user.save()
         return user
 

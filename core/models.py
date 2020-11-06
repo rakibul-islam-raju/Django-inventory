@@ -43,6 +43,8 @@ class User(AbstractUser):
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
     office = models.ForeignKey(Office, on_delete=models.CASCADE, to_field='name', blank=True, null=True)
     email = models.EmailField(_('email address'), blank=True, unique=True)
+    phone = models.CharField(max_length=11)
+    is_customer = models.BooleanField(default=True)
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
@@ -59,7 +61,7 @@ class User(AbstractUser):
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
     def __str__(self):
-        return str(self.office)
+        return self.username
 
 
 class Department(models.Model):

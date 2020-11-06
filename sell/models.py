@@ -5,9 +5,9 @@ from core.models import Warehouse, Product, Chalan
 
 class Customer(models.Model):
     name = models.CharField(max_length=100)
-    email = models.EmailField()
-    phone = models.DecimalField(decimal_places=0, max_digits=11)
-    address = models.TextField()
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=11)
+    address = models.TextField(blank=True, null=True)
     status = models.BooleanField(default=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
@@ -48,6 +48,7 @@ class SellProduct(models.Model):
 
     def get_total_price(self):
         result = self.price * self.quantity
+        return result
     
     def get_update_url(self):
         return reverse("sell:sell-edit", kwargs={"pk": self.pk})

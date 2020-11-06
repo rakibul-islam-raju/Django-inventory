@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'purchase',
     'sell',
     'users',
-    'chalan',
+
+    'order'
 ]
 
 SITE_ID = 1

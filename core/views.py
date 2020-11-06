@@ -11,21 +11,8 @@ from django.views.generic import (View,
                                 DetailView)
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import (Department,
-                    Category,
-                    Product,
-                    Warehouse,
-                    Bank,
-                    BankTransaction,
-                    Chalan)
-from .forms import (DeptForm,
-                    CategoryForm,
-                    ProductForm,
-                    WarehouseForm,
-                    BankForm,
-                    BankTransactionForm,
-                    UserPermissionForm,
-                    ChalanCreateForm)
+from .models import *
+from .forms import *
 from sell.models import Customer, SellProduct
 from purchase.models import Supplier, PurchaseProduct
 from .resources import ProductResource
@@ -33,8 +20,8 @@ from .filters import ChalanFilter
 
 from django.contrib.auth.decorators import login_required
 
-from django.contrib.auth import get_user_model
-User = get_user_model()
+# from django.contrib.auth import get_user_model
+# User = get_user_model()
 
 @login_required()
 def download_product_csv(request):
@@ -115,7 +102,6 @@ class ProductView(LoginRequiredMixin,
             return True
         return False
 
-# >>========== DetailView ==============>>
 
 class ChalanDetailView(DetailView):
     model = Chalan

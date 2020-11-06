@@ -68,6 +68,8 @@
 
                                     {% if request.user.is_staff %}
                                         <th>Action</th>
+                                    {% elif request.user.is_customer %}
+                                        <th>Action</th>
                                     {% endif %}
 
                                 </tr>
@@ -80,6 +82,8 @@
                                     <th>Sell Price</th>
 
                                     {% if request.user.is_staff %}
+                                        <th>Action</th>
+                                    {% elif request.user.is_customer %}
                                         <th>Action</th>
                                     {% endif %}
 
@@ -96,6 +100,10 @@
                                         {% if request.user.is_staff %}
                                         <td>
                                             <a class="btn btn-outline-primary btn-sm" href="{% url 'sell:sell-product' product.pk %}">Sell</a>
+                                        </td>
+                                        {% elif request.user.is_customer %}
+                                        <td>
+                                            <a class="btn btn-outline-primary btn-sm" href="{% url 'order:order-create' product.pk %}">Order</a>
                                         </td>
                                         {% endif %}
 
