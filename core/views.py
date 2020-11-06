@@ -157,7 +157,7 @@ class ProductCreateView(LoginRequiredMixin,
             description = form.cleaned_data.get('description')
             quantity = form.cleaned_data.get('quantity')
             warehouse = form.cleaned_data.get('warehouse')
-            office = self.request.user.office
+            organization = self.request.user.organization
             
             new_dept = Product(category=category,
                             name=name,
@@ -166,7 +166,7 @@ class ProductCreateView(LoginRequiredMixin,
                             description=description,
                             added_by=added_by,
                             quantity=quantity,
-                            office=office,
+                            organization=organizatione,
                             warehouse=warehouse)
             new_dept.save()
             messages.success(self.request, 'Product added successfully')
@@ -198,7 +198,7 @@ class DeparmentCreateView(LoginRequiredMixin,
         return context
 
     def form_valid(self, form):
-        form.instance.office = self.request.user
+        form.instance.organization = self.request.user
         return super().form_valid(form)
     
     def get_success_url(self, **kwargs):

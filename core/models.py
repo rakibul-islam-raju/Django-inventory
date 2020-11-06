@@ -14,7 +14,7 @@ from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 
-class Office(models.Model):
+class Organization(models.Model):
     name = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20, unique=True, blank=True, null=True)
@@ -41,7 +41,7 @@ class User(AbstractUser):
     )
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
-    office = models.ForeignKey(Office, on_delete=models.CASCADE, to_field='name', blank=True, null=True)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, to_field='name', blank=True, null=True)
     email = models.EmailField(_('email address'), blank=True, unique=True)
     phone = models.CharField(max_length=11)
     is_customer = models.BooleanField(default=True)
@@ -65,7 +65,7 @@ class User(AbstractUser):
 
 
 class Department(models.Model):
-    office = models.ForeignKey(User, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True) 
     status = models.BooleanField(default=True)
@@ -141,7 +141,7 @@ class Chalan(models.Model):
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='inventory_product')
-    office = models.ForeignKey(Office, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
     chalan = models.ForeignKey(Chalan, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=100)

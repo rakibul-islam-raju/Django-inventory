@@ -21,7 +21,7 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
                     'sell_price',
                     'quantity',
                     'added_by',
-                    'office',
+                    'organization',
                     'status']
     date_hierarchy = 'timestamp'
     list_display_links = ['name', 'added_by']
@@ -32,7 +32,7 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'first_name', 'last_name', 'office', 'is_staff')
+    list_display = ('username', 'email', 'first_name', 'last_name', 'organization', 'is_staff')
     list_filter = ('is_staff', 'is_superuser')
 
 
@@ -49,8 +49,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 class DepartmentAdmin(admin.ModelAdmin):
-    list_display = ['name', 'office', 'status']
-    list_filter = ['office']
+    list_display = ['name', 'organization', 'status']
+    list_filter = ['organization']
     search_fields = ['name']
 
 
@@ -72,7 +72,7 @@ class BankTransactionAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Chalan)
-admin.site.register(Office)
+admin.site.register(Organization)
 admin.site.register(Department, DepartmentAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Product, ProductAdmin)

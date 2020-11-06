@@ -1,5 +1,5 @@
 from django import forms
-from .models import (Office,
+from .models import (Organization,
                     Department,
                     Category,
                     Product,

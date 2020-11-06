@@ -5,3 +5,7 @@
 .navbar-bg-color {
     background-color: #02113f !important;
 }
+
+a:hover {
+    text-decoration: none !important;
+}

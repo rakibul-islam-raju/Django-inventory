@@ -13,7 +13,7 @@
                 <!-- <h6 class="card-header">Total Customers</h6> -->
                 <div class="card-body text-center">{{ total_customer }}  Customers</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">View Details</a>
+                    <a class="small text-white stretched-link" href="customer/">View Details</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
             <div class="card bg-info text-white mb-4">
                 <div class="card-body">{{ total_sell }} Sells</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">View Details</a>
+                    <a class="small text-white stretched-link" href="sell/products/">View Details</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
@@ -31,7 +31,7 @@
             <div class="card bg-success text-white mb-4">
                 <div class="card-body">{{ total_products }} Products</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">View Details</a>
+                    <a class="small text-white stretched-link" href="product/">View Details</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
             <div class="card bg-danger text-white mb-4">
                 <div class="card-body">{{ total_supplier }} Suppliers</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="#">View Details</a>
+                    <a class="small text-white stretched-link" href="supplier/">View Details</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
@@ -74,21 +74,6 @@
 
                                 </tr>
                             </thead>
-                            <tfoot>
-                                <tr>
-                                    {% comment %} <th>Chalan</th> {% endcomment %}
-                                    <th>Product</th>
-                                    <th>Quantity</th>
-                                    <th>Sell Price</th>
-
-                                    {% if request.user.is_staff %}
-                                        <th>Action</th>
-                                    {% elif request.user.is_customer %}
-                                        <th>Action</th>
-                                    {% endif %}
-
-                                </tr>
-                            </tfoot>
                             <tbody>
                                 {% for product in products %}
                                     <tr>

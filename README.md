@@ -7,4 +7,4 @@
 4. makemigrations
 5. migrate
 6. create super user
-7. login to the admin panel and create an Office and and it is ready to use
+7. login to the admin panel and create an Organization and and it is ready to use

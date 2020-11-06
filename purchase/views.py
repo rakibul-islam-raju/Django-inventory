@@ -12,7 +12,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from .models import Supplier, PurchaseProduct
 from .forms import SupplierForm, PurchaseProductForm
 
-from core.models import Product, Office
+from core.models import Product, Organization
 
 # from django.contrib.auth import get_user_model
 # User = get_user_model()
@@ -85,7 +85,7 @@ class CreatePurchaseView(LoginRequiredMixin,
             category = form.cleaned_data.get('category')
             chalan = form.cleaned_data.get('chalan')
 
-            office = Office.objects.get(name=self.request.user.office.name)
+            organization = Organization.objects.get(name=self.request.user.organization.name)
             
             new_purchase = PurchaseProduct(
                 name=name,
@@ -101,7 +101,7 @@ class CreatePurchaseView(LoginRequiredMixin,
             new_product = Product(
                 category=category,
                 warehouse=warehouse,
-                office=office,
+                organization=organization,
                 name=name,
                 chalan=chalan,
                 supplier_price=price,
