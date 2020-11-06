@@ -9,3 +9,8 @@
 a:hover {
     text-decoration: none !important;
 }
+
+.form-control:focus {
+    border-color: #02113f;
+    box-shadow: none !important;
+}
