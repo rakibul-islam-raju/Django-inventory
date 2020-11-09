@@ -99,6 +99,7 @@ class UserPermissionForm(forms.ModelForm):
                 'email',
                 'first_name',
                 'last_name',
+                'organization',
                 'is_active',
                 'is_staff',]
 

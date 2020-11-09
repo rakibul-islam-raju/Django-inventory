@@ -14,3 +14,11 @@ a:hover {
     border-color: #02113f;
     box-shadow: none !important;
 }
+
+.dark-blue{
+    color: #02113f;
+}
+
+.asteriskField {
+    color: rgb(255, 0, 0) !important;
+}
