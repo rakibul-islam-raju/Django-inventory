@@ -8,8 +8,6 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
 
 from datetime import date
-import barcode
-import qrcode
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
