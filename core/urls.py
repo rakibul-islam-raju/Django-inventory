@@ -1,45 +1,11 @@
 from django.urls import path, include
-from .views import (HomeView,
-
-                    UserManagement,
-                    EditUserManagent,
-
-                    download_product_csv,
-
-                    ChalanCreateView,
-                    ChalanDetailView,
-                    ChalanUpdateView,
-                    ChalanDeleteView,
-
-                    ProductView,
-                    ProductCreateView,
-                    ProductUpdateView,
-                    ProductDeleteView,
-
-                    DeparmentCreateView,
-                    DepartmentUpdateView,
-                    DepartmentDeleteView,
-
-                    CategoryCreateView,
-                    CategoryUpdateView,
-                    CategoryDeleteView,
-
-                    WarehouseCreateView,
-                    WarehouseUpdateView,
-                    WarehouseDeleteView,
-
-                    BankCreateView,
-                    BankUpdateView,
-                    BankDeleteView,
-
-                    TransactionCreateView,
-                    TransactionUpdateView,
-                    TransactionDeleteView,
-                    )
+from core.views import *
 
 app_name = 'core'
 
 urlpatterns = [
+    path('api/', include('core.api.urls')),
+
     path('', HomeView.as_view(), name='home'),
 
     path('users/', UserManagement.as_view(), name='user-management'),
@@ -57,13 +23,13 @@ urlpatterns = [
     path('product/edit/<pk>/', ProductUpdateView.as_view(), name='product-edit'),
     path('product/delete/<pk>/', ProductDeleteView.as_view(), name='product-delete'),
 
-    path('department/', DeparmentCreateView.as_view(), name='department'),
-    path('department/<pk>/', DepartmentUpdateView.as_view(), name='department-edit'),
-    path('department/delete/<pk>/', DepartmentDeleteView.as_view(), name='department-delete'),
+    path('department/', CategoryCreateView.as_view(), name='category'),
+    path('department/<pk>/', CategoryUpdateView.as_view(), name='category-edit'),
+    path('department/delete/<pk>/', CategoryDeleteView.as_view(), name='category-delete'),
 
-    path('category/', CategoryCreateView.as_view(), name='category'),
-    path('category/<pk>/', CategoryUpdateView.as_view(), name='category-edit'),
-    path('category/delete/<pk>/', CategoryDeleteView.as_view(), name='category-delete'),
+    path('category/', SubCategoryCreateView.as_view(), name='subcategory'),
+    path('category/<pk>/', SubCategoryUpdateView.as_view(), name='subcategory-edit'),
+    path('category/delete/<pk>/', SubCategoryDeleteView.as_view(), name='subcategory-delete'),
 
     path('warehouse/', WarehouseCreateView.as_view(), name='warehouse'),
     path('warehouse/<pk>', WarehouseUpdateView.as_view(), name='warehouse-edit'),

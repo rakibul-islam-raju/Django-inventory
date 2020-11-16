@@ -1,5 +1,5 @@
 from import_export import resources
-from .models import Department, Category, Product
+from .models import Product
 
 
 class ProductResource(resources.ModelResource):

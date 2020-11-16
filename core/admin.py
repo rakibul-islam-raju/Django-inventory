@@ -41,16 +41,14 @@ class UserAdmin(admin.ModelAdmin):
 #     inlines = [ProductAdmin]
 
 
-class CategoryAdmin(admin.ModelAdmin):
+class SubcategoryAdmin(admin.ModelAdmin):
     # model = Category
-    list_display = ['name', 'department', 'status']
-    list_filter = ['department']
+    list_display = ['name', 'category', 'status']
     search_fields = ['name']
 
 
-class DepartmentAdmin(admin.ModelAdmin):
-    list_display = ['name', 'organization', 'status']
-    list_filter = ['organization']
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'status']
     search_fields = ['name']
 
 
@@ -73,8 +71,8 @@ class BankTransactionAdmin(admin.ModelAdmin):
 
 admin.site.register(Chalan)
 admin.site.register(Organization)
-admin.site.register(Department, DepartmentAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Subcategory, SubcategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Warehouse, WarehouseAdmin)

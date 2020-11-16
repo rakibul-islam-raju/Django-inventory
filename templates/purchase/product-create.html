@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block body %}
-<main>
+<main id="purchase-create">
     <div class="container-fluid">
         <ol class="breadcrumb mb-4">
             <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
@@ -10,44 +10,212 @@
             <li class="breadcrumb-item active">Create New Purchase</li>
         </ol>
         <div class="card mb-4">
-            <h5 class="card-header">Create New Purchase</h5>
+            <h5 class="card-header">{{title|title}}</h5>
             <div class="card-body">
+                <div class="row justify-content-end">
+                    <div class="col-md-6">
+                        <!-- Button trigger modal -->
+                        <div class="buttons-right">
+                            <!-- warehouse button -->
+                            <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#warehouseModal">
+                            <i class="fa fa-plus"></i> Warehouse
+                            </button>
+                            <!-- category button -->
+                            <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#categoryModal">
+                            <i class="fa fa-plus"></i> Category
+                            </button>
+                            <!-- subcategory button -->
+                            <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#subCategoryModal">
+                            <i class="fa fa-plus"></i> Sub-category
+                            </button>
+
+                        </div>
+
+                        <!-- warehouse modal -->
+                        <div class="modal fade" id="warehouseModal" tabindex="-1" aria-labelledby="warehouseModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="warehouseModalLabel">Add New Warehouse</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form @submit.prevent="createWarehouse">
+                                            {% csrf_token %}
+                                            <div class="form-group">
+                                                <label for="id_name" class=" requiredField"> Name<span class="asteriskField">*</span></label>
+                                                <div class="">
+                                                    <input v-model="warehouseName" type="text" name="name" maxlength="100" class="form-control" required="" id="id_name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="id_description" class=""> Description </label>
+                                                <div class="">
+                                                    <textarea v-model="warehouseDescription" name="description" cols="40" rows="2" class="textarea form-control" id="id_description"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="buttons-right">
+                                                <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- category modal -->
+                        <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="categoryModalLabel">Add New Category</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form @submit.prevent="createCategory">
+                                            {% csrf_token %}
+                                            <div id="div_id_name" class="form-group">
+                                                <label for="id_name" class=" requiredField"> Name<span class="asteriskField">*</span></label>
+                                                <div class="">
+                                                    <input v-model="categoryName" type="text" name="name" maxlength="100" class="textinput textInput form-control" required="" id="id_name">
+                                                </div>
+                                            </div>
+                                            <div id="div_id_description" class="form-group">
+                                                <label for="id_description" class=""> Description </label>
+                                                <div class="">
+                                                    <textarea v-model="categoryDescription" name="description" cols="40" rows="2" maxlength="100" class="textarea form-control" id="id_description"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="buttons-right">
+                                                <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- subcategory modal -->
+                        <div class="modal fade" id="subCategoryModal" tabindex="-1" aria-labelledby="subCategoryModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="subCategoryModalLabel">Add New Sub-Category</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form @submit.prevent="createSubCategory">
+                                            {% csrf_token %}
+                                            <div id="div_id_category" class="form-group">
+                                                <label for="id_category" class=" requiredField"> Category<span class="asteriskField">*</span></label> 
+                                                <div class="">
+                                                    <select v-model="subcategoryCategory" name="category" class="select form-control" required="" id="id_category">
+                                                        <option value="">Select One</option>
+                                                        {% for instance in subcategory_form.category.field.queryset %}
+                                                            <option value="{{ instance.pk }}">{{ instance.name }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div id="div_id_name" class="form-group">
+                                                <label for="id_name" class=" requiredField"> Name<span class="asteriskField">*</span></label>
+                                                <div class="">
+                                                    <input v-model="subcategoryName" type="text" name="name" maxlength="100" class="form-control" required="" id="id_name">
+                                                </div>
+                                            </div>
+                                            <div id="div_id_description" class="form-group">
+                                                <label for="id_description" class=""> Description </label>
+                                                <div class="">
+                                                    <textarea v-model="subcategoryDescription" name="description" cols="40" rows="2" maxlength="100" class="textarea form-control" id="id_description"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="buttons-right">
+                                                <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
                 <div class="Product-form">
                     <form action="" method="POST">
                         {% csrf_token %}
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-lg-3">
-                                    {{form.chalan|as_crispy_field}}
-                                </div>
-                                <div class="col-lg-3">
-                                    {{form.supplier|as_crispy_field}}
-                                </div>
-                                <div class="col-lg-3">
+                                <div class="col-md-3">
                                     {{form.warehouse|as_crispy_field}}
                                 </div>
-                                <div class="col-lg-3">
+                                <div class="col-md-3">
                                     {{form.category|as_crispy_field}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form.sub_category|as_crispy_field}}
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-lg-5">
-                                    {{form.name|as_crispy_field}}
+                                <div class="col-md-4">
+                                    {{form.product_name|as_crispy_field}}
                                 </div>
-                                <div class="col-lg-2">
-                                    {{form.price|as_crispy_field}}
+                                <div class="col-md-2">
+                                    {{form.cost_price|as_crispy_field}}
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-md-2">
+                                    {{form.sell_price|as_crispy_field}}
+                                </div>
+                                <div class="col-md-2">
                                     {{form.quantity|as_crispy_field}}
                                 </div>
-                                <div class="col-lg-6">
-                                    {{form.description|as_crispy_field}}
+                                <div class="col-md-2">
+                                    {% comment %} {{form.payment_type|as_crispy_field}} {% endcomment %}
+                                    <label for="id_payment_type" class=" requiredField"> Payment type<span class="asteriskField">*</span></label>
+                                    <select name="payment_type" class="select form-control" required="" id="id_payment_type" v-model="paymentMethod" @change="paymentBank()">
+                                        <option value="">---------</option>
+                                        <option value="bank">Bank</option>
+                                        <option value="cash">Cash</option>
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                                <!-- if payment method is bank -->
+                            <div class="row" v-if="bankOption">
+                                <div class="col-md-4">
+                                    {{form.bank|as_crispy_field}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{form.check_no|as_crispy_field}}
+                                </div>
+                                <div class="col-md-4">
+                                    {{form.check_date|as_crispy_field}}
                                 </div>
                             </div>
+                                <!-- endif -->
+
+                            <div class="row">
+
+                                <div class="col-md-6">
+                                    {{form.remark|as_crispy_field}}
+                                </div>
+                            </>
                         </div>
 
                         <div class="buttons-right">
-                            <button class="btn btn-primary" type="submit">Submit</button>
+                            <button class="btn btn-primary" type="submit">Save And Add New</button>
+                            <button class="btn btn-info" type="submit">Save And Print</button>
                             <a class="btn btn-warning" href="{% url 'purchase:purchase-create' %}">Reset</a>
                         </div>
                     </form>
@@ -59,3 +227,97 @@
 
 {% endblock body %}
 
+
+
+{% block extra_script %}
+
+<script type="text/javascript">
+
+const purchaseForm = {
+    data(){
+        return{
+            paymentMethod: '',
+            bankOption: false,
+            warehouseName: '',
+            warehouseDescription: '',
+            categoryName: '',
+            categoryDescription: '',
+            subcategoryCategory: '',
+            subcategoryName: '',
+            subcategoryDescription: '',
+            errors: []
+        }
+    },
+    created(){
+        console.log('created')
+    },
+    methods: {
+        paymentBank(){
+            if(this.paymentMethod == 'bank'){
+                this.bankOption = true
+            }else(
+                this.bankOption = false
+            )
+        },
+
+        createWarehouse(){
+            console.log('form submitted')
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            axios.post('/api/warehouse-create', {
+                name: this.warehouseName,
+                description: this.warehouseDescription
+            })
+            .then(function (response) {
+                console.log(response.data)
+                window.location.reload();
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+        },
+
+        createCategory(){
+            console.log('form submitted')
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            axios.post('/api/category-create', {
+                name: this.categoryName,
+                description: this.categoryDescription
+            })
+            .then(function (response) {
+                console.log(response.data)
+                window.location.reload();
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+        },
+
+        createSubCategory(){
+            console.log('form submitted')
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+            axios.post('/api/subcategory-create', {
+                category: this.subcategoryCategory,
+                name: this.subcategoryName,
+                description: this.subcategoryDescription
+            })
+            .then(function (response) {
+                console.log(response.data)
+                window.location.reload();
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+        }
+    },
+    delimiters: ['[[', ']]']
+}
+
+
+Vue.createApp(purchaseForm).mount('#purchase-create')
+
+</script>
+
+{% endblock extra_script %}

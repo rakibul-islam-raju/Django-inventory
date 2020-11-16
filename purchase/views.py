@@ -3,16 +3,20 @@ from django.contrib import messages
 from django.urls import reverse
 from django.views.generic import (CreateView,
                                 ListView,
+                                DetailView,
                                 UpdateView,
                                 DeleteView,
                                 TemplateView,
                                 View)
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import Supplier, PurchaseProduct
-from .forms import SupplierForm, PurchaseProductForm
+from .models import *
+from .forms import *
 
-from core.models import Product, Organization
+from core.models import Product, Organization, Warehouse
+from core.forms import CategoryForm, WarehouseForm, SubcategoryForm
+
+import json
 
 # from django.contrib.auth import get_user_model
 # User = get_user_model()
@@ -35,29 +39,29 @@ class PurchaseProductList(LoginRequiredMixin,
         return False
 
 
-class CreateSupplierView(LoginRequiredMixin,
-                        UserPassesTestMixin,
-                        SuccessMessageMixin,
-                        CreateView):
-    model = Supplier
-    template_name = 'purchase/supplier.html'
-    form_class = SupplierForm
-    success_url = 'purchase:supplier'
-    success_message = "%(name)s was created successfully"
+# class CreateSupplierView(LoginRequiredMixin,
+#                         UserPassesTestMixin,
+#                         SuccessMessageMixin,
+#                         CreateView):
+#     model = Supplier
+#     template_name = 'purchase/supplier.html'
+#     form_class = SupplierForm
+#     success_url = 'purchase:supplier'
+#     success_message = "%(name)s was created successfully"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["suppliers"] = Supplier.objects.filter(status=True)
-        context["title"] = 'Add New Supplier'
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["suppliers"] = Supplier.objects.filter(status=True)
+#         context["title"] = 'Add New Supplier'
+#         return context
 
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
+#     def get_success_url(self, **kwargs):
+#         return reverse(self.success_url)
 
-    def test_func(self, *args, **kwargs):
-        if self.request.user.is_staff:
-            return True
-        return False
+#     def test_func(self, *args, **kwargs):
+#         if self.request.user.is_staff:
+#             return True
+#         return False
 
 
 class CreatePurchaseView(LoginRequiredMixin,
@@ -68,7 +72,10 @@ class CreatePurchaseView(LoginRequiredMixin,
         form = PurchaseProductForm()
         context = {
             'form': form,
-            'title': 'Create New Purchase'
+            'title': 'Create New Purchase',
+            'warehouse_form': WarehouseForm(),
+            'category_form': CategoryForm(),
+            'subcategory_form': SubcategoryForm(),
         }
         return render(self.request, 'purchase/product-create.html', context)
 
@@ -76,44 +83,51 @@ class CreatePurchaseView(LoginRequiredMixin,
         form = PurchaseProductForm(self.request.POST or None)
 
         if form.is_valid():
-            name = form.cleaned_data.get('name')
-            price = form.cleaned_data.get('price')
-            quantity = form.cleaned_data.get('quantity')
-            description = form.cleaned_data.get('description')
             warehouse = form.cleaned_data.get('warehouse')
-            supplier = form.cleaned_data.get('supplier')
             category = form.cleaned_data.get('category')
-            chalan = form.cleaned_data.get('chalan')
+            sub_category = form.cleaned_data.get('sub_category')
+            product_name = form.cleaned_data.get('product_name')
+            cost_price = form.cleaned_data.get('cost_price')
+            sell_price = form.cleaned_data.get('sell_price')
+            quantity = form.cleaned_data.get('quantity')
+            payment_type = form.cleaned_data.get('payment_type')
+            bank = form.cleaned_data.get('bank')
+            check_no = form.cleaned_data.get('check_no')
+            check_date = form.cleaned_data.get('check_date')
+            remark = form.cleaned_data.get('remark')
 
-            organization = Organization.objects.get(name=self.request.user.organization.name)
-            
             new_purchase = PurchaseProduct(
-                name=name,
-                price=price,
-                quantity=quantity,
-                description=description,
                 warehouse=warehouse,
-                supplier=supplier,
                 category=category,
-                chalan=chalan
+                sub_category=sub_category,
+                product_name=product_name,
+                cost_price=cost_price,
+                sell_price=sell_price,
+                quantity=quantity,
+                payment_type=payment_type,
+                bank=bank,
+                check_no=check_no,
+                check_date=check_date,
+                remark=remark,
+                added_by=self.request.user
             )
 
-            new_product = Product(
-                category=category,
-                warehouse=warehouse,
-                organization=organization,
-                name=name,
-                chalan=chalan,
-                supplier_price=price,
-                quantity=quantity,
-                description=description,
-                added_by=self.request.user.username
-            )
+            # new_product = Product(
+            #     category=category,
+            #     warehouse=warehouse,
+            #     organization=organization,
+            #     name=name,
+            #     chalan=chalan,
+            #     supplier_price=price,
+            #     quantity=quantity,
+            #     description=description,
+            #     added_by=self.request.user.username
+            # )
 
             new_purchase.save()
-            new_product.save()
+            # new_product.save()
             messages.success(self.request, 'Purchase added successfully')
-            return redirect('purchase:product')
+            return redirect('./')
         else:
             messages.warning(self.request, 'Invalid form value. Please try again')
             return redirect('purchase:purchase-create')
@@ -124,33 +138,15 @@ class CreatePurchaseView(LoginRequiredMixin,
         return False
 
 
+# ============ Detail views ============>
+
+class PurchaseProductDetailView(DetailView):
+    model = PurchaseProduct
+    template_name = 'purchase-detali.html'
+
 # ============ Update views ============>
 
 
-class SupplierUpdateView(LoginRequiredMixin,
-                        UserPassesTestMixin,
-                        SuccessMessageMixin,
-                        UpdateView):
-    model = Supplier
-    form_class = SupplierForm
-    template_name = 'purchase/supplier.html'
-    success_url = 'purchase:supplier'
-    success_message = "%(name)s was updated successfully" 
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["suppliers"] = Supplier.objects.filter(status=True)
-        context["title"] = 'Edit Supplier'
-        return context
-
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-    
-    def test_func(self, *args, **kwargs):
-        if self.request.user.is_staff:
-            return True
-        return False
-    
 
 class PurchaseProductUpdateView(LoginRequiredMixin,
                                 UserPassesTestMixin,
@@ -159,13 +155,13 @@ class PurchaseProductUpdateView(LoginRequiredMixin,
     model = PurchaseProduct
     form_class = PurchaseProductForm
     template_name = 'purchase/product-create.html'
-    success_url = 'purchase:product'
+    success_url = './'
     success_message = "%(name)s was updated successfully"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['products'] = PurchaseProduct.objects.filter(status=True)
-        context["title"] = 'Edit Product'
+        context["title"] = 'Edit Purchase'
         return context
 
     def get_success_url(self, **kwargs):
@@ -180,22 +176,22 @@ class PurchaseProductUpdateView(LoginRequiredMixin,
 # ================= delete views ==================>
 
 
-class SupplireDeleteView(LoginRequiredMixin,
-                        UserPassesTestMixin,
-                        SuccessMessageMixin,
-                        DeleteView):
-    model = Supplier
-    template_name = 'delete.html'
-    success_url = 'purchase:supplier'
-    success_message = "%(name)s was created successfully" 
+# class SupplireDeleteView(LoginRequiredMixin,
+#                         UserPassesTestMixin,
+#                         SuccessMessageMixin,
+#                         DeleteView):
+#     model = Supplier
+#     template_name = 'delete.html'
+#     success_url = 'purchase:supplier'
+#     success_message = "%(name)s was created successfully" 
 
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
+#     def get_success_url(self, **kwargs):
+#         return reverse(self.success_url)
 
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        return False
+#     def test_func(self):
+#         if self.request.user.is_superuser:
+#             return True
+#         return False
 
 
 class PurchaseProductDeleteView(LoginRequiredMixin,

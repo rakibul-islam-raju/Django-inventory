@@ -14,32 +14,28 @@
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
+                            <th>Serial</th>
+                            <th>Purchase No.</th>
+                            <th>Product Name</th>
                             <th>Warehouse</th>
+                            <th>Category</th>
+                            <th>Cost Price</th>
+                            <th>Sell Price</th>
+                            <th>Quantity</th>
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Warehouse</th>
-                            <th>Action</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                         {% for product in products %}
                             <tr>
-                                <td>{{ product.id }}</td>
-                                <td>{{ product.name }}</td>
-                                <td>{{ product.price }}</td>
-                                <td>{{ product.quantity }}</td>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ product.purchase_no }}</td>
+                                <td>{{ product.product_name }}</td>
                                 <td>{{ product.warehouse }}</td>
+                                <td>{{ product.category }}</td>
+                                <td>{{ product.cost_price }}</td>
+                                <td>{{ product.sell_price }}</td>
+                                <td>{{ product.quantity }}</td>
                                 <td>
                                     {% if request.user.is_staff %}
                                     <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>

@@ -1,9 +1,4 @@
 {
-    "django.snippets.exclude": [
-
-        "cms",
-        "wagtail"
-    ],
     "emmet.excludeLanguages": [
 
         "markdown"
