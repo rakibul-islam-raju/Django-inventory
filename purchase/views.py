@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
 from django.contrib import messages
 from django.urls import reverse
 from django.views.generic import (CreateView,
@@ -17,9 +18,39 @@ from core.models import Product, Organization, Warehouse
 from core.forms import CategoryForm, WarehouseForm, SubcategoryForm
 
 import json
+from datetime import date
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 # from django.contrib.auth import get_user_model
 # User = get_user_model()
+
+
+# ========== Purchase Invoice View ============>
+def purchaes_invoice(request, *args, **kwargs):
+    pk = kwargs.get('pk')
+    purchase = get_object_or_404(PurchaseProduct, pk=pk)
+
+    template_path = 'purchase/invoice.html'
+    context = {'purchase': purchase}
+    # Create a Django response object, and specify content_type as pdf
+    response = HttpResponse(content_type='application/pdf')
+    # if we want to download the pdf :
+    # response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+    # if we want to display the pdf :
+    filename = f'invoice{pk}-{date.today()}'
+    response['Content-Disposition'] = f'filename="{filename}.pdf"'
+    # find the template and render it.
+    template = get_template(template_path)
+    html = template.render(context)
+
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+        html, dest=response)
+    # if error then show some funy view
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
 
 
 class PurchaseProductList(LoginRequiredMixin,

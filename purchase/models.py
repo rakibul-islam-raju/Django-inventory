@@ -72,4 +72,7 @@ class PurchaseProduct(models.Model):
     
     def get_delete_url(self):
         return reverse("purchase:purchase-delete", kwargs={"pk": self.pk})
+    
+    def get_invoice_url(self):
+        return reverse("purchase:purchase-invoice", kwargs={"pk": self.pk})
 
