@@ -9,6 +9,7 @@
             <li class="breadcrumb-item active">Purchase</li>
             <li class="breadcrumb-item active">Create New Purchase</li>
         </ol>
+
         <div class="card mb-4">
             <h5 class="card-header">{{title|title}}</h5>
             <div class="card-body">
@@ -158,11 +159,25 @@
                                 <div class="col-md-3">
                                     {{form.warehouse|as_crispy_field}}
                                 </div>
-                                <div class="col-md-3">
-                                    {{form.category|as_crispy_field}}
+                                <div class="col-md-3"> 
+                                    <div id="div_id_category" class="form-group">
+                                        <label for="id_category" class=" requiredField"> Category<span class="asteriskField">*</span></label>
+                                        <div class="">
+                                            <select @change="selectSubcategory(categoryOption)" v-model="categoryOption" name="category" class="select form-control" required="" id="id_category">
+                                                <option value="" selected>Select One</option>
+                                                <option v-for="category in categories" :value="category.id">[[ category.name ]]</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-3">
-                                    {{form.sub_category|as_crispy_field}}
+                                <div id="div_id_sub_category" class="form-group">
+                                    <label for="id_sub_category" class=""> Sub category </label>
+                                    <div class="">
+                                        <select v-model="subcategoryOption" name="sub_category" class="select form-control" id="id_sub_category">
+                                            <option value="" selected>Select One</option>
+                                            <option v-for="subcategory in selectSubcategories" :value="subcategory.id">[[ subcategory.name ]]</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -214,9 +229,9 @@
                         </div>
 
                         <div class="buttons-right">
-                            <button class="btn btn-primary" type="submit">Save And Add New</button>
-                            <button class="btn btn-info" type="submit">Save And Print</button>
-                            <a class="btn btn-warning" href="{% url 'purchase:purchase-create' %}">Reset</a>
+                            <button class="mr-1 btn btn-primary" type="submit">Save And Add New</button>
+                            <a class="mr-1 btn btn-info text-white" href="{% url 'purchase:product'  %}">View Purchase</a>
+                            <a class="mr-1 btn btn-warning" href="{% url 'purchase:purchase-create' %}">Reset</a>
                         </div>
                     </form>
                 </div>
@@ -236,20 +251,40 @@
 const purchaseForm = {
     data(){
         return{
+            // mayment option toggle
             paymentMethod: '',
             bankOption: false,
+            // add warehouse
             warehouseName: '',
             warehouseDescription: '',
+            // add category
             categoryName: '',
             categoryDescription: '',
+            // add subcategory
             subcategoryCategory: '',
             subcategoryName: '',
             subcategoryDescription: '',
+            // category and sub category list
+            categories: [],
+            subcategories: [],
+            selectSubcategories: [],
+            // dependent subcategory dropdown
+            categoryOption: null,
+            subcategoryOption: null,
+
             errors: []
         }
     },
     created(){
-        console.log('created')
+        axios.get('/api/category-create')
+        .then(response => {
+            this.categories = response.data
+        })
+
+        axios.get('/api/subcategory-create')
+        .then(response => {
+            this.subcategories = response.data
+        })
     },
     methods: {
         paymentBank(){
@@ -310,7 +345,14 @@ const purchaseForm = {
             .catch(function (error) {
                 console.log(error)
             })
+        },
+
+        selectSubcategory(id, subcats=this.subcategories){
+            console.log('change')
+            const returnedSubcats = subcats.filter(subcat => subcat.category === id);
+            this.selectSubcategories = returnedSubcats
         }
+
     },
     delimiters: ['[[', ']]']
 }

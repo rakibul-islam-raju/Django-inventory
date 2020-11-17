@@ -6,19 +6,19 @@ class WarehouseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Warehouse
-        fields = ['name', 'description']
+        fields = ['id', 'name', 'description']
 
 
 class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['name', 'description']
+        fields = ['id', 'name', 'description']
 
 
 class SubcategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subcategory
-        fields = ['category', 'name', 'description']
+        fields = ['id', 'category', 'name', 'description']
 
