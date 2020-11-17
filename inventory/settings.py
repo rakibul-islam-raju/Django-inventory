@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'import_export',
     'django_filters',
+    'django_seed',
+    'rest_framework',
 
     'core',
     'purchase',

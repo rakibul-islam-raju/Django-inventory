@@ -20,6 +20,11 @@
         integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w=="
         crossorigin="anonymous" />
 
+    <!-- vuejs -->
+    <script src="{% static 'js/vue3.js' %}"></script>
+    <!-- axios -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js" integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ==" crossorigin="anonymous"></script>
+
     {% block extra_head %}
     {% endblock %}
 </head>
@@ -83,8 +88,8 @@
                         <div class="collapse" id="productCollapse" aria-labelledby="headingOne"
                             data-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="{% url 'core:department' %}">Department</a>
                                 <a class="nav-link" href="{% url 'core:category' %}">Category</a>
+                                <a class="nav-link" href="{% url 'core:subcategory' %}">Subcategory</a>
                                 <a class="nav-link" href="{% url 'core:product-create' %}">Add Product</a>
                                 <a class="nav-link" href="{% url 'core:product' %}">Manage Product</a>
                             </nav>
@@ -142,11 +147,6 @@
                             Warehouse
                         </a>
 
-                        <a class="nav-link" href="{% url 'purchase:supplier' %}">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            Supplier
-                        </a>
-
                         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#settingCollapse"
                             aria-expanded="false" aria-controls="settingCollapse">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
@@ -202,7 +202,7 @@
     <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"
         integrity="sha256-FEqEelWI3WouFOo2VWP/uJfs1y8KJ++FLh2Lbqc8SJk=" crossorigin="anonymous"></script>
-    {% comment %} char js {% endcomment %}
+    {% comment %} chart js {% endcomment %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
         integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg=="
         crossorigin="anonymous"></script>

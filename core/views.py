@@ -14,7 +14,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from .models import *
 from .forms import *
 from sell.models import Customer, SellProduct
-from purchase.models import Supplier, PurchaseProduct
+from purchase.models import PurchaseProduct
 from .resources import ProductResource
 from .filters import ChalanFilter
 
@@ -43,7 +43,7 @@ class HomeView(LoginRequiredMixin,
 
         context["total_products"] = products.count()
         context["total_customer"] = Customer.objects.filter(status=True).count()
-        context["total_supplier"] = Supplier.objects.filter(status=True).count()
+        # context["total_supplier"] = Supplier.objects.filter(status=True).count()
         context["total_sell"] = SellProduct.objects.all().count()
         context["total_Purchase"] = PurchaseProduct.objects.all().count()
         context["chalans"] = Chalan.objects.filter(status=True)
@@ -181,20 +181,20 @@ class ProductCreateView(LoginRequiredMixin,
         return False
 
 
-class DeparmentCreateView(LoginRequiredMixin, 
+class CategoryCreateView(LoginRequiredMixin, 
                         UserPassesTestMixin,
                         SuccessMessageMixin,
                         CreateView):
-    model = Department
-    template_name = 'department.html'
-    form_class = DeptForm
-    success_url = 'core:department'
+    model = Category
+    template_name = 'category.html'
+    form_class = CategoryForm
+    success_url = 'core:category'
     success_message = "%(name)s was created successfully"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = 'Create new department'
-        context["departments"] = Department.objects.filter(status=True)
+        context["title"] = 'Create new Category'
+        context["categories"] = Category.objects.filter(status=True)
         return context
 
     def form_valid(self, form):
@@ -210,20 +210,20 @@ class DeparmentCreateView(LoginRequiredMixin,
         return False
 
 
-class CategoryCreateView(LoginRequiredMixin,
+class SubCategoryCreateView(LoginRequiredMixin,
                         UserPassesTestMixin,
                         SuccessMessageMixin,
                         CreateView):
-    model = Category
-    template_name = 'category.html'
-    form_class = CategoryForm
-    success_url = 'core:category'
+    model = Subcategory
+    template_name = 'subcategory.html'
+    form_class = SubcategoryForm
+    success_url = 'core:subcategory'
     success_message = "%(name)s was created successfully"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = 'Add new category'
-        context["categories"] = Category.objects.filter(status=True)
+        context["title"] = 'Add new sub-category'
+        context["subcategories"] = Subcategory.objects.filter(status=True)
         return context
     
     def get_success_url(self, **kwargs):
@@ -361,31 +361,6 @@ class ProductUpdateView(LoginRequiredMixin,
         return False
 
 
-class DepartmentUpdateView(LoginRequiredMixin,
-                        UserPassesTestMixin,
-                        SuccessMessageMixin,
-                        UpdateView):
-    model = Department
-    form_class = DeptForm
-    template_name = 'department.html'
-    success_url = 'core:department'
-    success_message = "%(name)s was updated successfully"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = 'Edit department'
-        context["departments"] = Department.objects.filter(status=True)
-        return context
-    
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-
-    def test_func(self):
-        if self.request.user.is_staff:
-            return True
-        return False
-
-
 class CategoryUpdateView(LoginRequiredMixin,
                         UserPassesTestMixin,
                         SuccessMessageMixin,
@@ -400,6 +375,31 @@ class CategoryUpdateView(LoginRequiredMixin,
         context = super().get_context_data(**kwargs)
         context["title"] = 'Edit category'
         context["categories"] = Category.objects.filter(status=True)
+        return context
+    
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
+
+
+class SubCategoryUpdateView(LoginRequiredMixin,
+                        UserPassesTestMixin,
+                        SuccessMessageMixin,
+                        UpdateView):
+    model = Subcategory
+    form_class = SubcategoryForm
+    template_name = 'subcategory.html'
+    success_url = 'core:subcategory'
+    success_message = "%(name)s was updated successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = 'Edit sub-category'
+        context["subcategories"] = Subcategory.objects.filter(status=True)
         return context
     
     def get_success_url(self, **kwargs):
@@ -524,13 +524,13 @@ class ProductDeleteView(LoginRequiredMixin,
         return False
 
 
-class DepartmentDeleteView(LoginRequiredMixin,
+class CategoryDeleteView(LoginRequiredMixin,
                         UserPassesTestMixin,
                         SuccessMessageMixin,
                         DeleteView):
-    model = Department
+    model = Category
     template_name = 'delete.html'
-    success_url = 'core:department'
+    success_url = 'core:category'
     success_message = "%(name)s was deleted successfully"
 
     def get_success_url(self, **kwargs):
@@ -542,11 +542,11 @@ class DepartmentDeleteView(LoginRequiredMixin,
         return False
 
 
-class CategoryDeleteView(LoginRequiredMixin,
+class SubCategoryDeleteView(LoginRequiredMixin,
                         UserPassesTestMixin,
                         SuccessMessageMixin,
                         DeleteView):
-    model = Category
+    model = Subcategory
     template_name = 'delete.html'
     success_url = 'core:home'
     success_message = "%(name)s was deleted successfully"
