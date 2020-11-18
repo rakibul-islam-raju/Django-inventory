@@ -44,9 +44,9 @@
             <li class="nav-item dropdown">
                 <a class="nav-link" href="{% url 'core:product' %}" role="button">Products</a>
             </li>
-            <li class="nav-item dropdown">
+            {% comment %} <li class="nav-item dropdown">
                 <a class="nav-link" href="{% url 'core:chalan' %}" role="button">Chalans</a>
-            </li>
+            </li> {% endcomment %}
             {% elif request.user.is_customer%}
             <li class="nav-item dropdown">
                 <a class="nav-link" href="{% url 'order:order-list' %}" role="button">Orders</a>

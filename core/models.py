@@ -117,26 +117,26 @@ class Warehouse(models.Model):
         return reverse("core:warehouse-delete", kwargs={"pk": self.pk})
 
 
-class Chalan(models.Model):
-    name = models.CharField(max_length=254,
-                        help_text='Example: ABC-01122020', 
-                        unique=True)
-    description = models.TextField(max_length=254)
-    status = models.BooleanField(default=True)
-    date_updated = models.DateTimeField(auto_now=True)
-    date_added = models.DateTimeField(auto_now_add=True)
+# class Chalan(models.Model):
+#     name = models.CharField(max_length=254,
+#                         help_text='Example: ABC-01122020', 
+#                         unique=True)
+#     description = models.TextField(max_length=254)
+#     status = models.BooleanField(default=True)
+#     date_updated = models.DateTimeField(auto_now=True)
+#     date_added = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
 
-    def get_absolute_url(self):
-        return reverse("core:chalan-detail", kwargs={"pk": self.pk})
+#     def get_absolute_url(self):
+#         return reverse("core:chalan-detail", kwargs={"pk": self.pk})
 
-    def get_update_url(self):
-        return reverse("core:chalan-edit", kwargs={"pk": self.pk})
+#     def get_update_url(self):
+#         return reverse("core:chalan-edit", kwargs={"pk": self.pk})
     
-    def get_delete_url(self):
-        return reverse("core:chalan-delete", kwargs={"pk": self.pk})
+#     def get_delete_url(self):
+#         return reverse("core:chalan-delete", kwargs={"pk": self.pk})
 
 
 class Product(models.Model):
@@ -144,7 +144,7 @@ class Product(models.Model):
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='inventory_product')
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
-    chalan = models.ForeignKey(Chalan, on_delete=models.SET_NULL, null=True)
+    # chalan = models.ForeignKey(Chalan, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=100)
     # qr_code = models.ImageField(upload_to='qrcodes', blank=True, null=True)
     supplier_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)

@@ -69,7 +69,7 @@ class BankTransactionAdmin(admin.ModelAdmin):
     date_hierarchy = 'date'
 
 
-admin.site.register(Chalan)
+# admin.site.register(Chalan)
 admin.site.register(Organization)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Subcategory, SubcategoryAdmin)

@@ -16,7 +16,7 @@ from .forms import *
 from sell.models import Customer, SellProduct
 from purchase.models import PurchaseProduct
 from .resources import ProductResource
-from .filters import ChalanFilter
+# from .filters import ChalanFilter
 
 from django.contrib.auth.decorators import login_required
 
@@ -46,7 +46,7 @@ class HomeView(LoginRequiredMixin,
         # context["total_supplier"] = Supplier.objects.filter(status=True).count()
         context["total_sell"] = SellProduct.objects.all().count()
         context["total_Purchase"] = PurchaseProduct.objects.all().count()
-        context["chalans"] = Chalan.objects.filter(status=True)
+        # context["chalans"] = Chalan.objects.filter(status=True)
         return context
 
 
@@ -103,35 +103,35 @@ class ProductView(LoginRequiredMixin,
         return False
 
 
-class ChalanDetailView(DetailView):
-    model = Chalan
-    template_name = 'chalan/chalan_detail.html'
+# class ChalanDetailView(DetailView):
+#     model = Chalan
+#     template_name = 'chalan/chalan_detail.html'
 
 # >=========== create views =============>
 
-class ChalanCreateView(LoginRequiredMixin, 
-                        UserPassesTestMixin,
-                        SuccessMessageMixin,
-                        CreateView):
-    model = Chalan
-    form_class = ChalanCreateForm
-    template_name = 'chalan/chalan_create.html'
-    success_url = 'core:chalan'
-    success_message = "%(name)s was created successfully"
+# class ChalanCreateView(LoginRequiredMixin, 
+#                         UserPassesTestMixin,
+#                         SuccessMessageMixin,
+#                         CreateView):
+#     model = Chalan
+#     form_class = ChalanCreateForm
+#     template_name = 'chalan/chalan_create.html'
+#     success_url = 'core:chalan'
+#     success_message = "%(name)s was created successfully"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = 'Create New Chalan'
-        context["chalans"] = Chalan.objects.filter(status=True)
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["title"] = 'Create New Chalan'
+#         context["chalans"] = Chalan.objects.filter(status=True)
+#         return context
 
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
+#     def get_success_url(self, **kwargs):
+#         return reverse(self.success_url)
 
-    def test_func(self):
-        if self.request.user.is_staff:
-            return True
-        return False
+#     def test_func(self):
+#         if self.request.user.is_staff:
+#             return True
+#         return False
 
 class ProductCreateView(LoginRequiredMixin,
                         UserPassesTestMixin,
@@ -312,29 +312,29 @@ class TransactionCreateView(LoginRequiredMixin,
 # >=========== update views =============>
 
 
-class ChalanUpdateView(LoginRequiredMixin,
-                        UserPassesTestMixin,
-                        SuccessMessageMixin,
-                        UpdateView):
-    model = Chalan
-    form_class = ChalanCreateForm
-    template_name = 'chalan/chalan_create.html'
-    success_url = 'core:chalan'
-    success_message = "%(name)s was updated successfully"
+# class ChalanUpdateView(LoginRequiredMixin,
+#                         UserPassesTestMixin,
+#                         SuccessMessageMixin,
+#                         UpdateView):
+#     model = Chalan
+#     form_class = ChalanCreateForm
+#     template_name = 'chalan/chalan_create.html'
+#     success_url = 'core:chalan'
+#     success_message = "%(name)s was updated successfully"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = 'Edit Chalan'
-        context["chalans"] = Chalan.objects.filter(status=True)
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["title"] = 'Edit Chalan'
+#         context["chalans"] = Chalan.objects.filter(status=True)
+#         return context
     
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
+#     def get_success_url(self, **kwargs):
+#         return reverse(self.success_url)
     
-    def test_func(self):
-        if self.request.user.is_staff:
-            return True
-        return False
+#     def test_func(self):
+#         if self.request.user.is_staff:
+#             return True
+#         return False
 
 
 class ProductUpdateView(LoginRequiredMixin,
@@ -488,22 +488,22 @@ class TransactionUpdateView(LoginRequiredMixin,
 # >=================== delete views ===============>
 
 
-class ChalanDeleteView(LoginRequiredMixin,
-                    UserPassesTestMixin,
-                    SuccessMessageMixin,
-                    DeleteView):
-    model = Chalan
-    template_name = 'delete.html'
-    success_url = 'core:chalan'
-    success_message = "%(name)s was deleted successfully"
+# class ChalanDeleteView(LoginRequiredMixin,
+#                     UserPassesTestMixin,
+#                     SuccessMessageMixin,
+#                     DeleteView):
+#     model = Chalan
+#     template_name = 'delete.html'
+#     success_url = 'core:chalan'
+#     success_message = "%(name)s was deleted successfully"
 
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
+#     def get_success_url(self, **kwargs):
+#         return reverse(self.success_url)
     
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        return False
+#     def test_func(self):
+#         if self.request.user.is_superuser:
+#             return True
+#         return False
 
 
 class ProductDeleteView(LoginRequiredMixin,
