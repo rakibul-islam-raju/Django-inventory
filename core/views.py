@@ -147,33 +147,32 @@ class ProductCreateView(LoginRequiredMixin,
     def post(self, *args, **kwargs):
         form = ProductForm(self.request.POST or None)
         added_by = User.objects.get(username=self.request.user.username)
-        added_by = added_by.username
 
         if form.is_valid():
             category = form.cleaned_data.get('category')
-            name = form.cleaned_data.get('name')
-            supplier_price= form.cleaned_data.get('supplier_price')
+            subcategory = form.cleaned_data.get('subcategory')
+            product_name = form.cleaned_data.get('product_name')
             sell_price = form.cleaned_data.get('sell_price')
             description = form.cleaned_data.get('description')
             quantity = form.cleaned_data.get('quantity')
             warehouse = form.cleaned_data.get('warehouse')
-            organization = self.request.user.organization
             
-            new_dept = Product(category=category,
-                            name=name,
-                            supplier_price=supplier_price,
-                            sell_price=sell_price,
-                            description=description,
-                            added_by=added_by,
-                            quantity=quantity,
-                            organization=organizatione,
-                            warehouse=warehouse)
+            new_dept = Product(
+                        category=category,
+                        subcategory=subcategory,
+                        product_name=product_name,
+                        sell_price=sell_price,
+                        description=description,
+                        quantity=quantity,
+                        warehouse=warehouse,
+                        added_by=added_by.username,
+                        )
             new_dept.save()
             messages.success(self.request, 'Product added successfully')
-            return redirect('/')
+            return redirect('./')
         else:
             messages.warning(self.request, 'Something went wrong')
-            return redirect('/')
+            return redirect('./')
     
     def test_func(self):
         if self.request.user.is_staff:

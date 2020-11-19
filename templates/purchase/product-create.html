@@ -156,10 +156,10 @@
                         {% csrf_token %}
                         <div class="form-group">
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     {{form.warehouse|as_crispy_field}}
                                 </div>
-                                <div class="col-md-3"> 
+                                <div class="col-md-4"> 
                                     <div id="div_id_category" class="form-group">
                                         <label for="id_category" class=" requiredField"> Category<span class="asteriskField">*</span></label>
                                         <div class="">
@@ -170,13 +170,15 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="div_id_sub_category" class="form-group">
-                                    <label for="id_sub_category" class=""> Sub category </label>
-                                    <div class="">
-                                        <select v-model="subcategoryOption" name="sub_category" class="select form-control" id="id_sub_category">
-                                            <option value="" selected>Select One</option>
-                                            <option v-for="subcategory in selectSubcategories" :value="subcategory.id">[[ subcategory.name ]]</option>
-                                        </select>
+                                <div class="col-md-4"> 
+                                    <div id="div_id_sub_category" class="form-group">
+                                        <label for="id_sub_category" class=""> Sub category </label>
+                                        <div class="">
+                                            <select v-model="subcategoryOption" name="sub_category" class="select form-control" id="id_sub_category">
+                                                <option value="" selected>Select One</option>
+                                                <option v-for="subcategory in selectSubcategories" :value="subcategory.id">[[ subcategory.name ]]</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -348,7 +350,6 @@ const purchaseForm = {
         },
 
         selectSubcategory(id, subcats=this.subcategories){
-            console.log('change')
             const returnedSubcats = subcats.filter(subcat => subcat.category === id);
             this.selectSubcategories = returnedSubcats
         }

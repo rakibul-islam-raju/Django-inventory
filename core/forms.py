@@ -43,11 +43,10 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['category',
+                'subcategory',
                 'warehouse',
-                # 'chalan',
-                'name',
+                'product_name',
                 'quantity',
-                'supplier_price',
                 'sell_price',
                 'description']
         widgets = {
