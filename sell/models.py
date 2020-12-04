@@ -31,14 +31,12 @@ class SellProduct(models.Model):
     warehouse = models.ForeignKey(Warehouse, null=True, on_delete=models.SET_NULL)
     customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
-    # chalan = models.ForeignKey(Chalan, null=True, on_delete=models.SET_NULL)
-
 
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(decimal_places=2, max_digits=8)
     description = models.TextField(blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
-    # added_by = models.CharField(max_length=100)
+    
+    added_by = models.CharField(max_length=100)
     status = models.CharField(max_length=100, choices=STATUS)
     date_updated = models.DateTimeField(auto_now=True)
     date_added = models.DateTimeField(auto_now_add=True)
@@ -46,6 +44,7 @@ class SellProduct(models.Model):
     def __str__(self):
         return f'{self.customer.name}\'s order'
 
+    @property
     def get_total_price(self):
         result = self.price * self.quantity
         return result

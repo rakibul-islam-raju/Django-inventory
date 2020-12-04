@@ -4,8 +4,6 @@ from core.views import *
 app_name = 'core'
 
 urlpatterns = [
-    path('api/', include('core.api.urls')),
-
     path('', HomeView.as_view(), name='home'),
 
     path('users/', UserManagement.as_view(), name='user-management'),

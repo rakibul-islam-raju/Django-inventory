@@ -14,4 +14,5 @@ def create_product(sender, instance, created, **kwargs):
             product_name=instance.product_name,
             sell_price=instance.sell_price,
             quantity=instance.quantity,
+            added_by=instance.added_by
         )
