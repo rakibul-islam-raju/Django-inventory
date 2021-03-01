@@ -1,55 +1,54 @@
 {% extends './base.html' %}
 
+{% block title %}Products - {% endblock title %}
+
 {% block body %}
 
-<div class="container-fluid">
-    {% comment %} <h4 class="mt-4"><Dashb></Dashb>oard</h4> {% endcomment %}
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active"><a href="{% url 'core:home' %}">Dashboard</a></li>
-        <li class="breadcrumb-item active">Stocks</li>
-    </ol>
-    <div class="card mb-4">
-        <div class="card-header"><i class="fas fa-table mr-1"></i>Product List</div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Code</th>
-                            <th>Name</th>
-                            <th>Category</th>
-                            <th>Subcategory</th>
-                            <th>Sell Price</th>
-                            <th>Quantity</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for product in products %}
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Products</h6>
+                </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
                             <tr>
-                                <td>{{ product.get_unique_number }}</td>
-                                <td>{{ product.product_name }}</td>
-                                <td>{{ product.category.name }}</td>
-                                <td>{{ product.subcategory}}</td>
-                                <td>{{ product.sell_price }}</td>
-                                <td>{{ product.quantity }}</td>
-                                
-                                <td>
-                                    {% if request.user.is_staff %}
-                                    {% comment %} <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
-                                    <a href="{{ product.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a> {% endcomment %}
-                                    <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-                                        <div class="btn-group" role="group" aria-label="First group">
-                                            <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
-                                            <a href="{{ product.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                </td>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Subcategory</th>
+                                <th>Sell Price</th>
+                                <th>Quantity</th>
+                                <th>Action</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                                <tr>
+                                    <td>{{ product.get_unique_number }}</td>
+                                    <td>{{ product.product_name }}</td>
+                                    <td>{{ product.category.name }}</td>
+                                    <td>{{ product.subcategory}}</td>
+                                    <td>{{ product.sell_price }}</td>
+                                    <td>{{ product.quantity }}</td>
+                                    
+                                    <td>
+                                        {% if request.user.is_staff %}
+                                        <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                                            <div class="btn-group" role="group" aria-label="First group">
+                                                <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></a>
+                                                <a href="{{ product.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

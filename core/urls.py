@@ -5,6 +5,8 @@ app_name = 'core'
 
 urlpatterns = [
     path('', HomeView.as_view(), name='home'),
+    path('profile/<username>/', ProfileView.as_view(), name='profile'),
+    path('profile/edit/<username>/', ProfileEditView.as_view(), name='profile-edit'),
 
     path('users/', UserManagement.as_view(), name='user-management'),
     path('users/edit/<username>/', EditUserManagent.as_view(), name='edit-user-management'),
@@ -21,13 +23,13 @@ urlpatterns = [
     path('product/edit/<pk>/', ProductUpdateView.as_view(), name='product-edit'),
     path('product/delete/<pk>/', ProductDeleteView.as_view(), name='product-delete'),
 
-    path('department/', CategoryCreateView.as_view(), name='category'),
-    path('department/<pk>/', CategoryUpdateView.as_view(), name='category-edit'),
-    path('department/delete/<pk>/', CategoryDeleteView.as_view(), name='category-delete'),
+    path('category/', CategoryCreateView.as_view(), name='category'),
+    path('category/<pk>/', CategoryUpdateView.as_view(), name='category-edit'),
+    path('category/delete/<pk>/', CategoryDeleteView.as_view(), name='category-delete'),
 
-    path('category/', SubCategoryCreateView.as_view(), name='subcategory'),
-    path('category/<pk>/', SubCategoryUpdateView.as_view(), name='subcategory-edit'),
-    path('category/delete/<pk>/', SubCategoryDeleteView.as_view(), name='subcategory-delete'),
+    path('sub-category/', SubCategoryCreateView.as_view(), name='subcategory'),
+    path('sub-category/<pk>/', SubCategoryUpdateView.as_view(), name='subcategory-edit'),
+    path('sub-category/delete/<pk>/', SubCategoryDeleteView.as_view(), name='subcategory-delete'),
 
     path('warehouse/', WarehouseCreateView.as_view(), name='warehouse'),
     path('warehouse/<pk>', WarehouseUpdateView.as_view(), name='warehouse-edit'),

@@ -3,33 +3,28 @@
 
 {% block body %}
 <main id="purchase-create">
-    <div class="container-fluid">
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-            <li class="breadcrumb-item active">Purchase</li>
-            <li class="breadcrumb-item active">Create New Purchase</li>
-        </ol>
-
-        <div class="card mb-4">
-            <h5 class="card-header">{{title|title}}</h5>
-            <div class="card-body">
-                <div class="row justify-content-end">
-                    <div class="col-md-6">
+    <div class="row">
+        <div class="col">
+            <div class="card row mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">{{title|title}}</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-end mb-4">
                         <!-- Button trigger modal -->
                         <div class="buttons-right">
                             <!-- warehouse button -->
-                            <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#warehouseModal">
+                            <button type="button" class="btn btn-sm btn-outline-primary ml-2" data-toggle="modal" data-target="#warehouseModal">
                             <i class="fa fa-plus"></i> Warehouse
                             </button>
                             <!-- category button -->
-                            <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#categoryModal">
+                            <button type="button" class="btn btn-sm btn-outline-primary ml-2" data-toggle="modal" data-target="#categoryModal">
                             <i class="fa fa-plus"></i> Category
                             </button>
                             <!-- subcategory button -->
-                            <button type="button" class="btn btn-sm btn-outline-info" data-toggle="modal" data-target="#subCategoryModal">
+                            <button type="button" class="btn btn-sm btn-outline-primary ml-2" data-toggle="modal" data-target="#subCategoryModal">
                             <i class="fa fa-plus"></i> Sub-category
                             </button>
-
                         </div>
 
                         <!-- warehouse modal -->
@@ -149,93 +144,91 @@
                         </div>
 
                     </div>
-                </div>
 
-                <div class="Product-form">
-                    <form action="" method="POST">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    {{form.warehouse|as_crispy_field}}
-                                </div>
-                                <div class="col-md-4"> 
-                                    <div id="div_id_category" class="form-group">
-                                        <label for="id_category" class=" requiredField"> Category<span class="asteriskField">*</span></label>
-                                        <div class="">
-                                            <select @change="selectSubcategory(categoryOption)" v-model="categoryOption" name="category" class="select form-control" required="" id="id_category">
-                                                <option value="" selected>Select One</option>
-                                                <option v-for="category in categories" :value="category.id">[[ category.name ]]</option>
-                                            </select>
+                    <div class="Product-form">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {{form.warehouse|as_crispy_field}}
+                                    </div>
+                                    <div class="col-md-4"> 
+                                        <div id="div_id_category" class="form-group">
+                                            <label for="id_category" class=" requiredField"> Category<span class="asteriskField">*</span></label>
+                                            <div class="">
+                                                <select @change="selectSubcategory(categoryOption)" v-model="categoryOption" name="category" class="select form-control" required="" id="id_category">
+                                                    <option value="" selected>Select One</option>
+                                                    <option v-for="category in categories" :value="category.id">[[ category.name ]]</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4"> 
+                                        <div id="div_id_sub_category" class="form-group">
+                                            <label for="id_sub_category" class=""> Sub category </label>
+                                            <div class="">
+                                                <select v-model="subcategoryOption" name="sub_category" class="select form-control" id="id_sub_category">
+                                                    <option value="" selected>Select One</option>
+                                                    <option v-for="subcategory in selectSubcategories" :value="subcategory.id">[[ subcategory.name ]]</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4"> 
-                                    <div id="div_id_sub_category" class="form-group">
-                                        <label for="id_sub_category" class=""> Sub category </label>
-                                        <div class="">
-                                            <select v-model="subcategoryOption" name="sub_category" class="select form-control" id="id_sub_category">
-                                                <option value="" selected>Select One</option>
-                                                <option v-for="subcategory in selectSubcategories" :value="subcategory.id">[[ subcategory.name ]]</option>
-                                            </select>
-                                        </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {{form.product_name|as_crispy_field}}
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{form.cost_price|as_crispy_field}}
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{form.sell_price|as_crispy_field}}
+                                    </div>
+                                    <div class="col-md-2">
+                                        {{form.quantity|as_crispy_field}}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="id_payment_type" class=" requiredField"> Payment type<span class="asteriskField">*</span></label>
+                                        <select name="payment_type" class="select form-control" required="" id="id_payment_type" v-model="paymentMethod" @change="paymentBank()">
+                                            <option value="">---------</option>
+                                            <option value="bank">Bank</option>
+                                            <option value="cash">Cash</option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                    <!-- if payment method is bank -->
+                                <div class="row" v-if="bankOption">
+                                    <div class="col-md-4">
+                                        {{form.bank|as_crispy_field}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form.check_no|as_crispy_field}}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form.check_date|as_crispy_field}}
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    {{form.product_name|as_crispy_field}}
-                                </div>
-                                <div class="col-md-2">
-                                    {{form.cost_price|as_crispy_field}}
-                                </div>
-                                <div class="col-md-2">
-                                    {{form.sell_price|as_crispy_field}}
-                                </div>
-                                <div class="col-md-2">
-                                    {{form.quantity|as_crispy_field}}
-                                </div>
-                                <div class="col-md-2">
-                                    {% comment %} {{form.payment_type|as_crispy_field}} {% endcomment %}
-                                    <label for="id_payment_type" class=" requiredField"> Payment type<span class="asteriskField">*</span></label>
-                                    <select name="payment_type" class="select form-control" required="" id="id_payment_type" v-model="paymentMethod" @change="paymentBank()">
-                                        <option value="">---------</option>
-                                        <option value="bank">Bank</option>
-                                        <option value="cash">Cash</option>
-                                    </select>
+                                    <!-- endif -->
 
-                                </div>
+                                <div class="row">
 
+                                    <div class="col-md-6">
+                                        {{form.remark|as_crispy_field}}
+                                    </div>
+                                </>
                             </div>
 
-                                <!-- if payment method is bank -->
-                            <div class="row" v-if="bankOption">
-                                <div class="col-md-4">
-                                    {{form.bank|as_crispy_field}}
-                                </div>
-                                <div class="col-md-4">
-                                    {{form.check_no|as_crispy_field}}
-                                </div>
-                                <div class="col-md-4">
-                                    {{form.check_date|as_crispy_field}}
-                                </div>
+                            <div class="d-flex justify-content-end">
+                                <a class="mr-1 btn btn-secondary" href="{% url 'purchase:purchase-create' %}">Reset</a>
+                                <button class="btn btn-primary ml-2" type="submit">Submit</button>
                             </div>
-                                <!-- endif -->
-
-                            <div class="row">
-
-                                <div class="col-md-6">
-                                    {{form.remark|as_crispy_field}}
-                                </div>
-                            </>
-                        </div>
-
-                        <div class="buttons-right">
-                            <button class="mr-1 btn btn-primary" type="submit">Save And Add New</button>
-                            <a class="mr-1 btn btn-info text-white" href="{% url 'purchase:product'  %}">View Purchase</a>
-                            <a class="mr-1 btn btn-warning" href="{% url 'purchase:purchase-create' %}">Reset</a>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

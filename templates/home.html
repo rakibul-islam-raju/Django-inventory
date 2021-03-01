@@ -1,47 +1,90 @@
 {% extends './base.html' %}
 
+{% block title %}Dashboard - {% endblock title %}
+
 {% block body %}
 
-<div class="container-fluid">
-    {% comment %} <h4 class="mt-4"><Dashb></Dashb>oard</h4> {% endcomment %}
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Dashboard</li>
-    </ol>
-    <div class="row justify-content-center">
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-primary text-white mb-4">
-                <!-- <h6 class="card-header">Total Customers</h6> -->
-                <div class="card-body text-center">{{ total_customer }}  Customers</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="customer/">View Details</a>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+
+    <div class="row">
+        <!-- Customers Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Customers</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_customer }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-info text-white mb-4">
-                <div class="card-body">{{ total_sell }} Sells</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="sell/products/">View Details</a>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+
+        <!-- Sales Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Sells</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_sell }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-success text-white mb-4">
-                <div class="card-body">{{ total_products }} Products</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="product/">View Details</a>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+
+        <!-- Products Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Products
+                            </div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ total_products }}</div>
+                                </div>
+                                <div class="col">
+                                    <div class="progress progress-sm mr-2">
+                                        <div class="progress-bar bg-info" role="progressbar"
+                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                            aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6">
-            <div class="card bg-danger text-white mb-4">
-                <div class="card-body">{{ total_supplier }} Suppliers</div>
-                <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="supplier/">View Details</a>
-                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+
+        <!-- Suppliers Card Example -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Suppliers</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_supplier }}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -49,11 +92,13 @@
 
     <div class="row">
         <div class="col-lg-7">
-            <div class="card mb-4">
-                <div class="card-header"><i class="fas fa-table mr-1"></i>Product List</div>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Product List</h6>
+                </div>
                 <div class="card-body">
 
-                    <div style="float:right">
+                    <div class="d-flex justify-content-end">
                         <a class="btn btn-primary btn-sm mb-3" href="{% url 'core:product-download-csv' %}">Download CSV</a>
                     </div>
 
@@ -61,16 +106,10 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    {% comment %} <th>Chalan</th> {% endcomment %}
                                     <th>Product</th>
                                     <th>Quantity</th>
                                     <th>Sell Price</th>
-
-                                    {% if request.user.is_staff %}
-                                        <th>Action</th>
-                                    {% elif request.user.is_customer %}
-                                        <th>Action</th>
-                                    {% endif %}
+                                    <th>Action</th>
 
                                 </tr>
                             </thead>
@@ -91,7 +130,6 @@
                                             <a class="btn btn-outline-primary btn-sm" href="{% url 'order:order-create' product.pk %}">Order</a>
                                         </td>
                                         {% endif %}
-
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -102,107 +140,84 @@
         </div>
 
         <div class="col-lg-5">
-
-        <!-- ========= Chalan List ===========  -->
-            {% comment %} <div class="card mb-3">
-                <div class="card-header">
-                    <i class="fas fa-table mr-1"></i>
-                    Chalan List
-                    <a class="btn btn-primary btn-sm buttons-right" href="{% url 'core:chalan' %}">New Chalan</a>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>Chalans</th>
-                                    <th>Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                {% for chalan in chalans %}
-                                <tr>
-                                    <td><a href="{{ chalan.get_absolute_url }}">{{ chalan.name }}</a></td>
-                                    <td>{{ chalan.description }}</td>
-                                </tr>
-                                {% endfor %}
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div> {% endcomment %}
-
             <div class="card mb-3 shadow">
                 <div class="card-header">
                     <i class="fas fa-chart-pie"></i>
                     Product Amount Chart
                 </div>
                 <div class="card-body">
-                    <canvas id="myChart" height="300"></canvas>
+                    <canvas id="productDonutChart" height="300"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-4">
-            
-        </div>
-    </div>
-</div>
-
 {% endblock body %}
 
 {% block extra_script %}
 
-    <script>
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: [
-                {% for product in products %}
-                    '{{product.name}}',
-                {% endfor %}
-            ],
-            datasets: [{
-                label: 'Product by Amount',
-                data: [
+    <script type="text/javascript">
+        // Set new default font family and font color to mimic Bootstrap's default styling
+        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.defaults.global.defaultFontColor = '#858796';
+
+        // Pie Chart Example
+        var ctx = document.getElementById("productDonutChart");
+        var productDonutChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [
                     {% for product in products %}
-                    {{product.quantity}},
+                        '{{product.name}}',
                     {% endfor %}
                 ],
-                backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 206, 86)',
-                    'rgb(75, 192, 192)',
-                    'rgb(153, 102, 255)',
-                    'rgb(255, 159, 62)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
+                datasets: [{
+                    label: 'Product by Amount',
+                    data: [
+                        {% for product in products %}
+                        {{product.quantity}},
+                        {% endfor %}
+                    ],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 206, 86)',
+                        'rgb(75, 192, 192)',
+                        'rgb(153, 102, 255)',
+                        'rgb(255, 159, 62)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                tooltips: {
+                backgroundColor: "rgb(255,255,255)",
+                bodyFontColor: "#858796",
+                borderColor: '#dddfeb',
+                borderWidth: 1,
+                xPadding: 15,
+                yPadding: 15,
+                displayColors: false,
+                caretPadding: 10,
+                },
+                legend: {
+                display: false
+                },
+                cutoutPercentage: 80,
+            },
+        });
+
     </script>
+
+
 
 {% endblock extra_script %}

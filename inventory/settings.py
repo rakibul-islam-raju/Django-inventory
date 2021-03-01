@@ -1,6 +1,8 @@
 import os
 from django.conf import settings
 
+from django.contrib import messages
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -33,12 +35,12 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
 
-    'crispy_forms',
     'import_export',
     'django_filters',
     'django_seed',
     'rest_framework',
     'drf_yasg',
+    'crispy_forms',
 
     'core',
     'purchase',
@@ -166,11 +168,12 @@ AUTH_USER_MODEL = 'core.User'
 
 # email backend
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'rakibul.islam44109@gmail.com'
-# EMAIL_HOST_PASSWORD = 'BornIn190796'
 
+# Messages
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}
+
 

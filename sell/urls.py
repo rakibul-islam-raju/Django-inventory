@@ -8,8 +8,8 @@ urlpatterns = [
 
     path('customer/', CustomerCreateView.as_view(), name='customer'),
     path('customer/<int:pk>/', SingleCustomerView.as_view(), name='single-customer'),
-    path('customer/<pk>/', CustomerUpdateView.as_view(), name='customer-edit'),
-    path('customer/delete/<pk>/', CustomerDeleteView.as_view(), name='customer-delete'),
+    path('customer/edit/<int:pk>/', CustomerUpdateView.as_view(), name='customer-edit'),
+    path('customer/delete/<int:pk>/', CustomerDeleteView.as_view(), name='customer-delete'),
 
     path('sell/create/', SellProductCreateView.as_view(), name='sell-create'),
     path('sell/edit/<pk>/', SellProductUpdateView.as_view(), name='sell-edit'),
