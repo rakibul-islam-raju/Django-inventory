@@ -32,7 +32,7 @@ class PurchaseProduct(models.Model):
     sub_category = models.ForeignKey(Subcategory, blank=True, null=True, on_delete=models.SET_NULL)
     warehouse = models.ForeignKey(Warehouse, null=True, on_delete=models.SET_NULL)
 
-    product_name = models.CharField(max_length=100, unique=True)
+    product_name = models.CharField(max_length=100)
     cost_price = models.DecimalField(max_digits=8, decimal_places=2)
     sell_price = models.DecimalField(max_digits=8, decimal_places=2)
     quantity = models.PositiveIntegerField()

@@ -1,53 +1,51 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
+{% block title %}Manage User - {% endblock title %}
+
 {% block body %}
-    <div class="container-fluid">
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">User Management</li>
-        </ol>
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header">Edit User</div>
+                <div class="card-body">
+                    <form action="" method="POST" novalidate>
+                        {% csrf_token %}
 
-        <div class="row justify-content-center">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">Edit User List</div>
-                    <div class="card-body">
-                        <form action="" method="POST" novalidate>
-                            {% csrf_token %}
-
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        {{ form.username|as_crispy_field }}
-                                    </div>
-                                    <div class="col-lg-6">
-                                        {{ form.email|as_crispy_field }}
-                                    </div>
-                                    <div class="col-lg-6">
-                                        {{ form.first_name|as_crispy_field }}
-                                    </div>
-                                    <div class="col-lg-6">
-                                        {{ form.last_name|as_crispy_field }}
-                                    </div>
-                                    <div class="col-lg-6">
-                                        {{ form.organization|as_crispy_field }}
-                                    </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    {{ form.username|as_crispy_field }}
                                 </div>
-                                
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        {{ form.is_active|as_crispy_field }}
-                                    </div>
-                                    <div class="col-lg-6">
-                                        {{ form.is_staff|as_crispy_field }}
-                                    </div>
+                                <div class="col-lg-6">
+                                    {{ form.email|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-6">
+                                    {{ form.first_name|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-6">
+                                    {{ form.last_name|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-6">
+                                    {{ form.organization|as_crispy_field }}
                                 </div>
                             </div>
+                            
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    {{ form.is_active|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-6">
+                                    {{ form.is_staff|as_crispy_field }}
+                                </div>
+                            </div>
+                        </div>
 
-                            <button class="btn btn-primary" type="submit">Save</button>
-                            <a href="{% url 'core:user-management' %}" class="btn btn-warning">Cancel</a>
-                        </form>
-                    </div>
+                        <div class="d-flex justify-content-end">
+                            <a href="{% url 'core:user-management' %}" class="btn btn-secondary">Cancel</a>
+                            <button class="btn btn-primary ml-2" type="submit">Submit</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

@@ -43,11 +43,10 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['category',
+                'subcategory',
                 'warehouse',
-                'chalan',
-                'name',
+                'product_name',
                 'quantity',
-                'supplier_price',
                 'sell_price',
                 'description']
         widgets = {
@@ -99,11 +98,11 @@ class UserPermissionForm(forms.ModelForm):
                 'is_staff',]
 
 
-class ChalanCreateForm(forms.ModelForm):
+# class ChalanCreateForm(forms.ModelForm):
 
-    class Meta:
-        model = Chalan
-        fields = ['name', 'description']
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': '2'}),
-        }
+#     class Meta:
+#         model = Chalan
+#         fields = ['name', 'description']
+#         widgets = {
+#             'description': forms.Textarea(attrs={'rows': '2'}),
+#         }

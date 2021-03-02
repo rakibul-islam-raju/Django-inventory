@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from django.urls import reverse
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView, ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -73,6 +74,7 @@ class SellProductCreateView(SuccessMessageMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["products"] = SellProduct.objects.all()
+        context["title"] = 'New Sale'
         return context
 
     def get_success_url(self, **kwargs):

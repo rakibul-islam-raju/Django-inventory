@@ -1,58 +1,49 @@
 {% extends '../base.html' %}
 
+{% block title %}Sales - {% endblock title %}
+
 {% block body %}
 
-<div class="container-fluid">
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active"><a href="{% url 'core:home' %}">Dashboard</a></li>
-        <li class="breadcrumb-item active">Products</li>
-    </ol>
-    <div class="card mb-4">
-        <div class="card-header"><i class="fas fa-table mr-1"></i>Product List</div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Product</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Customer</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>ID</th>
-                            <th>Product</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Customer</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        {% for product in products %}
+<div class="row">
+    <div class="col">
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-primary">Sales</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
                             <tr>
-                                <td>{{ product.id }}</td>
-                                <td>{{ product.product.name }}</td>
-                                <td>{{ product.price }}</td>
-                                <td>{{ product.quantity }}</td>
-                                <td>{{ product.customer }}</td>
-                                <td>{{ product.status }}</td>
-                                <td>
-                                    {% if request.user.is_staff %}
-                                    <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
-                                    <a href="{{ product.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
-                                    {% endif %}
-                                </td>
+                                <th>ID</th>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Customer</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                                <tr>
+                                    <td>{{ product.id }}</td>
+                                    <td>{{ product.product.name }}</td>
+                                    <td>{{ product.price }}</td>
+                                    <td>{{ product.quantity }}</td>
+                                    <td>{{ product.customer }}</td>
+                                    <td>{{ product.status }}</td>
+                                    <td>
+                                        {% if request.user.is_staff %}
+                                        <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
+                                        <a href="{{ product.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

@@ -117,65 +117,23 @@ class Warehouse(models.Model):
         return reverse("core:warehouse-delete", kwargs={"pk": self.pk})
 
 
-class Chalan(models.Model):
-    name = models.CharField(max_length=254,
-                        help_text='Example: ABC-01122020', 
-                        unique=True)
-    description = models.TextField(max_length=254)
-    status = models.BooleanField(default=True)
-    date_updated = models.DateTimeField(auto_now=True)
-    date_added = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse("core:chalan-detail", kwargs={"pk": self.pk})
-
-    def get_update_url(self):
-        return reverse("core:chalan-edit", kwargs={"pk": self.pk})
-    
-    def get_delete_url(self):
-        return reverse("core:chalan-delete", kwargs={"pk": self.pk})
-
-
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
     warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='inventory_product')
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
 
-    chalan = models.ForeignKey(Chalan, on_delete=models.SET_NULL, null=True)
-    name = models.CharField(max_length=100)
-    # qr_code = models.ImageField(upload_to='qrcodes', blank=True, null=True)
-    supplier_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    sell_price = models.DecimalField(max_digits=8, decimal_places=2, default=0, null=True, blank=True)
-    quantity = models.PositiveIntegerField(null=True, blank=True)
+    product_name = models.CharField(max_length=100)
+    sell_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    quantity = models.PositiveIntegerField()
     description = models.TextField(blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
+
     added_by = models.CharField(max_length=100)
     status = models.BooleanField(default=True)
     date_updated = models.DateTimeField(auto_now=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
-
-    def get_profit_per_product(self):
-        if self.sell_price > self.supplier_price:
-            profit = self.sell_price - self.supplier_price
-            result = (profit / self.supplier_price) * 100
-            result = round(result, 2)
-            return result
-    
-    def get_loss_per_product(self):
-        if self.sell_price:
-            if self.sell_price < self.supplier_price:
-                loss = self.supplier_price - self.sell_price
-                result = (loss / self.supplier_price) * 100
-                result = round(result, 2)
-                return result
-        else:
-            return 0
+        return self.product_name
 
     def get_update_url(self):
         return reverse("core:product-edit", kwargs={"pk": self.pk})
@@ -183,15 +141,16 @@ class Product(models.Model):
     def get_delete_url(self):
         return reverse("core:product-delete", kwargs={"pk": self.pk})
 
+    @property
     def get_unique_number(self):
         cat = str(self.category.name)
         ware = str(self.warehouse.name)
-        name = str(self.name)
+        product_name = str(self.product_name)
         _id = str(self.id)
         d = date.today()
         d = d.strftime("%d%m%y")
 
-        unique_number = cat[0] + ware[0] + name[0] + _id + '-' + d
+        unique_number = cat[0] + ware[0] + product_name[0] + _id + '-' + d
         unique_number = unique_number.upper()
 
         return unique_number
