@@ -93,12 +93,12 @@ const createProduct = {
         }
     },
     created(){
-        axios.get('/api/category-create')
+        axios.get('/api/v1/category')
         .then(response => {
             this.categories = response.data
         })
 
-        axios.get('/api/subcategory-create')
+        axios.get('/api/v1/subcategory')
         .then(response => {
             this.subcategories = response.data
         })

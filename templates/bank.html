@@ -74,7 +74,7 @@
                                             <td>{{ bank.branch }}</td>
                                             <td>
                                                 {% if request.user.is_staff %}
-                                                <a href="{{ bank.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
+                                                <a href="{{ bank.get_update_url }}" class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></a>
                                                 <a href="{{ bank.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
                                                 {% endif %}
                                             </td>

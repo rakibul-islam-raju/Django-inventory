@@ -4,7 +4,7 @@
 
 {% block body %}
 
-
+    {% if not user.is_customer %}
     <div class="row">
         <!-- Customers Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
@@ -17,7 +17,7 @@
                             <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_customer }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                            <i class="fas fa-users fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                            <i class="fas fa-fw fa-boxes fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
@@ -73,22 +73,23 @@
 
         <!-- Suppliers Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card border-left-danger shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                Suppliers</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_supplier }}</div>
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Orders</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ pending_orders }}</div>
                         </div>
                         <div class="col-auto">
-                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                            <i class="fa fa-file-invoice fa-2x text-gray-300"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    {% endif %}
 
     <div class="row">
         <div class="col-lg-7">
@@ -98,9 +99,9 @@
                 </div>
                 <div class="card-body">
 
-                    <div class="d-flex justify-content-end">
+                    {% comment %} <div class="d-flex justify-content-end">
                         <a class="btn btn-primary btn-sm mb-3" href="{% url 'core:product-download-csv' %}">Download CSV</a>
-                    </div>
+                    </div> {% endcomment %}
 
                     <div class="table-responsive">
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -123,11 +124,11 @@
 
                                         {% if request.user.is_staff %}
                                         <td>
-                                            <a class="btn btn-outline-primary btn-sm" href="{% url 'sell:sell-product' product.pk %}">Sell</a>
+                                            <a class="btn btn-primary btn-sm" href="{% url 'sell:sell-product' product.pk %}">Sell</a>
                                         </td>
                                         {% elif request.user.is_customer %}
                                         <td>
-                                            <a class="btn btn-outline-primary btn-sm" href="{% url 'order:order-create' product.pk %}">Order</a>
+                                            <a class="btn btn-primary btn-sm" href="{% url 'order:order-create' product.pk %}">Order</a>
                                         </td>
                                         {% endif %}
                                     </tr>

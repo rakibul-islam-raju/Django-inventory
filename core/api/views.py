@@ -13,7 +13,7 @@ class WarehouseListCreate(generics.ListCreateAPIView):
     model = Warehouse
     serializer_class = WarehouseSerializer
     queryset = Warehouse.objects.filter(status=True)
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
 
 class WarehouseDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -23,7 +23,7 @@ class WarehouseDetail(generics.RetrieveUpdateDestroyAPIView):
     model = Warehouse
     serializer_class = WarehouseEditSerializer
     queryset = Warehouse.objects.filter(status=True)
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
 
 class CategoryListCreate(generics.ListCreateAPIView):
@@ -33,7 +33,7 @@ class CategoryListCreate(generics.ListCreateAPIView):
     model = Category
     serializer_class = CategorySerializer
     queryset = Category.objects.filter(status=True)
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
 
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):

@@ -8,85 +8,55 @@
 
 {% block content %}
 <div class="card o-hidden border-0 shadow-lg my-5">
-    <div class="card-body p-0">
-        <!-- Nested Row within Card Body -->
-        <div class="row">
-            <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
-            <div class="col-lg-7">
-                {% include '../includes/messages.html' %}
-                <div class="p-5">
-                    <div class="text-center">
-                        <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
-                    </div>
+    <div class="col-xl-12 col-lg-12 col-md-12">
+        <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+                <div class="col-lg-6 d-none d-lg-block auth-bg"></div>
+                <div class="col-lg-6">
+                    {% include '../includes/messages.html' %}
+                    <div class="p-5">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
+                        </div>
 
-                    <form class="signup user" id="signup_form" method="POST" action="{% url 'account_signup' %}">
-                        {% csrf_token %}
-                        {{ form|as_crispy_errors }}
-                        <div class="form-group row">
-                            <div class="col-sm-6 mb-3 mb-sm-0">
-                                {% crispy_field form.username 'class' 'form-control form-control-user' %}
+                        <form class="signup user" id="signup_form" method="POST" action="{% url 'account_signup' %}">
+                            {% csrf_token %}
+                            {{ form|as_crispy_errors }}
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    {% crispy_field form.username 'class' 'form-control form-control-user' %}
+                                </div>
+                                <div class="col-sm-6">
+                                    {% crispy_field form.phone 'class' 'form-control form-control-user' %}
+                                </div>
                             </div>
-                            <div class="col-sm-6">
-                                {% crispy_field form.phone 'class' 'form-control form-control-user' %}
+                            <div class="form-group">
+                                {% crispy_field form.email 'class' 'form-control form-control-user' %}
                             </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    {% crispy_field form.password1 'class' 'form-control form-control-user' %}
+                                </div>
+                                <div class="col-sm-6">
+                                    {% comment %} {% crispy_field form.password2 'class' 'form-control form-control-user' %} {% endcomment %}
+                                    <input type="password" name="password2" placeholder="Confirm Password" class="textinput textInput form-control form-control form-control-user" required="" id="id_password2">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-user btn-block">
+                                Register Account
+                            </button>
+                        </form>
+                        <hr>
+                        <div class="text-center">
+                            <a class="small" href="{{ login_url }}">Already have an account? Login!</a>
                         </div>
-                        <div class="form-group">
-                            {% crispy_field form.email 'class' 'form-control form-control-user' %}
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-sm-6 mb-3 mb-sm-0">
-                                {% crispy_field form.password1 'class' 'form-control form-control-user' %}
-                            </div>
-                            <div class="col-sm-6">
-                                {% crispy_field form.password2 'class' 'form-control form-control-user' %}
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                            Register Account
-                        </button>
-                    </form>
-                    <hr>
-                    <div class="text-center">
-                        <a class="small" href="{{ login_url }}">Already have an account? Login!</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-
-{% comment %} <main>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-7">
-                <div class="card shadow-lg border-0 rounded-lg mt-3 mb-3">
-                    {% include '../includes/messages.html' %}
-                    <div class="card-header">
-                        <h3 class="text-center font-weight-light text-primary">{% trans "Create Account" %}</h3>
-                    </div>
-                    <div class="card-body">
-                        <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-                            {% csrf_token %}
-                            {{ form|crispy }}
-                            {% if redirect_field_value %}
-                            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-                            {% endif %}
-                            <div class="form-group mt-4 mb-0">
-                                <button class="primaryAction btn btn-primary btn-block" type="submit">{% trans "Sign Up" %}</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="card-footer text-center">
-                        <div class="small">{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</main> {% endcomment %}
-
 
 {% endblock %}
 

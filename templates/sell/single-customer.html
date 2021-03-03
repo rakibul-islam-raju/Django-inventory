@@ -8,7 +8,7 @@
         <div class="col">
             <div class="card shadow mb-4">
                 <div class="card-header">
-                    <h6 class="m-0 font-weight-bold text-primary">Ordered Product by Customer</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Customer History</h6>
                 </div>
                 <div class="card-body">
                     <div class="">
@@ -28,14 +28,14 @@
                                         <tr>
                                             {% for product in sellproduct %}
                                             <td>{{ product.id }}</td>
-                                            <td>{{ product.product.name }}</td>
+                                            <td>{{ product.product.product_name }}</td>
                                             <td>{{ product.price}}</td>
                                             <td>{{ product.quantity}}</td>
                                             <td>{{ product.status }}</td>
                                             <td>
                                                 {% if request.user.is_staff %}
-                                                <a href="{{ customer.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
-                                                <a href="{{ customer.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
+                                                <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></a>
+                                                <a href="{{ product.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
                                                 {% endif %}
                                             </td>
                                             {% endfor %}

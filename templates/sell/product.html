@@ -28,14 +28,14 @@
                             {% for product in products %}
                                 <tr>
                                     <td>{{ product.id }}</td>
-                                    <td>{{ product.product.name }}</td>
+                                    <td>{{ product.product.product_name }}</td>
                                     <td>{{ product.price }}</td>
                                     <td>{{ product.quantity }}</td>
                                     <td>{{ product.customer }}</td>
                                     <td>{{ product.status }}</td>
                                     <td>
                                         {% if request.user.is_staff %}
-                                        <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
+                                        <a href="{{ product.get_update_url }}" class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></a>
                                         <a href="{{ product.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
                                         {% endif %}
                                     </td>

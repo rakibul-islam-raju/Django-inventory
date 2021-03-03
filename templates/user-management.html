@@ -21,6 +21,7 @@
                                         <th>Last Name</th>
                                         <th>Active User</th>
                                         <th>Stuff User</th>
+                                        <th>Customer</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -41,6 +42,13 @@
                                         </td>
                                         <td>
                                         {% if  user.is_staff %}
+                                            <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                                        {% else %}
+                                            <i class="fa fa-times-circle text-danger" aria-hidden="true"></i>
+                                        {% endif %}
+                                        </td>
+                                        <td>
+                                        {% if  user.is_customer %}
                                             <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
                                         {% else %}
                                             <i class="fa fa-times-circle text-danger" aria-hidden="true"></i>

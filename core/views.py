@@ -14,6 +14,7 @@ from .resources import ProductResource
 
 from sell.models import Customer, SellProduct
 from purchase.models import PurchaseProduct
+from order.models import Order
 
 
 @login_required()
@@ -36,10 +37,9 @@ class HomeView(LoginRequiredMixin, TemplateView):
         context["total_products"] = products.count()
         context["total_customer"] = Customer.objects.filter(
             status=True).count()
-        # context["total_supplier"] = Supplier.objects.filter(status=True).count()
         context["total_sell"] = SellProduct.objects.all().count()
         context["total_Purchase"] = PurchaseProduct.objects.all().count()
-        # context["chalans"] = Chalan.objects.filter(status=True)
+        context["pending_orders"] = Order.objects.filter(order_status=False).count()
         return context
 
 
@@ -371,8 +371,8 @@ class ProductUpdateView(LoginRequiredMixin,
     model = Product
     form_class = ProductForm
     template_name = 'product_create.html'
-    success_url = 'core:home'
-    success_message = "%(name)s was updated successfully"
+    success_url = 'core:product'
+    success_message = "%(product_name)s was updated successfully"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

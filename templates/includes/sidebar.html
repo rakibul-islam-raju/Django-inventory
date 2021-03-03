@@ -22,6 +22,8 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
 
+    {% if user.is_staff or user.is_customer %}
+
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#order"
@@ -35,6 +37,8 @@
             </div>
         </div>
     </li>
+
+    {% if not user.is_customer and user.is_staff or user.is_superuser %}
 
     <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
@@ -79,7 +83,6 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{% url 'purchase:purchase-create' %}">New Purchase</a>
                 <a class="collapse-item" href="{% url 'purchase:product' %}">Purchases</a>
-                <a class="collapse-item" href="{% url 'core:warehouse' %}">Warehouses</a>
             </div>
         </div>
     </li>
@@ -110,6 +113,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{% url 'core:category' %}">Category</a>
                 <a class="collapse-item" href="{% url 'core:subcategory' %}">Sub Category</a>
+                <a class="collapse-item" href="{% url 'core:warehouse' %}">Warehouses</a>
             </div>
         </div>
     </li>
@@ -127,6 +131,10 @@
             </div>
         </div>
     </li>
+
+    {% endif %}
+    
+    {% endif %}
 
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">

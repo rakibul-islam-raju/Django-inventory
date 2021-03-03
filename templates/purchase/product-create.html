@@ -10,7 +10,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">{{title|title}}</h6>
                 </div>
                 <div class="card-body">
-                    <div class="d-flex justify-content-end mb-4">
+                    {% comment %} <div class="d-flex justify-content-end mb-4">
                         <!-- Button trigger modal -->
                         <div class="buttons-right">
                             <!-- warehouse button -->
@@ -143,7 +143,7 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> {% endcomment %}
 
                     <div class="Product-form">
                         <form action="" method="POST">
@@ -158,7 +158,7 @@
                                             <label for="id_category" class=" requiredField"> Category<span class="asteriskField">*</span></label>
                                             <div class="">
                                                 <select @change="selectSubcategory(categoryOption)" v-model="categoryOption" name="category" class="select form-control" required="" id="id_category">
-                                                    <option value="" selected>Select One</option>
+                                                    {% comment %} <option value="" selected>Select One</option> {% endcomment %}
                                                     <option v-for="category in categories" :value="category.id">[[ category.name ]]</option>
                                                 </select>
                                             </div>
@@ -169,7 +169,7 @@
                                             <label for="id_sub_category" class=""> Sub category </label>
                                             <div class="">
                                                 <select v-model="subcategoryOption" name="sub_category" class="select form-control" id="id_sub_category">
-                                                    <option value="" selected>Select One</option>
+                                                    {% comment %} <option value="" selected>Select One</option> {% endcomment %}
                                                     <option v-for="subcategory in selectSubcategories" :value="subcategory.id">[[ subcategory.name ]]</option>
                                                 </select>
                                             </div>
@@ -271,12 +271,12 @@ const purchaseForm = {
         }
     },
     created(){
-        axios.get('/api/category-create')
+        axios.get('/api/v1/category')
         .then(response => {
             this.categories = response.data
         })
 
-        axios.get('/api/subcategory-create')
+        axios.get('/api/v1/subcategory')
         .then(response => {
             this.subcategories = response.data
         })

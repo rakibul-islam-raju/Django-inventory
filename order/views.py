@@ -42,12 +42,14 @@ class OrderListView(LoginRequiredMixin,
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = 'Order List'
-        context["orders"] = Order.objects.filter(user=self.request.user).order_by('order_status')
-        context["allOrders"] = Order.objects.all().order_by('order_status')
+        if self.request.user.is_customer:
+            context["orders"] = Order.objects.filter(user=self.request.user).order_by('order_status')
+        else:
+            context["orders"] = Order.objects.all().order_by('order_status')
         return context
 
     def test_func(self):
-        if self.request.user.is_customer:
+        if self.request.user.is_customer or self.request.usre.is_staff:
             return True
         return False
 
