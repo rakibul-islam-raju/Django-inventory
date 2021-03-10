@@ -1,18 +1,17 @@
 {% extends "base.html" %}
 
-{% block body %}
-    <div class="container-fluid">
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item active">User Management</li>
-        </ol>
+{% block title %}User Management - {% endblock title %}
 
-        <div class="row justify-content-center">
+{% block body %}
+    <div class="row">
             <div class="col">
                 <div class="card">
-                    <div class="card-header">User List</div>
+                    <div class="card-header">
+                        <h6 class="m-0 font-weight-bold text-primary">Users</h6>
+                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table" id="dataTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -22,13 +21,12 @@
                                         <th>Last Name</th>
                                         <th>Active User</th>
                                         <th>Stuff User</th>
+                                        <th>Customer</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     {% for user in users %}
-                                    
                                     <tr>
                                         <td>{{ user.id }}</td>
                                         <td>{{ user.username }}</td>
@@ -50,20 +48,24 @@
                                         {% endif %}
                                         </td>
                                         <td>
-                                            <a href="{% url 'core:edit-user-management' user.username %}" class="btn btn-sm btn-outline-info">
+                                        {% if  user.is_customer %}
+                                            <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
+                                        {% else %}
+                                            <i class="fa fa-times-circle text-danger" aria-hidden="true"></i>
+                                        {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{% url 'core:edit-user-management' user.username %}" class="btn btn-sm btn-outline-primary">
                                                 <i class="fa fa-edit"></i>
                                             </a>
                                         </td>
                                     </tr>
-
                                     {% endfor %}
-
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 {% endblock body %}

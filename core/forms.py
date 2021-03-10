@@ -1,46 +1,41 @@
 from django import forms
-from .models import (Office,
-                    Department,
-                    Category,
-                    Product,
-                    User,
-                    Warehouse,
-                    Bank,
-                    BankTransaction,
-                    Chalan)
+from .models import *
 
 from allauth.account.forms import SignupForm
 
 
-offices = Office.objects.all()
-
-
 class MyCustomSignupForm(SignupForm):
-    office = forms.ModelChoiceField(offices)
+    phone = forms.CharField(max_length=14,
+                            min_length=11,
+                            widget=forms.TextInput(attrs={'placeholder': 'Phone Number'})
+                        )
 
     def save(self, request):
         user = super(MyCustomSignupForm, self).save(request)
-        office = self.cleaned_data['office']
-        user.office = office
+        phone = self.cleaned_data['phone']
+        user.phone = phone
         user.save()
         return user
-
-
-class DeptForm(forms.ModelForm):
-
-    class Meta:
-        model = Department
-        fields = ['name', 'description']
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': '2'}),
-        }
 
 
 class CategoryForm(forms.ModelForm):
 
     class Meta:
         model = Category
-        fields = ['department', 'name']
+        fields = ['name', 'description']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': '2'}),
+        }
+
+
+class SubcategoryForm(forms.ModelForm):
+
+    class Meta:
+        model = Subcategory
+        fields = ['category', 'name', 'description']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': '2'}),
+        }
 
 
 class ProductForm(forms.ModelForm):
@@ -48,11 +43,10 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['category',
+                'subcategory',
                 'warehouse',
-                'chalan',
-                'name',
+                'product_name',
                 'quantity',
-                'supplier_price',
                 'sell_price',
                 'description']
         widgets = {
@@ -99,15 +93,16 @@ class UserPermissionForm(forms.ModelForm):
                 'email',
                 'first_name',
                 'last_name',
+                'organization',
                 'is_active',
                 'is_staff',]
 
 
-class ChalanCreateForm(forms.ModelForm):
+# class ChalanCreateForm(forms.ModelForm):
 
-    class Meta:
-        model = Chalan
-        fields = ['name', 'description']
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': '2'}),
-        }
+#     class Meta:
+#         model = Chalan
+#         fields = ['name', 'description']
+#         widgets = {
+#             'description': forms.Textarea(attrs={'rows': '2'}),
+#         }

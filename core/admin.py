@@ -15,24 +15,22 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     make_status_active.short_description = 'Update status to active'
     make_status_inactive.short_description = 'Update status to inactive'
 
-    list_display = ['name',
+    list_display = ['product_name',
                     'category',
-                    'supplier_price',
                     'sell_price',
                     'quantity',
                     'added_by',
-                    'office',
                     'status']
-    date_hierarchy = 'timestamp'
-    list_display_links = ['name', 'added_by']
-    search_fields = ['name']
+    date_hierarchy = 'date_added'
+    list_display_links = ['product_name', 'added_by']
+    search_fields = ['product_name']
     actions = [make_status_active, make_status_inactive]
 
     resource_class = ProductResource
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'first_name', 'last_name', 'office', 'is_staff')
+    list_display = ('username', 'email', 'first_name', 'last_name', 'organization', 'is_staff')
     list_filter = ('is_staff', 'is_superuser')
 
 
@@ -41,16 +39,14 @@ class UserAdmin(admin.ModelAdmin):
 #     inlines = [ProductAdmin]
 
 
-class CategoryAdmin(admin.ModelAdmin):
+class SubcategoryAdmin(admin.ModelAdmin):
     # model = Category
-    list_display = ['name', 'department', 'status']
-    list_filter = ['department']
+    list_display = ['name', 'category', 'status']
     search_fields = ['name']
 
 
-class DepartmentAdmin(admin.ModelAdmin):
-    list_display = ['name', 'office', 'status']
-    list_filter = ['office']
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'status']
     search_fields = ['name']
 
 
@@ -71,10 +67,10 @@ class BankTransactionAdmin(admin.ModelAdmin):
     date_hierarchy = 'date'
 
 
-admin.site.register(Chalan)
-admin.site.register(Office)
-admin.site.register(Department, DepartmentAdmin)
+# admin.site.register(Chalan)
+admin.site.register(Organization)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Subcategory, SubcategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Warehouse, WarehouseAdmin)

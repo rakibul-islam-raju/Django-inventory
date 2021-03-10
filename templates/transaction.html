@@ -1,105 +1,104 @@
 {% extends './base.html' %}
 {% load crispy_forms_tags %}
 
+{% block title %}Transactions{% endblock title %}
+
 {% block body %}
 
 <main>
-    <div class="container-fluid">
-        <ol class="breadcrumb mb-4">
-            <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Dashboard</a></li>
-            <li class="breadcrumb-item active">Transaction</li>
-        </ol>
-        <div class="card mb-4">
-            <h5 class="card-header">{{title|title}}</h5>
-            <div class="card-body">
-                <div class="category-form">
-                    <form action="" method=POST>
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col">
-                                    {{ form.bank|as_crispy_field }}
-                                </div>
-                                <div class="col">
-                                    {{ form.date|as_crispy_field }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    {{ form.account_type|as_crispy_field }}
-                                </div>
-                                <div class="col-lg-4">
-                                    {{ form.transaction_type|as_crispy_field }}
-                                </div>
-                                <div class="col-lg-4">
-                                    {{ form.amount|as_crispy_field }}
-                                </div>
-                                <div class="col-lg-6">
-                                    {{ form.description|as_crispy_field }}
-                                </div>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" type="submit">Submit</button>
-                        <a href="{% url 'core:bank' %}" class="btn btn-secondary" type="submit">Cancel</a>
-                    </form>
+    <div class="row">
+        <div class="col">
+            <div class="card shadow mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">{{title|title}}</h6>
                 </div>
-            </div>
-        </div>
-        <div class="card mb-4">
-            <h5 class="card-header">All Transaction List</h5>
-            <div class="card-body">
-                <div class="department-list">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Bank</th>
-                                    <th>A/C Type</th>
-                                    <th>Transaction Type</th>
-                                    <th>Amount</th>
-                                    <th>Description</th>
-                                    <th>Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tfoot>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Bank</th>
-                                    <th>A/C Type</th>
-                                    <th>Transaction Type</th>
-                                    <th>Amount</th>
-                                    <th>Description</th>
-                                    <th>Date</th>
-                                    <th>Action</th>
-                                </tr>
-                            </tfoot>
-                            <tbody>
-                                {% for transaction in transactions %}
-                                    <tr>
-                                        <td>{{ transaction.id }}</td>
-                                        <td>{{ transaction.bank }}</td>
-                                        <td>{{ transaction.get_account_type_display }}</td>
-                                        <td>{{ transaction.get_transaction_type_display }}</td>
-                                        <td>{{ transaction.amount }}</td>
-                                        <td>{{ transaction.description }}</td>
-                                        <td>{{ transaction.date }}</td>
-                                        <td>
-                                            {% if request.user.is_staff %}
-                                            <a href="{{ transaction.get_update_url }}" class="btn btn-sm btn-outline-info"><i class="fa fa-edit"></i></a>
-                                            <a href="{{ transaction.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                <div class="card-body">
+                    <div class="category-form">
+                        <form action="" method=POST>
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        {{ form.bank|as_crispy_field }}
+                                    </div>
+                                    <div class="col">
+                                        {{ form.date|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        {{ form.account_type|as_crispy_field }}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        {{ form.transaction_type|as_crispy_field }}
+                                    </div>
+                                    <div class="col-lg-4">
+                                        {{ form.amount|as_crispy_field }}
+                                    </div>
+                                    <div class="col-lg-6">
+                                        {{ form.description|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <a href="{% url 'core:bank' %}" class="btn btn-secondary" type="submit">Cancel</a>
+                                <button class="btn btn-primary ml-2" type="submit">Submit</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="row">
+        <div class="col">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="m-0 font-weight-bold text-primary">Transactions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="department-list">
+                        <div class="table-responsive">
+                            <table class="table" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Bank</th>
+                                        <th>A/C Type</th>
+                                        <th>Transaction Type</th>
+                                        <th>Amount</th>
+                                        <th>Description</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for transaction in transactions %}
+                                        <tr>
+                                            <td>{{ transaction.id }}</td>
+                                            <td>{{ transaction.bank }}</td>
+                                            <td>{{ transaction.get_account_type_display }}</td>
+                                            <td>{{ transaction.get_transaction_type_display }}</td>
+                                            <td>{{ transaction.amount }}</td>
+                                            <td>{{ transaction.description }}</td>
+                                            <td>{{ transaction.date }}</td>
+                                            <td>
+                                                {% if request.user.is_staff %}
+                                                <a href="{{ transaction.get_update_url }}" class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></a>
+                                                <a href="{{ transaction.get_delete_url }}" class="btn btn-sm btn-outline-danger"><i class="fa fa-trash-alt"></i></a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 

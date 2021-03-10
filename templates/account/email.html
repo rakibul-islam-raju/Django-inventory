@@ -3,15 +3,16 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block head_title %}{% trans "E-mail Addresses" %}{% endblock %}
+{% block title %}{% trans "E-mail Addresses" %} - {% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-6 card mt-5">
             {% include '../includes/messages.html' %}
-    <h1 class="card-header text-primary">{% trans "E-mail Addresses" %}</h1>
+    {% comment %} <h1 class="card-header text-primary"></h1> {% endcomment %}
     <div class="card-body">
+    <h1 class="h4 text-gray-900 mb-2">{% trans "E-mail Addresses" %}</h1>
 {% if user.emailaddress_set.all %}
 <p>{% trans 'The following e-mail addresses are associated with your account:' %}</p>
 
@@ -36,10 +37,10 @@
 </div>
   {% endfor %}
 
-<div class="buttonHolder">
-      <button class="secondaryAction btn btn-outline-primary" type="submit" name="action_primary" >{% trans 'Make Primary' %}</button>
-      <button class="secondaryAction btn btn-outline-primary" type="submit" name="action_send" >{% trans 'Re-send Verification' %}</button>
-      <button class="primaryAction btn btn-outline-primary" type="submit" name="action_remove" >{% trans 'Remove' %}</button>
+<div class="buttonHolder d-flex justify-content-end">
+      <button class="secondaryAction btn btn-sm btn-primary ml-2" type="submit" name="action_primary" >{% trans 'Make Primary' %}</button>
+      <button class="secondaryAction btn btn-sm btn-secondary ml-2" type="submit" name="action_send" >{% trans 'Re-send Verification' %}</button>
+      <button class="primaryAction btn btn-sm btn-dark ml-2" type="submit" name="action_remove" >{% trans 'Remove' %}</button>
 </div>
 
 </fieldset>
@@ -57,7 +58,11 @@
     <form method="post" action="{% url 'account_email' %}" class="add_email">
         {% csrf_token %}
         {{ form|crispy }}
-        <button class="btn btn-primary" name="action_add" type="submit">{% trans "Add E-mail" %}</button>
+
+        <div class="d-flex justify-content-between">
+          <a class="btn btn-secondary" href="{% url 'core:profile' user.username %}">Cancel</a>
+          <button class="btn btn-primary" name="action_add" type="submit">{% trans "Add E-mail" %}</button>
+        </div>
     </form>
         </div>
         </div>

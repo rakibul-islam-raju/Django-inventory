@@ -1,63 +1,71 @@
 {% extends "./base.html" %}
 {% load crispy_forms_tags %}
+{% load crispy_forms_field %}
 
-{% load i18n %}
-{% load account socialaccount %}
 
-{% block head_title %}{% trans "Sign In" %}{% endblock %}
+{% block title %}Login - {% endblock title %}
 
 {% block content %}
-<main>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-5">
-                <div class="card shadow-lg border-0 rounded-lg mt-5">
-                    {% include '../includes/messages.html' %}
-                    <div class="card-header">
-                        <h3 class="text-center font-weight-light text-primary">{% trans "Sign In" %}</h3>
-                        {% get_providers as socialaccount_providers %}
-                    </div>
-                    <div class="card-body">
 
-                        {% if socialaccount_providers %}
-                            <p>{% blocktrans with site.name as site_name %}Please sign in with one
-                            of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-                            for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
-
-                            <div class="socialaccount_ballot">
-
-                            <ul class="socialaccount_providers">
-                                {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-                            </ul>
-
-                            <div class="login-or">{% trans 'or' %}</div>
-
+<!-- Outer Row -->
+<div class="row justify-content-center">
+    <div class="col-xl-12 col-lg-12 col-md-12">
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-6 d-none d-lg-block auth-bg"></div>
+                    <div class="col-lg-6">
+                        {% include '../includes/messages.html' %}
+                        <div class="p-5">
+                            <div class="text-center">
+                                {% comment %} <h1 class="h4 text-gray-900 mb-4">NOGORSOFT</h1> {% endcomment %}
+                                <h3 class="h4 text-gray-900 mb-4">Inventory Managemest System</h3>
                             </div>
-
-                            {% include "socialaccount/snippets/login_extra.html" %}
-
-                            {% else %}
-                            <p>{% blocktrans %}If you have not created an account yet, then please
-                            <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
-                        {% endif %}
-
-                        <form class="login" method="POST" action="{% url 'account_login' %}">
-                            {% csrf_token %}
-                            {{ form|crispy }}
-                            <div class="form-group d-flex align-items-center justify-content-between mt-4 mb-0">
-                                <a class="button secondaryAction small" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-                                <button class="primaryAction btn btn-primary" type="submit">{% trans "Sign In" %}</button>
+                            <form class="user login" action="{% url 'account_login' %}" method="POST">
+                                {% csrf_token %}
+                                {{ form|as_crispy_errors }}
+                                <div class="form-group">
+                                    {% crispy_field form.login 'class' 'form-control form-control-user' %}
+                                </div>
+                                <div class="form-group">
+                                    {% crispy_field form.password 'class' 'form-control form-control-user' %}
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox small">
+                                        <input type="checkbox" class="custom-control-input" id="showPwd">
+                                        <label class="custom-control-label" for="showPwd">Show Password</label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">
+                                    Login
+                                </button>
+                            </form>
+                            <hr>
+                            <div class="text-center">
+                                <a class="small" href="{% url 'account_reset_password' %}">Forgot Password?</a>
                             </div>
-                        </form>
-                    </div>
-                    <div class="card-footer text-center">
-                        <div class="small"><a href="{% url 'account_signup' %}">Need an account? Sign up!</a></div>
+                            <div class="text-center">
+                                <a class="small" href="{% url 'account_signup' %}">Create an Account!</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</main>
+</div>
 
+<script type="text/javascript">
+    const pwdInp = document.getElementById('id_password')
+    const showPwd = document.getElementById('showPwd')
+    showPwd.addEventListener('click', () => {
+        if (pwdInp.type === "password") {
+            pwdInp.type = "text";
+        } else {
+            pwdInp.type = "password";
+        }
+    })
+</script>
 
-{% endblock %}
+{% endblock content %}

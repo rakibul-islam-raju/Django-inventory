@@ -1,13 +1,13 @@
 from django.db import models
 from django.urls import reverse
-from core.models import Warehouse, Product, Chalan
+from core.models import Warehouse, Product
 
 
 class Customer(models.Model):
     name = models.CharField(max_length=100)
-    email = models.EmailField()
-    phone = models.DecimalField(decimal_places=0, max_digits=11)
-    address = models.TextField()
+    email = models.EmailField(blank=True, null=True)
+    phone = models.CharField(max_length=11)
+    address = models.TextField(blank=True, null=True)
     status = models.BooleanField(default=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
@@ -31,14 +31,12 @@ class SellProduct(models.Model):
     warehouse = models.ForeignKey(Warehouse, null=True, on_delete=models.SET_NULL)
     customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL)
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
-    chalan = models.ForeignKey(Chalan, null=True, on_delete=models.SET_NULL)
-
 
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(decimal_places=2, max_digits=8)
     description = models.TextField(blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now=False, auto_now_add=True)
-    # added_by = models.CharField(max_length=100)
+    
+    added_by = models.CharField(max_length=100)
     status = models.CharField(max_length=100, choices=STATUS)
     date_updated = models.DateTimeField(auto_now=True)
     date_added = models.DateTimeField(auto_now_add=True)
@@ -46,8 +44,10 @@ class SellProduct(models.Model):
     def __str__(self):
         return f'{self.customer.name}\'s order'
 
+    @property
     def get_total_price(self):
         result = self.price * self.quantity
+        return result
     
     def get_update_url(self):
         return reverse("sell:sell-edit", kwargs={"pk": self.pk})

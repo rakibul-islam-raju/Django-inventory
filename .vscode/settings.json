@@ -1,14 +1,10 @@
 {
-    "django.snippets.exclude": [
-
-        "cms",
-        "wagtail"
-    ],
     "emmet.excludeLanguages": [
 
         "markdown"
     ],
 
     "emmet.triggerExpansionOnTab": true,
-    "python.pythonPath": "venv/bin/python"
+    "python.pythonPath": "venv/bin/python",
+    "python.formatting.provider": "autopep8"
 }
