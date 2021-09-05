@@ -1,6 +1,6 @@
 from rest_framework import generics
-from rest_framework import status, permissions
-from rest_framework.response import Response
+from rest_framework import permissions
+
 from sell.models import *
 from sell.api.serializers import *
 
@@ -32,7 +32,7 @@ class SellProductListCreate(generics.ListCreateAPIView):
     model = SellProduct
     serializer_class = SellProductSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = SellProduct.objects.filter(status=True)
+    queryset = SellProduct.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(added_by=self.request.user)
@@ -45,7 +45,7 @@ class SellProductDetail(generics.RetrieveUpdateDestroyAPIView):
     model = SellProduct
     serializer_class = SellProductEditSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = SellProduct.objects.filter(status=True)
+    queryset = SellProduct.objects.all()
 
     def perform_update(self, serializer):
         serializer.save(added_by=self.request.user)

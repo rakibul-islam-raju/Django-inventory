@@ -9,9 +9,8 @@ class CustomerAdmin(admin.ModelAdmin):
 
 
 class SellProductAdmin(admin.ModelAdmin):
-    list_display = ['customer', 'status', 'date_added', 'description']
+    list_display = ['customer', 'date_added', 'description']
     search_fields = ['product', 'customer']
-    list_filter = ['status']
 
     date_hierarchy = 'date_added'
 

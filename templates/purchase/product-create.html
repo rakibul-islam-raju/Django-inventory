@@ -1,5 +1,6 @@
 {% extends '../base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block body %}
 <main id="purchase-create">
@@ -10,7 +11,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">{{title|title}}</h6>
                 </div>
                 <div class="card-body">
-                    {% comment %} <div class="d-flex justify-content-end mb-4">
+                    <div class="d-flex justify-content-end mb-4">
                         <!-- Button trigger modal -->
                         <div class="buttons-right">
                             <!-- warehouse button -->
@@ -53,7 +54,7 @@
                                                 </div>
                                             </div>
                                             <div class="buttons-right">
-                                                <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Close</button>
+                                                <button id="warehouseModalClose" type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Close</button>
                                                 <button type="submit" class="btn btn-primary">Save</button>
                                             </div>
                                         </form>
@@ -88,7 +89,7 @@
                                                 </div>
                                             </div>
                                             <div class="buttons-right">
-                                                <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Close</button>
+                                                <button id="categoryModalClose" type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Close</button>
                                                 <button type="submit" class="btn btn-primary">Save</button>
                                             </div>
                                         </form>
@@ -110,10 +111,10 @@
                                     <div class="modal-body">
                                         <form @submit.prevent="createSubCategory">
                                             {% csrf_token %}
-                                            <div id="div_id_category" class="form-group">
-                                                <label for="id_category" class=" requiredField"> Category<span class="asteriskField">*</span></label> 
+                                            <div id="div_id_sub_category" class="form-group">
+                                                <label for="id_sub_category" class=" requiredField"> Category<span class="asteriskField">*</span></label> 
                                                 <div class="">
-                                                    <select v-model="subcategoryCategory" name="category" class="select form-control" required="" id="id_category">
+                                                    <select v-model="subcategoryCategory" name="category" class="select form-control" required="" id="id_sub_category">
                                                         <option value="">Select One</option>
                                                         {% for instance in subcategory_form.category.field.queryset %}
                                                             <option value="{{ instance.pk }}">{{ instance.name }}</option>
@@ -134,7 +135,7 @@
                                                 </div>
                                             </div>
                                             <div class="buttons-right">
-                                                <button type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Close</button>
+                                                <button id="subcategoryModalClose" type="button" class="btn btn-secondary mr-1" data-dismiss="modal">Close</button>
                                                 <button type="submit" class="btn btn-primary">Save</button>
                                             </div>
                                         </form>
@@ -143,7 +144,7 @@
                             </div>
                         </div>
 
-                    </div> {% endcomment %}
+                    </div>
 
                     <div class="Product-form">
                         <form action="" method="POST">
@@ -155,11 +156,12 @@
                                     </div>
                                     <div class="col-md-4"> 
                                         <div id="div_id_category" class="form-group">
-                                            <label for="id_category" class=" requiredField"> Category<span class="asteriskField">*</span></label>
+                                            <label for="id_category" class=" requiredField">Category<span class="asteriskField">*</span></label>
                                             <div class="">
-                                                <select @change="selectSubcategory(categoryOption)" v-model="categoryOption" name="category" class="select form-control" required="" id="id_category">
-                                                    {% comment %} <option value="" selected>Select One</option> {% endcomment %}
-                                                    <option v-for="category in categories" :value="category.id">[[ category.name ]]</option>
+                                                <select @change="selectSubcategory()" id="id_category" name="category" class="select form-control">
+                                                    {% for id, name in form.category.field.choices %}
+                                                    <option value="{{ id }}">{{ name }}</option>
+                                                    {% endfor %}
                                                 </select>
                                             </div>
                                         </div>
@@ -169,7 +171,6 @@
                                             <label for="id_sub_category" class=""> Sub category </label>
                                             <div class="">
                                                 <select v-model="subcategoryOption" name="sub_category" class="select form-control" id="id_sub_category">
-                                                    {% comment %} <option value="" selected>Select One</option> {% endcomment %}
                                                     <option v-for="subcategory in selectSubcategories" :value="subcategory.id">[[ subcategory.name ]]</option>
                                                 </select>
                                             </div>
@@ -238,122 +239,6 @@
 {% endblock body %}
 
 
-
 {% block extra_script %}
-
-<script type="text/javascript">
-
-const purchaseForm = {
-    data(){
-        return{
-            // mayment option toggle
-            paymentMethod: '',
-            bankOption: false,
-            // add warehouse
-            warehouseName: '',
-            warehouseDescription: '',
-            // add category
-            categoryName: '',
-            categoryDescription: '',
-            // add subcategory
-            subcategoryCategory: '',
-            subcategoryName: '',
-            subcategoryDescription: '',
-            // category and sub category list
-            categories: [],
-            subcategories: [],
-            selectSubcategories: [],
-            // dependent subcategory dropdown
-            categoryOption: null,
-            subcategoryOption: null,
-
-            errors: []
-        }
-    },
-    created(){
-        axios.get('/api/v1/category')
-        .then(response => {
-            this.categories = response.data
-        })
-
-        axios.get('/api/v1/subcategory')
-        .then(response => {
-            this.subcategories = response.data
-        })
-    },
-    methods: {
-        paymentBank(){
-            if(this.paymentMethod == 'bank'){
-                this.bankOption = true
-            }else(
-                this.bankOption = false
-            )
-        },
-
-        createWarehouse(){
-            console.log('form submitted')
-            axios.defaults.xsrfCookieName = 'csrftoken';
-            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-            axios.post('/api/warehouse-create', {
-                name: this.warehouseName,
-                description: this.warehouseDescription
-            })
-            .then(function (response) {
-                console.log(response.data)
-                window.location.reload();
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
-        },
-
-        createCategory(){
-            console.log('form submitted')
-            axios.defaults.xsrfCookieName = 'csrftoken';
-            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-            axios.post('/api/category-create', {
-                name: this.categoryName,
-                description: this.categoryDescription
-            })
-            .then(function (response) {
-                console.log(response.data)
-                window.location.reload();
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
-        },
-
-        createSubCategory(){
-            console.log('form submitted')
-            axios.defaults.xsrfCookieName = 'csrftoken';
-            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-            axios.post('/api/subcategory-create', {
-                category: this.subcategoryCategory,
-                name: this.subcategoryName,
-                description: this.subcategoryDescription
-            })
-            .then(function (response) {
-                console.log(response.data)
-                window.location.reload();
-            })
-            .catch(function (error) {
-                console.log(error)
-            })
-        },
-
-        selectSubcategory(id, subcats=this.subcategories){
-            const returnedSubcats = subcats.filter(subcat => subcat.category === id);
-            this.selectSubcategories = returnedSubcats
-        }
-
-    },
-    delimiters: ['[[', ']]']
-}
-
-
-Vue.createApp(purchaseForm).mount('#purchase-create')
-
-</script>
-
+<script src="{% static 'js/purchases/purchase-create.js' %}"></script>
 {% endblock extra_script %}

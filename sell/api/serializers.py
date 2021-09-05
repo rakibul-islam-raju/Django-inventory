@@ -26,7 +26,7 @@ class SellProductSerializer(serializers.ModelSerializer):
     '''
     class Meta:
         model = SellProduct
-        exclude = ['added_by', 'status', 'date_updated', 'date_added']
+        exclude = ['added_by', 'date_updated', 'date_added']
 
 
 class SellProductEditSerializer(serializers.ModelSerializer):

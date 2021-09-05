@@ -16,7 +16,7 @@ SECRET_KEY = '1j97rnx!hraxv5(^hkp8u#90an0^n+mz3dg(*&9dx4mel5_0)@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1' ,'inventory.nogorsoft.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -165,7 +165,6 @@ ACCOUNT_FORMS = {'signup': 'core.forms.MyCustomSignupForm'}
 AUTH_USER_MODEL = 'core.User'
 
 
-
 # email backend
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -175,5 +174,3 @@ MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
-
-
