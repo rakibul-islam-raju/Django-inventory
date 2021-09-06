@@ -39,7 +39,8 @@ class HomeView(LoginRequiredMixin, TemplateView):
             status=True).count()
         context["total_sell"] = SellProduct.objects.all().count()
         context["total_Purchase"] = PurchaseProduct.objects.all().count()
-        context["pending_orders"] = Order.objects.filter(order_status=False).count()
+        context["pending_orders"] = Order.objects.filter(
+            order_status=False).count()
         return context
 
 
@@ -77,9 +78,7 @@ class ProfileEditView(LoginRequiredMixin, SuccessMessageMixin, UserPassesTestMix
         return False
 
 
-class UserManagement(LoginRequiredMixin,
-                     UserPassesTestMixin,
-                     View):
+class UserManagement(LoginRequiredMixin, UserPassesTestMixin, View):
     def get(self, *args, **kwargs):
         users = User.objects.all()
         context = {
@@ -93,10 +92,7 @@ class UserManagement(LoginRequiredMixin,
         return False
 
 
-class EditUserManagent(LoginRequiredMixin,
-                       UserPassesTestMixin,
-                       SuccessMessageMixin,
-                       UpdateView):
+class EditUserManagent(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
     model = User
     form_class = UserPermissionForm
     template_name = 'edit-user-management.html'
@@ -114,9 +110,7 @@ class EditUserManagent(LoginRequiredMixin,
         return False
 
 
-class ProductView(LoginRequiredMixin,
-                  UserPassesTestMixin,
-                  TemplateView):
+class ProductView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'product.html'
 
     def get_context_data(self, **kwargs):
@@ -130,76 +124,26 @@ class ProductView(LoginRequiredMixin,
         return False
 
 
-# class ChalanDetailView(DetailView):
-#     model = Chalan
-#     template_name = 'chalan/chalan_detail.html'
-
 # >=========== create views =============>
 
-# class ChalanCreateView(LoginRequiredMixin,
-#                         UserPassesTestMixin,
-#                         SuccessMessageMixin,
-#                         CreateView):
-#     model = Chalan
-#     form_class = ChalanCreateForm
-#     template_name = 'chalan/chalan_create.html'
-#     success_url = 'core:chalan'
-#     success_message = "%(name)s was created successfully"
+class ProductCreateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView):
+    model = Product
+    template_name = 'product_create.html'
+    form_class = ProductForm
+    success_url = 'core:product-create'
+    success_message = '%(product_name)s was created successfully'
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["title"] = 'Create New Chalan'
-#         context["chalans"] = Chalan.objects.filter(status=True)
-#         return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = 'Create new product'
+        return context
 
-#     def get_success_url(self, **kwargs):
-#         return reverse(self.success_url)
+    def form_valid(self, form):
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
 
-#     def test_func(self):
-#         if self.request.user.is_staff:
-#             return True
-#         return False
-
-class ProductCreateView(LoginRequiredMixin,
-                        UserPassesTestMixin,
-                        View):
-    def get(self, *args, **kwargs):
-        form = ProductForm()
-        context = {
-            'form': form,
-            'title': 'Add new product'
-        }
-        return render(self.request, 'product_create.html', context)
-
-    def post(self, *args, **kwargs):
-        form = ProductForm(self.request.POST or None)
-        added_by = User.objects.get(username=self.request.user.username)
-
-        if form.is_valid():
-            category = form.cleaned_data.get('category')
-            subcategory = form.cleaned_data.get('subcategory')
-            product_name = form.cleaned_data.get('product_name')
-            sell_price = form.cleaned_data.get('sell_price')
-            description = form.cleaned_data.get('description')
-            quantity = form.cleaned_data.get('quantity')
-            warehouse = form.cleaned_data.get('warehouse')
-
-            new_dept = Product(
-                category=category,
-                subcategory=subcategory,
-                product_name=product_name,
-                sell_price=sell_price,
-                description=description,
-                quantity=quantity,
-                warehouse=warehouse,
-                added_by=added_by.username,
-            )
-            new_dept.save()
-            messages.success(self.request, 'Product added successfully')
-            return redirect('./')
-        else:
-            messages.warning(self.request, 'Something went wrong')
-            return redirect('./')
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
 
     def test_func(self):
         if self.request.user.is_staff:
@@ -207,10 +151,7 @@ class ProductCreateView(LoginRequiredMixin,
         return False
 
 
-class CategoryCreateView(LoginRequiredMixin,
-                         UserPassesTestMixin,
-                         SuccessMessageMixin,
-                         CreateView):
+class CategoryCreateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView):
     model = Category
     template_name = 'category.html'
     form_class = CategoryForm

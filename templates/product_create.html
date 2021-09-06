@@ -1,10 +1,11 @@
 {% extends './base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block title %}New Product - {% endblock title %}
 
 {% block body %}
-<main id="addToStock">
+<main id="productCreate">
     <div class="row">
         <div class="col">
             <div class="card shadow mb-4">
@@ -21,36 +22,33 @@
                                         {{form.warehouse|as_crispy_field}}
                                     </div>
                                     <div class="col-md-4">
-                                        <div id="div_id_category" class="form-group">
-                                            <label for="id_category" class=" requiredField">Category<span class="asteriskField">*</span></label>
-                                            <div class="">
-                                                <select  @change="selectSubcategory(categoryOption)" v-model="categoryOption" name="category" class="select form-control" required="" id="id_category">
-                                                    <option value="" selected="" disabled>Select Category</option>
-                                                    <option v-for="category in categories" :value="category.id">[[ category.name ]]</option>
-                                                </select>
-                                            </div>
-                                        </div>
+                                        <label for="id_category" class="requiredField">Category<span class="asteriskField">*</span></label>
+                                        <select onchange="selectSubcategory()" id="id_category" name="category" class="select form-control">
+                                            {% for value, name in form.category.field.choices %}
+                                            <option value="{{ value }}" {% if value == form.category.value %}selected{% endif %}>{{ name }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <div id="div_id_subcategory" class="form-group">
-                                            <label for="id_subcategory" class=" requiredField">Sub-Category<span class="asteriskField">*</span></label>
-                                            <div class="">
-                                                <select v-model="subcategoryOption" name="subcategory" class="select form-control" required="" id="id_subcategory">
-                                                    <option value="" selected="" disabled>Select SubCategory</option>
-                                                    <option v-for="subcategory in selectSubcategories" :value="subcategory.id">[[ subcategory.name ]]</option>
-                                                </select>
-                                            </div>
-                                        </div>
+                                        <label for="id_subcategory" class="">Subcategory</label>
+                                        <select name="subcategory" class="select form-control" id="id_subcategory">
+                                            {% for value, name in form.subcategory.field.choices %}
+                                            <option value="{{ value }}" {% if value == form.subcategory.value %}selected{% endif %}>{{ name }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         {{form.product_name|as_crispy_field}}
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         {{form.quantity|as_crispy_field}}
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        {{form.cost_price|as_crispy_field}}
+                                    </div>
+                                    <div class="col-md-3">
                                         {{form.sell_price|as_crispy_field}}
                                     </div>
                                     <div class="col-md-6">
@@ -75,46 +73,5 @@
 
 
 {% block extra_script %}
-
-<script type="text/javascript">
-
-const createProduct = {
-    data(){
-        return{
-            // category and sub category list
-            categories: [],
-            subcategories: [],
-            selectSubcategories: [],
-            // dependent subcategory dropdown
-            categoryOption: null,
-            subcategoryOption: null,
-
-            errors: []
-        }
-    },
-    created(){
-        axios.get('/api/v1/category')
-        .then(response => {
-            this.categories = response.data
-        })
-
-        axios.get('/api/v1/subcategory')
-        .then(response => {
-            this.subcategories = response.data
-        })
-    },
-    methods: {
-        selectSubcategory(id, subcats=this.subcategories){
-            const returnedSubcats = subcats.filter(subcat => subcat.category === id);
-            this.selectSubcategories = returnedSubcats
-        }
-    },
-    delimiters: ['[[', ']]']
-}
-
-
-Vue.createApp(createProduct).mount('#addToStock')
-
-</script>
-
+<script src="{% static 'js/core/product_create.js' %}"></script>
 {% endblock extra_script %}

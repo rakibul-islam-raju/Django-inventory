@@ -31,7 +31,8 @@ class User(AbstractUser):
         _('username'),
         max_length=150,
         unique=True,
-        help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
+        help_text=_(
+            'Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
         validators=[username_validator],
         error_messages={
             'unique': _("A user with that username already exists."),
@@ -39,14 +40,16 @@ class User(AbstractUser):
     )
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
-    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, to_field='name', blank=True, null=True)
+    organization = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, to_field='name', blank=True, null=True)
     email = models.EmailField(_('email address'), blank=True, unique=True)
     phone = models.CharField(max_length=11)
     is_customer = models.BooleanField(default=True)
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
-        help_text=_('Designates whether the user can log into this admin site.'),
+        help_text=_(
+            'Designates whether the user can log into this admin site.'),
     )
     is_active = models.BooleanField(
         _('active'),
@@ -64,7 +67,7 @@ class User(AbstractUser):
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(blank=True, null=True, max_length=100) 
+    description = models.TextField(blank=True, null=True, max_length=100)
     status = models.BooleanField(default=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
@@ -79,7 +82,7 @@ class Category(models.Model):
 
     def get_delete_url(self):
         return reverse("core:category-delete", kwargs={"pk": self.pk})
-    
+
 
 class Subcategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -90,13 +93,13 @@ class Subcategory(models.Model):
 
     class Meta:
         verbose_name_plural = 'Subcategories'
-    
+
     def __str__(self):
         return self.name
-    
+
     def get_update_url(self):
         return reverse("core:subcategory-edit", kwargs={"pk": self.pk})
-    
+
     def get_delete_url(self):
         return reverse("core:subcategory-delete", kwargs={"pk": self.pk})
 
@@ -109,10 +112,10 @@ class Warehouse(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def get_update_url(self):
         return reverse("core:warehouse-edit", kwargs={"pk": self.pk})
-    
+
     def get_delete_url(self):
         return reverse("core:warehouse-delete", kwargs={"pk": self.pk})
 
@@ -120,14 +123,18 @@ class Warehouse(models.Model):
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE)
-    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name='inventory_product')
+    warehouse = models.ForeignKey(
+        Warehouse, on_delete=models.CASCADE, related_name='inventory_product')
 
     product_name = models.CharField(max_length=100)
-    sell_price = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
-    quantity = models.PositiveIntegerField()
+    cost_price = models.DecimalField(
+        default=0, max_digits=8, decimal_places=2, blank=True, null=True)
+    sell_price = models.DecimalField(
+        default=0, max_digits=8, decimal_places=2, blank=True, null=True)
+    quantity = models.PositiveIntegerField(default=0, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
 
-    added_by = models.CharField(max_length=100)
+    added_by = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.BooleanField(default=True)
     date_updated = models.DateTimeField(auto_now=True)
     date_added = models.DateTimeField(auto_now_add=True)
@@ -137,7 +144,7 @@ class Product(models.Model):
 
     def get_update_url(self):
         return reverse("core:product-edit", kwargs={"pk": self.pk})
-    
+
     def get_delete_url(self):
         return reverse("core:product-delete", kwargs={"pk": self.pk})
 
@@ -166,13 +173,13 @@ class Bank(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def get_update_url(self):
         return reverse("core:bank-edit", kwargs={"pk": self.pk})
-    
+
     def get_delete_url(self):
         return reverse("core:bank-delete", kwargs={"pk": self.pk})
-    
+
 
 class BankTransaction(models.Model):
     account_type_choices = (
@@ -190,7 +197,8 @@ class BankTransaction(models.Model):
     date = models.DateField()
     account_type = models.CharField(choices=account_type_choices, max_length=1)
     description = models.TextField(blank=True, null=True)
-    transaction_type = models.CharField(max_length=1, choices=transaction_type_choices)
+    transaction_type = models.CharField(
+        max_length=1, choices=transaction_type_choices)
     amount = models.DecimalField(max_digits=8, decimal_places=2)
     status = models.BooleanField(default=True)
     date_updated = models.DateTimeField(auto_now=True)
@@ -198,9 +206,9 @@ class BankTransaction(models.Model):
 
     def __str__(self):
         return self.account_type
-    
+
     def get_update_url(self):
         return reverse("core:transaction-edit", kwargs={"pk": self.pk})
-    
+
     def get_delete_url(self):
         return reverse("core:transaction-delete", kwargs={"pk": self.pk})

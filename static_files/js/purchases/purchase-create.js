@@ -21,10 +21,9 @@ const purchaseForm = {
 			categoryOption: null,
 			subcategoryOption: null,
 			// error messages
-			errorMessages: null,
-			successMessages: null,
-
-			errors: [],
+			formErrors: [],
+			errorMessage: "",
+			successMessage: "",
 		};
 	},
 	methods: {
@@ -55,15 +54,21 @@ const purchaseForm = {
 						`${response.data.id}`
 					);
 					select.insertBefore(opt, select.firstChild);
-					document.getElementById("warehouseModalClose").click();
 					this.warehouseName = null;
 					this.warehouseDescription = null;
 					this.successMessages =
 						"Warehouse was created successfully.";
 				})
 				.catch(function (error) {
-					this.errorMessages = "Network Error";
-				});
+					if (error.response) {
+						this.formErrors = error.response.data;
+					} else {
+						this.errorMessage = "Network Error";
+					}
+				})
+				.finally(() =>
+					document.getElementById("warehouseModalClose").click()
+				);
 		},
 
 		createCategory() {
@@ -81,13 +86,23 @@ const purchaseForm = {
 						`${response.data.id}`
 					);
 					select.insertBefore(opt, select.firstChild);
-					document.getElementById("categoryModalClose").click();
+
 					this.categoryName = null;
 					this.categoryDescription = null;
 					this.successMessages = "Category was created successfully.";
 				})
 				.catch(function (error) {
-					this.errorMessages = "Network Error";
+					if (error.response) {
+						console.log(error.response.data);
+						this.formErrors = error.response.data;
+						console.log(this.formErrors);
+					} else {
+						this.errorMessage = "Network Error";
+					}
+				})
+				.finally(() => {
+					document.getElementById("categoryModalClose").click();
+					console.log(this.formErrors);
 				});
 		},
 
@@ -102,7 +117,6 @@ const purchaseForm = {
 					description: this.subcategoryDescription,
 				})
 				.then((response) => {
-					document.getElementById("subcategoryModalClose").click();
 					this.subcategoryCategory = null;
 					this.subcategoryName = null;
 					this.subcategoryDescription = null;
@@ -111,9 +125,14 @@ const purchaseForm = {
 					status = true;
 				})
 				.catch((error) => {
-					console.log(error);
+					if (error.response) {
+						this.formErrors = error.response.data;
+					} else {
+						this.errorMessage = "Network Error";
+					}
 				})
 				.finally(() => {
+					document.getElementById("subcategoryModalClose").click();
 					if (status === true) {
 						this.fetchSubcategory();
 						this.selectSubcategory();
