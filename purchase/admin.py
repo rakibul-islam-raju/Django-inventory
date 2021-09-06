@@ -1,13 +1,13 @@
 from django.contrib import admin
 from .models import PurchaseProduct
 
+
 class PurchaseProductAdmin(admin.ModelAdmin):
     list_display = ['purchase_no',
-                    'product_name',
+                    'product',
                     'quantity',
                     'payment_type',
-                    'total_cost_price',
-                    'total_sell_price',
+                    'total_price',
                     'status'
                     ]
     search_fields = ['name', 'purchase_no']

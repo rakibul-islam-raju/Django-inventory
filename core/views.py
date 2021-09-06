@@ -115,7 +115,8 @@ class ProductView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["products"] = Product.objects.filter(status=True)
+        context["products"] = Product.objects.filter(
+            status=True).order_by('-id')
         return context
 
     def test_func(self):

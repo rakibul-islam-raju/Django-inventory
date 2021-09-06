@@ -127,8 +127,6 @@ class Product(models.Model):
         Warehouse, on_delete=models.CASCADE, related_name='inventory_product')
 
     product_name = models.CharField(max_length=100)
-    cost_price = models.DecimalField(
-        default=0, max_digits=8, decimal_places=2, blank=True, null=True)
     sell_price = models.DecimalField(
         default=0, max_digits=8, decimal_places=2, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=0, blank=True, null=True)
