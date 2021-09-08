@@ -12,7 +12,7 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.product.name)
-    
+
     @property
     def total_item_price(self):
         return self.product.sell_price * self.quantity

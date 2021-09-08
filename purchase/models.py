@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 from django.urls import reverse
 from core.models import Product, User, Bank
 
@@ -12,7 +13,7 @@ class PurchaseProduct(models.Model):
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2)
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     payment_type = models.CharField(choices=PAYMENT_TYPE_CHOICE, max_length=4)
     bank = models.ForeignKey(
         Bank, blank=True, null=True, on_delete=models.SET_NULL)

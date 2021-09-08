@@ -29,10 +29,9 @@ class SellProductListCreate(generics.ListCreateAPIView):
     '''
         create view
     '''
-    model = SellProduct
+    model = SellProductItem
     serializer_class = SellProductSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = SellProduct.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(added_by=self.request.user)
@@ -42,10 +41,9 @@ class SellProductDetail(generics.RetrieveUpdateDestroyAPIView):
     '''
         detail view
     '''
-    model = SellProduct
     serializer_class = SellProductEditSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = SellProduct.objects.all()
+    queryset = SellProductItem.objects.all()
 
     def perform_update(self, serializer):
         serializer.save(added_by=self.request.user)

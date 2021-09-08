@@ -1,30 +1,20 @@
 from django import forms
-from .models import Customer, SellProduct
+from .models import Customer, Sell, SellProductItem
 
 
 class CustomerForm(forms.ModelForm):
-
     class Meta:
         model = Customer
-        fields = ['name', 'email', 'phone', 'address']
-
-        widgets = {
-            'address': forms.Textarea(attrs={'rows': '2'}),
-        }
+        fields = ['name', 'email', 'phone']
 
 
-class SellProductForm(forms.ModelForm):
-
+class SellForm(forms.ModelForm):
     class Meta:
-        model = SellProduct
-        fields = [
-            'customer',
-            'product',
-            'price',
-            'quantity',
-            'description'
-        ]
+        model = Sell
+        fields = ['customer']
 
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': '2'}),
-        }
+
+class SellProductItemForm(forms.ModelForm):
+    class Meta:
+        model = SellProductItem
+        fields = ['product', 'price', 'quantity', ]

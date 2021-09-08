@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.urls import reverse
-from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView, ListView, View
+from django.views.generic import (
+    TemplateView, CreateView, UpdateView, DeleteView, ListView, View)
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import Customer, SellProduct
-from .forms import CustomerForm, SellProductForm
+from .models import Customer, SellProductItem
+from .forms import CustomerForm, SellProductItemForm
 from core.models import User, Product
 
 
@@ -21,7 +22,7 @@ class SellProductListView(TemplateView):
 class SellProductItem(SuccessMessageMixin, CreateView):
     def get(self, *args, **kwargs):
         product_instance = get_object_or_404(Product, pk=self.kwargs['pk'])
-        form = SellProductForm(initial={
+        form = SellProductItemForm(initial={
             'warehouse': product_instance.warehouse,
             'product': product_instance,
             'price': product_instance.sell_price,
@@ -35,7 +36,7 @@ class SellProductItem(SuccessMessageMixin, CreateView):
 
     def post(self, *args, **kwargs):
         product_instance = get_object_or_404(Product, pk=self.kwargs['pk'])
-        form = SellProductForm(self.request.POST or None)
+        form = SellProductItemForm(self.request.POST or None)
         if form.is_valid():
             quantity = form.cleaned_data.get('quantity')
 
@@ -53,9 +54,9 @@ class SellProductItem(SuccessMessageMixin, CreateView):
 
 
 class SellProductCreateView(SuccessMessageMixin, CreateView):
-    model = SellProduct
+    model = SellProductItem
     template_name = 'sell/product-create.html'
-    form_class = SellProductForm
+    form_class = SellProductItemForm
     success_url = 'sell:product'
     success_message = "Order was created successfully"
 
@@ -69,9 +70,9 @@ class SellProductCreateView(SuccessMessageMixin, CreateView):
 
 
 class SellProductUpdateView(SuccessMessageMixin, UpdateView):
-    model = SellProduct
+    model = SellProductItem
     template_name = 'sell/product-create.html'
-    form_class = SellProductForm
+    form_class = SellProductItemForm
     success_url = 'sell:product'
     success_message = "%(product)s was updated successfully"
 
@@ -85,7 +86,7 @@ class SellProductUpdateView(SuccessMessageMixin, UpdateView):
 
 
 class SellProductDeleteView(SuccessMessageMixin, DeleteView):
-    model = SellProduct
+    model = SellProductItem
     template_name = 'delete.html'
     success_url = 'sell:product'
     success_message = "%(name)s was deleted successfully"
