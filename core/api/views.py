@@ -74,14 +74,6 @@ class ProductListCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(added_by=self.request.user)
 
-    # def post(self, *args, **kwargs):
-    #     serializer = self.get_serializer(data=self.request.data)
-    #     if serializer.is_valid():
-    #         serializer.save(added_by=self.request.user)
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     ''' 
@@ -93,5 +85,3 @@ class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def perform_update(self, serializer):
         serializer.save(added_by=self.request.user)
-
-

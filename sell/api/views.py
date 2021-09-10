@@ -1,5 +1,7 @@
-from rest_framework import generics
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, response
 from rest_framework import permissions
+from rest_framework.views import APIView
 
 from sell.models import *
 from sell.api.serializers import *
@@ -23,6 +25,17 @@ class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CustomerEditSerializer
     permission_classes = [permissions.IsAuthenticated]
     queryset = Customer.objects.filter(status=True)
+
+
+class CustomerSingleObject(APIView):
+    '''
+        single object
+    '''
+
+    def get(self, request, *args, **kwargs):
+        phone = request.GET.get('phone')
+        customer = get_object_or_404(Customer, phone=phone)
+        return response.Response({'customer': CustomerSerializer(instance=customer).data})
 
 
 class SellProductListCreate(generics.ListCreateAPIView):

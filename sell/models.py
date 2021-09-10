@@ -27,9 +27,15 @@ class Sell(models.Model):
     customer = models.ForeignKey(
         Customer, blank=True, null=True, on_delete=models.SET_NULL)
     invoice_number = models.CharField(max_length=50, blank=True)
+
     added_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_sold = models.BooleanField(default=False)
+    status = models.BooleanField(default=True)
     date_updated = models.DateTimeField(auto_now=True)
     date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.invoice_number
 
     def save(self, *args, **kwargs):
         today = datetime.date.today()
@@ -43,21 +49,30 @@ class Sell(models.Model):
         self.invoice_number = today_string + next_invoice_number
         super(Sell, self).save(*args, **kwargs)
 
+    @property
+    def total_price(self):
+        return sum(item.get_total_price for item in self.sellproductitem_set.all())
+
+    def get_update_url(self):
+        return reverse("sell:sale-edit", kwargs={"pk": self.pk})
+
+    def get_delete_url(self):
+        return reverse("sell:sale-delete", kwargs={"pk": self.pk})
+
 
 class SellProductItem(models.Model):
     sell = models.ForeignKey(Sell, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, null=True, on_delete=models.SET_NULL)
     quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     price = models.DecimalField(decimal_places=2, max_digits=8)
-    is_sold = models.BooleanField(default=True)
+    is_sold = models.BooleanField(default=False)
 
     def __str__(self):
         return self.product.product_name
 
     @property
     def get_total_price(self):
-        result = self.price * self.quantity
-        return result
+        return self.price * self.quantity
 
     def get_update_url(self):
         return reverse("sell:sell-edit", kwargs={"pk": self.pk})

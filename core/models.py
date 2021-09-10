@@ -1,6 +1,9 @@
+from unidecode import unidecode
+
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from django.template.defaultfilters import slugify
 
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
@@ -127,6 +130,7 @@ class Product(models.Model):
         Warehouse, on_delete=models.CASCADE, related_name='inventory_product')
 
     product_name = models.CharField(max_length=100)
+    product_slug = models.SlugField(blank=True, unique=True)
     sell_price = models.DecimalField(
         default=0, max_digits=8, decimal_places=2, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=0, blank=True, null=True)
@@ -139,6 +143,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_name
+
+    def save(self, *args, **kwargs):
+        self.product_slug = slugify(unidecode(self.product_name))
+        super(Product, self).save(*args, **kwargs)
 
     def get_update_url(self):
         return reverse("core:product-edit", kwargs={"pk": self.pk})

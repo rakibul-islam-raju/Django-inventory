@@ -141,7 +141,7 @@ class SellOrderItem(LoginRequiredMixin,
     model = SellProductItem
     template_name = 'sell/product-create.html'
     form_class = SellProductItemForm
-    success_url = 'sell:product'
+    success_url = 'sell:sales'
     success_message = "Order was created successfully"
 
     def get_context_data(self, **kwargs):
@@ -192,7 +192,7 @@ class SellOrderItem(LoginRequiredMixin,
             order_instance.order_status = True
             order_instance.save()
 
-            return redirect('sell:product')
+            return redirect('sell:sales')
 
     def test_func(self):
         if self.request.user.is_staff:
