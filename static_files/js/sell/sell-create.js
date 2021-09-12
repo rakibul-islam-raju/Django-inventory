@@ -1,12 +1,14 @@
-const arr = [];
-const cart = [];
-const showCart = [];
+let arr = [];
+let cart = [];
+let showCart = [];
 const input = document.getElementById("value");
 const optionsVal = document.getElementById("list");
 const dropdown = document.getElementById("dropdown");
 const productValue = document.getElementById("productValue");
 const customerPhone = document.getElementById("customerPhone");
 const customerName = document.getElementById("customerName");
+const productPrice = document.getElementById("productPrice");
+const productQuantity = document.getElementById("productQuantity");
 const loading = document.getElementById("loading");
 const message = document.getElementById("message");
 
@@ -49,16 +51,12 @@ const getCustomer = async (phone) => {
 	let data = await response.json();
 	if (data.customer) {
 		customerName.value = data?.customer?.name;
-		console.log(data);
 	} else {
 		customerName.value = "";
 		showMessage("danger", "Customer not found.");
 	}
-	console.log("loading off");
 	loading.style.display = "none";
 };
-
-console.log(arr);
 
 // string to slug
 const string_to_slug = (str) => {
@@ -101,30 +99,48 @@ const show = () => {
 	}
 };
 
-const addValue = (text, val) => {
-	const createOptions = document.createElement("option");
-	optionsVal.appendChild(createOptions);
-	createOptions.text = text;
-	createOptions.value = text;
-	productValue.value = val;
-};
-
 //Settin the value in the box by firing the click event
-const setVal = (selectedVal) => {
-	input.value = selectedVal.value;
+const setVal = (text, val) => {
+	console.log(text, val);
+
+	input.value = text;
+	productValue.value = val;
+	const product = arr.find((item) => item.id === parseInt(val));
+	productPrice.value = product.sell_price;
+	productQuantity.value = product.quantity;
 	document.getElementById("dropdown").style.display = "none";
 };
+
+const addValue = (text, val) => {
+	const createOptions = document.createElement("option");
+	// createOptions.setAttribute("onclick", "setVal(text, val)");
+	createOptions.onclick = () => {
+		setVal(text, val);
+	};
+	optionsVal.appendChild(createOptions);
+	createOptions.text = text;
+	createOptions.value = val;
+};
+
+// const filterCartItems = () => {
+// 	ids = [];
+// 	for (let i = 0; i < cart.length; i++) {
+// 		ids.push(cart[i].id);
+// 	}
+// 	return arr.filter((item) => ids.includes(item.id));
+// };
 
 const showCartItems = () => {
 	let output = "";
 	showCart.forEach((item) => {
 		output += `
 			<tr>
+				<td class="d-none">${item.id}</td>
 				<td>${item.name}</td>
 				<td>${item.price}</td>
 				<td>${item.quantity}</td>
-				<td>
-					<button class="btn btn-outline-danger btn-sm">
+				<td style="width: 90px;">
+					<button onclick="removeProductFromCart(${item.id})" type="button" class="btn btn-outline-danger btn-sm">
 						<i class="fa fa-trash-alt"></i>
 					</button>
 				</td>
@@ -136,24 +152,21 @@ const showCartItems = () => {
 
 // add product to cart
 const addProductToCart = () => {
-	const productValue = document.getElementById("productValue");
-	const productPrice = document.getElementById("productPrice");
-	const productQuantity = document.getElementById("productQuantity");
+	const product_id = parseInt(productValue.value);
+	const product_price = parseFloat(productPrice.value);
+	const product_quantity = parseInt(productQuantity.value);
 
-	if (
-		productValue.value !== "" &&
-		productPrice.value > 0 &&
-		productQuantity.value > 0
-	) {
+	if (product_id !== "" && product_price > 0 && product_quantity > 0) {
 		let product = {
-			id: productValue.value,
+			id: product_id,
 			price: productPrice.value,
 			quantity: productQuantity.value,
 		};
 		let showProduct = {
+			id: product_id,
 			name: input.value,
-			price: productPrice.value,
-			quantity: productQuantity.value,
+			price: product_price,
+			quantity: product_quantity,
 		};
 		cart.push(product);
 		showCart.push(showProduct);
@@ -163,31 +176,44 @@ const addProductToCart = () => {
 		productQuantity.value = "";
 		input.value = "";
 	} else {
-		console.log("error");
+		if (product_price <= 0) {
+			showMessage("danger", "Invalid price.");
+		} else if (product_quantity <= 0) {
+			showMessage("danger", "Invalid quantity.");
+		} else showMessage("danger", "Please select a product.");
 	}
+
+	console.log(cart);
 };
 
 // remove product to local storage
-function removeProduct(productId) {
-	// Your logic for your app.
-
-	// strore products in local storage
-
-	let storageProducts = JSON.parse(localStorage.getItem("products"));
-	let products = storageProducts.filter(
-		(product) => product.productId !== productId
-	);
-	localStorage.setItem("products", JSON.stringify(products));
-}
+const removeProductFromCart = (productId) => {
+	let products = cart.filter((product) => product.id !== productId);
+	let showProducts = showCart.filter((product) => product.id !== productId);
+	cart = products;
+	showCart = showProducts;
+	showCartItems();
+};
 
 // Event listeners
 input.addEventListener("keyup", show);
 
-optionsVal.onclick = function () {
-	setVal(this);
-};
+// optionsVal.onclick = function () {
+// 	setVal(this);
+// };
 
+// get customer trigger
 customerPhone.onblur = () => {
-	phone = customerPhone.value;
-	getCustomer(phone);
+	let phone = customerPhone.value;
+	if (phone.length === 0) {
+		customerName.value = "";
+		return false;
+	} else {
+		if (phone.length === 11) {
+			getCustomer(phone);
+		} else {
+			customerName.value = "";
+			showMessage("danger", "Invalid phone number.");
+		}
+	}
 };
