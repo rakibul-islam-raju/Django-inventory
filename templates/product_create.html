@@ -22,10 +22,13 @@
                                         {{form.warehouse|as_crispy_field}}
                                     </div>
                                     <div class="col-md-4">
-                                        <label for="id_category" class="requiredField">Category<span class="asteriskField">*</span></label>
-                                        <select onchange="selectSubcategory()" id="id_category" name="category" class="select form-control">
+                                        <label for="id_category" class="requiredField">Category</label>
+                                        <select onchange="selectSubcategory()" id="id_category" name="category"
+                                            class="select form-control">
                                             {% for value, name in form.category.field.choices %}
-                                            <option value="{{ value }}" {% if value == form.category.value %}selected{% endif %}>{{ name }}</option>
+                                            <option value="{{ value }}"
+                                                {% if value == form.category.value %}selected{% endif %}>{{ name }}
+                                            </option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -33,7 +36,9 @@
                                         <label for="id_subcategory" class="">Subcategory</label>
                                         <select name="subcategory" class="select form-control" id="id_subcategory">
                                             {% for value, name in form.subcategory.field.choices %}
-                                            <option value="{{ value }}" {% if value == form.subcategory.value %}selected{% endif %}>{{ name }}</option>
+                                            <option value="{{ value }}"
+                                                {% if value == form.subcategory.value %}selected{% endif %}>{{ name }}
+                                            </option>
                                             {% endfor %}
                                         </select>
                                     </div>

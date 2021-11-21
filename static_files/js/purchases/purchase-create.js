@@ -1,158 +1,97 @@
-const purchaseForm = {
-	data() {
-		return {
-			// payment option toggle
-			paymentMethod: "",
-			bankOption: false,
-			// add warehouse
-			warehouseName: "",
-			warehouseDescription: "",
-			// add category
-			categoryName: "",
-			categoryDescription: "",
-			// add subcategory
-			subcategoryCategory: "",
-			subcategoryName: "",
-			subcategoryDescription: "",
-			// sub category list
-			subcategories: [],
-			selectSubcategories: [],
-			// dependent subcategory dropdown
-			categoryOption: null,
-			subcategoryOption: null,
-			// error messages
-			formErrors: [],
-			errorMessage: "",
-			successMessage: "",
-		};
-	},
-	methods: {
-		fetchSubcategory() {
-			axios.get("/api/v1/subcategory").then((response) => {
-				this.subcategories = response.data;
-			});
-		},
+// ==========================================
+// show bank option if payment method is bank
+// ==========================================
+const bank_payment_info = document.getElementById("bank_payment_info");
+bank_payment_info.style.display = "none";
+const id_payment_type = document.getElementById("id_payment_type");
 
-		paymentBank() {
-			if (this.paymentMethod == "bank") {
-				this.bankOption = true;
-			} else this.bankOption = false;
-		},
+id_payment_type.addEventListener("change", () => {
+	const paymentOption = id_payment_type.value;
+	if (paymentOption === "bank") {
+		bank_payment_info.style.display = "flex";
+	} else {
+		bank_payment_info.style.display = "none";
+	}
+});
 
-		createWarehouse() {
-			axios.defaults.xsrfCookieName = "csrftoken";
-			axios.defaults.xsrfHeaderName = "X-CSRFToken";
-			axios
-				.post("/api/v1/warehouse", {
-					name: this.warehouseName,
-					description: this.warehouseDescription,
-				})
-				.then(function (response) {
-					const select = document.getElementById("id_warehouse");
-					const opt = new Option(
-						`${response.data.name}`,
-						`${response.data.id}`
-					);
-					select.insertBefore(opt, select.firstChild);
-					this.warehouseName = null;
-					this.warehouseDescription = null;
-					this.successMessages =
-						"Warehouse was created successfully.";
-				})
-				.catch(function (error) {
-					if (error.response) {
-						this.formErrors = error.response.data;
-					} else {
-						this.errorMessage = "Network Error";
-					}
-				})
-				.finally(() =>
-					document.getElementById("warehouseModalClose").click()
-				);
-		},
+// =====================
+// calculate total price
+// =====================
+const id_quantity = document.getElementById("id_quantity");
+const id_price = document.getElementById("id_price");
+const totalPrice = document.getElementById("totalPrice");
+const showTotal = document.getElementById("showTotal");
+showTotal.style.display = "none";
 
-		createCategory() {
-			axios.defaults.xsrfCookieName = "csrftoken";
-			axios.defaults.xsrfHeaderName = "X-CSRFToken";
-			axios
-				.post("/api/v1/category", {
-					name: this.categoryName,
-					description: this.categoryDescription,
-				})
-				.then(function (response) {
-					const select = document.getElementById("id_category");
-					const opt = new Option(
-						`${response.data.name}`,
-						`${response.data.id}`
-					);
-					select.insertBefore(opt, select.firstChild);
+const calculateTotalPrice = () => {
+	const total = id_price.value * id_quantity.value;
+	totalPrice.innerHTML = total;
 
-					this.categoryName = null;
-					this.categoryDescription = null;
-					this.successMessages = "Category was created successfully.";
-				})
-				.catch(function (error) {
-					if (error.response) {
-						console.log(error.response.data);
-						this.formErrors = error.response.data;
-						console.log(this.formErrors);
-					} else {
-						this.errorMessage = "Network Error";
-					}
-				})
-				.finally(() => {
-					document.getElementById("categoryModalClose").click();
-					console.log(this.formErrors);
-				});
-		},
-
-		createSubCategory() {
-			let status = null;
-			axios.defaults.xsrfCookieName = "csrftoken";
-			axios.defaults.xsrfHeaderName = "X-CSRFToken";
-			axios
-				.post("/api/v1/subcategory", {
-					category: this.subcategoryCategory,
-					name: this.subcategoryName,
-					description: this.subcategoryDescription,
-				})
-				.then((response) => {
-					this.subcategoryCategory = null;
-					this.subcategoryName = null;
-					this.subcategoryDescription = null;
-					this.successMessages =
-						"Subcategory was created successfully.";
-					status = true;
-				})
-				.catch((error) => {
-					if (error.response) {
-						this.formErrors = error.response.data;
-					} else {
-						this.errorMessage = "Network Error";
-					}
-				})
-				.finally(() => {
-					document.getElementById("subcategoryModalClose").click();
-					if (status === true) {
-						this.fetchSubcategory();
-						this.selectSubcategory();
-					}
-				});
-		},
-
-		selectSubcategory() {
-			const select = document.getElementById("id_category");
-			const value = select.options[select.selectedIndex].value;
-			const returnedSubcats = this.subcategories.filter(
-				(subcat) => subcat.category == parseInt(value)
-			);
-			this.selectSubcategories = returnedSubcats;
-		},
-	},
-	mounted() {
-		this.fetchSubcategory();
-	},
-	delimiters: ["[[", "]]"],
+	if (total > 0) {
+		showTotal.style.display = "block";
+	} else {
+		showTotal.style.display = "none";
+	}
 };
 
-Vue.createApp(purchaseForm).mount("#purchase-create");
+id_price.addEventListener("change", calculateTotalPrice);
+id_quantity.addEventListener("change", calculateTotalPrice);
+
+// ===============
+// add new product
+// ===============
+const productSelect = document.getElementById("id_product");
+const productModalClose = document.getElementById("productModalClose");
+const newProductForm = document.getElementById("newProductForm");
+const displayError = document.getElementById("displayError");
+
+const csrf = document.getElementsByName("csrfmiddlewaretoken");
+
+const saveNewProduct = async (e) => {
+	e.preventDefault();
+	displayError.classList.add("d-none");
+
+	const newProduct = document.getElementById("newProduct").value;
+	const data = { product_name: newProduct };
+	try {
+		const config = {
+			method: "POST",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+				"X-CSRFToken": csrf[0].value,
+			},
+			body: JSON.stringify(data),
+			credentials: "same-origin",
+		};
+		const response = await fetch("/api/v1/product", config);
+
+		if (response.status === 201) {
+			const json = await response.json();
+			console.log("json >>>", json);
+			// reset form and clean errors
+			e.target.reset();
+			productModalClose.click();
+			displayError.classList.add("d-none");
+
+			// add product to options
+			const newProductOption = document.createElement("option");
+			newProductOption.text = json.product_name;
+			newProductOption.value = parseInt(json.id);
+			productSelect.add(newProductOption);
+		}
+
+		if (response.status === 400) {
+			const json = await response.json();
+			displayError.classList.remove("d-none");
+			document.getElementById(
+				"errorText"
+			).innerHTML = `${json.product_name[0]}`;
+		}
+	} catch (error) {
+		displayError.classList.remove("d-none");
+		document.getElementById("errorText").innerHTML = "Network error!!!";
+	}
+};
+
+newProductForm.addEventListener("submit", saveNewProduct);
