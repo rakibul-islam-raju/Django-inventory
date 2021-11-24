@@ -1,18 +1,18 @@
 // ==========================================
 // show bank option if payment method is bank
 // ==========================================
-const bank_payment_info = document.getElementById("bank_payment_info");
-bank_payment_info.style.display = "none";
-const id_payment_type = document.getElementById("id_payment_type");
+// const bank_payment_info = document.getElementById("bank_payment_info");
+// bank_payment_info.style.display = "none";
+// const id_payment_type = document.getElementById("id_payment_type");
 
-id_payment_type.addEventListener("change", () => {
-	const paymentOption = id_payment_type.value;
-	if (paymentOption === "bank") {
-		bank_payment_info.style.display = "flex";
-	} else {
-		bank_payment_info.style.display = "none";
-	}
-});
+// id_payment_type.addEventListener("change", () => {
+// 	const paymentOption = id_payment_type.value;
+// 	if (paymentOption === "bank") {
+// 		bank_payment_info.style.display = "flex";
+// 	} else {
+// 		bank_payment_info.style.display = "none";
+// 	}
+// });
 
 // =====================
 // calculate total price

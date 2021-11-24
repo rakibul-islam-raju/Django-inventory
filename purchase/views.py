@@ -3,7 +3,14 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.urls import reverse
 from django.views.generic import (
-    CreateView, ListView, DetailView, UpdateView, DeleteView, TemplateView, View)
+    CreateView,
+    ListView,
+    DetailView,
+    UpdateView,
+    DeleteView,
+    TemplateView,
+    View,
+)
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from .models import *
@@ -20,36 +27,34 @@ from xhtml2pdf import pisa
 
 # ========== Purchase Invoice View ============>
 def purchaes_invoice(request, *args, **kwargs):
-    pk = kwargs.get('pk')
+    pk = kwargs.get("pk")
     purchase = get_object_or_404(PurchaseProduct, pk=pk)
 
-    template_path = 'purchase/invoice.html'
-    context = {'purchase': purchase}
+    template_path = "purchase/invoice.html"
+    context = {"purchase": purchase}
     # Create a Django response object, and specify content_type as pdf
-    response = HttpResponse(content_type='application/pdf')
+    response = HttpResponse(content_type="application/pdf")
     # if we want to download the pdf :
     # response['Content-Disposition'] = 'attachment; filename="report.pdf"'
     # if we want to display the pdf :
-    filename = f'invoice{pk}-{date.today()}'
-    response['Content-Disposition'] = f'filename="{filename}.pdf"'
+    filename = f"invoice{pk}-{date.today()}"
+    response["Content-Disposition"] = f'filename="{filename}.pdf"'
     # find the template and render it.
     template = get_template(template_path)
     html = template.render(context)
 
     # create a pdf
-    pisa_status = pisa.CreatePDF(
-        html, dest=response)
+    pisa_status = pisa.CreatePDF(html, dest=response)
     # if error then show some funy view
     if pisa_status.err:
-        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+        return HttpResponse("We had some errors <pre>" + html + "</pre>")
     return response
 
 
-class PurchaseProductList(LoginRequiredMixin,
-                          UserPassesTestMixin,
-                          SuccessMessageMixin,
-                          TemplateView):
-    template_name = 'purchase/product.html'
+class PurchaseProductList(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, TemplateView
+):
+    template_name = "purchase/product.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -62,52 +67,26 @@ class PurchaseProductList(LoginRequiredMixin,
         return False
 
 
-# class CreateSupplierView(LoginRequiredMixin,
-#                         UserPassesTestMixin,
-#                         SuccessMessageMixin,
-#                         CreateView):
-#     model = Supplier
-#     template_name = 'purchase/supplier.html'
-#     form_class = SupplierForm
-#     success_url = 'purchase:supplier'
-#     success_message = "%(name)s was created successfully"
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["suppliers"] = Supplier.objects.filter(status=True)
-#         context["title"] = 'Add New Supplier'
-#         return context
-
-#     def get_success_url(self, **kwargs):
-#         return reverse(self.success_url)
-
-#     def test_func(self, *args, **kwargs):
-#         if self.request.user.is_staff:
-#             return True
-#         return False
-
-
-class CreatePurchaseView(LoginRequiredMixin,
-                         UserPassesTestMixin,
-                         SuccessMessageMixin,
-                         View):
+class CreatePurchaseView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, View
+):
     def get(self, *args, **kwargs):
         form = PurchaseProductForm()
         context = {
-            'form': form,
-            'title': 'Create New Purchase',
-            'warehouse_form': WarehouseForm(),
-            'category_form': CategoryForm(),
-            'subcategory_form': SubcategoryForm(),
+            "form": form,
+            "title": "Create New Purchase",
+            "warehouse_form": WarehouseForm(),
+            "category_form": CategoryForm(),
+            "subcategory_form": SubcategoryForm(),
         }
-        return render(self.request, 'purchase/product-create.html', context)
+        return render(self.request, "purchase/product-create.html", context)
 
     def post(self, *args, **kwargs):
         form = PurchaseProductForm(self.request.POST or None)
 
         if form.is_valid():
-            product = form.cleaned_data.get('product')
-            quantity = form.cleaned_data.get('quantity')
+            product = form.cleaned_data.get("product")
+            quantity = form.cleaned_data.get("quantity")
 
             product_instance = get_object_or_404(Product, id=product.id)
             product_instance.quantity += quantity
@@ -117,12 +96,11 @@ class CreatePurchaseView(LoginRequiredMixin,
             new_purchase.save()
             product_instance.save()
 
-            messages.success(self.request, 'Item was purchased successfully')
-            return redirect('purchase:purchase-create')
+            messages.success(self.request, "Item was purchased successfully")
+            return redirect("purchase:purchase-create")
         else:
-            messages.warning(
-                self.request, 'Invalid form value. Please try again')
-            return redirect('purchase:purchase-create')
+            messages.warning(self.request, "Invalid form value. Please try again")
+            return redirect("purchase:purchase-create")
 
     def test_func(self, *args, **kwargs):
         if self.request.user.is_staff:
@@ -132,27 +110,59 @@ class CreatePurchaseView(LoginRequiredMixin,
 
 # ============ Detail views ============>
 
+
 class PurchaseProductDetailView(DetailView):
     model = PurchaseProduct
-    template_name = 'purchase-detali.html'
+    template_name = "purchase-detali.html"
+
 
 # ============ Update views ============>
 
 
-class PurchaseProductUpdateView(LoginRequiredMixin,
-                                UserPassesTestMixin,
-                                SuccessMessageMixin,
-                                UpdateView):
+class PurchaseProductUpdateView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView
+):
     model = PurchaseProduct
     form_class = PurchaseProductForm
-    template_name = 'purchase/product-create.html'
-    success_url = './'
+    template_name = "purchase/product-create.html"
+    success_url = "./"
     success_message = "%(name)s was updated successfully"
+
+    def post(self, request, pk, *args, **kwargs):
+        instance = PurchaseProduct.objects.get(pk=pk)
+        stock_product = Product.objects.get(pk=instance.product.pk)
+        form = PurchaseProductForm(self.request.POST or None, instance=instance)
+
+        quantity_before = int(instance.quantity)
+
+        if form.is_valid():
+            quantity_after = int(form.cleaned_data.get("quantity"))
+
+            # calculate updated quantity
+            qty_diff = 0
+            if quantity_before != quantity_after:
+                qty_diff = quantity_before - quantity_after
+
+            # update stock quantity
+            if qty_diff != 0:
+                stock_product.quantity = stock_product.quantity + qty_diff
+
+            # save form
+            form.save()
+            # update stock
+            stock_product.save()
+
+            messages.success(self.request, "Item was updated successfully")
+            return redirect("./")
+        else:
+            print(form.errors.as_data)
+            messages.warning(self.request, "Invalid form value. Please try again")
+            return redirect("./")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['products'] = PurchaseProduct.objects.filter(status=True)
-        context["title"] = 'Edit Purchase'
+        context["products"] = PurchaseProduct.objects.filter(status=True)
+        context["title"] = "Edit Purchase"
         return context
 
     def get_success_url(self, **kwargs):
@@ -167,31 +177,12 @@ class PurchaseProductUpdateView(LoginRequiredMixin,
 # ================= delete views ==================>
 
 
-# class SupplireDeleteView(LoginRequiredMixin,
-#                         UserPassesTestMixin,
-#                         SuccessMessageMixin,
-#                         DeleteView):
-#     model = Supplier
-#     template_name = 'delete.html'
-#     success_url = 'purchase:supplier'
-#     success_message = "%(name)s was created successfully"
-
-#     def get_success_url(self, **kwargs):
-#         return reverse(self.success_url)
-
-#     def test_func(self):
-#         if self.request.user.is_superuser:
-#             return True
-#         return False
-
-
-class PurchaseProductDeleteView(LoginRequiredMixin,
-                                UserPassesTestMixin,
-                                SuccessMessageMixin,
-                                DeleteView):
+class PurchaseProductDeleteView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
+):
     model = PurchaseProduct
-    template_name = 'delete.html'
-    success_url = 'purchase:product'
+    template_name = "delete.html"
+    success_url = "purchase:product"
     success_message = "%(name)s was created successfully"
 
     def get_success_url(self, **kwargs):

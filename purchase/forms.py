@@ -17,42 +17,40 @@ from .models import *
 
 
 class PurchaseProductForm(forms.ModelForm):
-
     class Meta:
         model = PurchaseProduct
         fields = [
-            'product',
-            'price',
-            'quantity',
-            'payment_type',
-            'bank',
-            'check_no',
-            'check_date',
-            'remark'
+            "product",
+            "price",
+            "quantity",
+            # "payment_type",
+            # "bank",
+            # "check_no",
+            # "check_date",
+            "remark",
         ]
 
         widgets = {
-            'remark': forms.Textarea(attrs={'rows': '2'}),
-            'check_date': forms.DateInput(attrs={'type': 'date'}, format='%d/%m/%Y')
+            "remark": forms.Textarea(attrs={"rows": "2"}),
+            # 'check_date': forms.DateInput(attrs={'type': 'date'}, format='%d/%m/%Y')
         }
 
 
 class PurchaseProductEditForm(forms.ModelForm):
-
     class Meta:
         model = PurchaseProduct
         fields = [
-            'product',
-            'price',
-            'quantity',
-            'payment_type',
-            'bank',
-            'check_no',
-            'check_date',
-            'remark'
+            "product",
+            "price",
+            "quantity",
+            # "payment_type",
+            # "bank",
+            # "check_no",
+            # "check_date",
+            "remark",
         ]
 
         widgets = {
-            'remark': forms.Textarea(attrs={'rows': '2'}),
-            'check_date': forms.DateInput(attrs={'type': 'date'}, format='%d/%m/%Y')
+            "remark": forms.Textarea(attrs={"rows": "2"}),
+            # "check_date": forms.DateInput(attrs={"type": "date"}, format="%d/%m/%Y"),
         }

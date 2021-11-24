@@ -7,18 +7,9 @@ from datetime import date
 
 
 class PurchaseProduct(models.Model):
-    PAYMENT_TYPE_CHOICE = (
-        ('bank', 'Bank'),
-        ('cash', 'Cash')
-    )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     quantity = models.PositiveIntegerField(validators=[MinValueValidator(1)])
-    payment_type = models.CharField(choices=PAYMENT_TYPE_CHOICE, max_length=4)
-    bank = models.ForeignKey(
-        Bank, blank=True, null=True, on_delete=models.SET_NULL)
-    check_no = models.PositiveIntegerField(blank=True, null=True)
-    check_date = models.DateField(blank=True, null=True)
     remark = models.TextField(blank=True, null=True, max_length=254)
 
     added_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
@@ -34,7 +25,7 @@ class PurchaseProduct(models.Model):
         product = str(self.product.product_name)
         d = date.today()
         d = d.strftime("%d%m%y")
-        return (product[:3] + str(self.id) + '-' + d).upper()
+        return (product[:3] + str(self.id) + "-" + d).upper()
 
     @property
     def total_price(self):
