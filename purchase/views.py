@@ -155,7 +155,6 @@ class PurchaseProductUpdateView(
             messages.success(self.request, "Item was updated successfully")
             return redirect("./")
         else:
-            print(form.errors.as_data)
             messages.warning(self.request, "Invalid form value. Please try again")
             return redirect("./")
 
