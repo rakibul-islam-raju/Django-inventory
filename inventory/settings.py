@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # third parties
     "django.contrib.sites",
     "allauth",
     "allauth.account",
@@ -43,10 +44,10 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_yasg",
     "crispy_forms",
+    # local apps
     "core",
     "purchase",
     "sell",
-    "users",
     "order",
 ]
 

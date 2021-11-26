@@ -45,7 +45,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
         context["total_customer"] = Customer.objects.filter(status=True).count()
         context["total_sell"] = SellProductItem.objects.all().count()
         context["total_Purchase"] = PurchaseProduct.objects.all().count()
-        context["pending_orders"] = Order.objects.filter(order_status=False).count()
+        context["orders"] = Order.objects.filter(order_status=False)
         return context
 
 

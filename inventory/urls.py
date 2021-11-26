@@ -14,7 +14,6 @@ urlpatterns = [
     path("", include("purchase.urls", namespace="purchase")),
     path("", include("sell.urls", namespace="sell")),
     path("", include("order.urls", namespace="order")),
-    path("users/", include("users.urls", namespace="users")),
 ]
 
 admin.site.site_header = "Inventory Admin Panel"

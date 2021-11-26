@@ -25,7 +25,6 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 
 
-# ========== Purchase Invoice View ============>
 def purchaes_invoice(request, *args, **kwargs):
     pk = kwargs.get("pk")
     purchase = get_object_or_404(PurchaseProduct, pk=pk)
@@ -108,15 +107,9 @@ class CreatePurchaseView(
         return False
 
 
-# ============ Detail views ============>
-
-
 class PurchaseProductDetailView(DetailView):
     model = PurchaseProduct
     template_name = "purchase-detali.html"
-
-
-# ============ Update views ============>
 
 
 class PurchaseProductUpdateView(
@@ -171,9 +164,6 @@ class PurchaseProductUpdateView(
         if self.request.user.is_staff:
             return True
         return False
-
-
-# ================= delete views ==================>
 
 
 class PurchaseProductDeleteView(
