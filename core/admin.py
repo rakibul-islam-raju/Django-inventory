@@ -12,26 +12,35 @@ class ProductAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     def make_status_inactive(self, modeladmin, request, queryset):
         queryset.update(status=False)
 
-    make_status_active.short_description = 'Update status to active'
-    make_status_inactive.short_description = 'Update status to inactive'
+    make_status_active.short_description = "Update status to active"
+    make_status_inactive.short_description = "Update status to inactive"
 
-    list_display = ['product_name',
-                    'category',
-                    'sell_price',
-                    'quantity',
-                    'added_by',
-                    'status']
-    date_hierarchy = 'date_added'
-    list_display_links = ['product_name', 'added_by']
-    search_fields = ['product_name']
+    list_display = [
+        "product_name",
+        "category",
+        "sell_price",
+        "quantity",
+        "added_by",
+        "status",
+    ]
+    date_hierarchy = "date_added"
+    list_display_links = ["product_name", "added_by"]
+    search_fields = ["product_name"]
     actions = [make_status_active, make_status_inactive]
 
     resource_class = ProductResource
 
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'first_name', 'last_name', 'organization', 'is_staff')
-    list_filter = ('is_staff', 'is_superuser')
+    list_display = (
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+        "organization",
+        "is_staff",
+    )
+    list_filter = ("is_staff", "is_superuser")
 
 
 # class UserInlineAdmin():
@@ -41,30 +50,18 @@ class UserAdmin(admin.ModelAdmin):
 
 class SubcategoryAdmin(admin.ModelAdmin):
     # model = Category
-    list_display = ['name', 'category', 'status']
-    search_fields = ['name']
+    list_display = ["name", "category", "status"]
+    search_fields = ["name"]
 
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'status']
-    search_fields = ['name']
+    list_display = ["name", "status"]
+    search_fields = ["name"]
 
 
 class WarehouseAdmin(admin.ModelAdmin):
-    list_display = ['name', 'description', 'status']
-    search_fields = ['name']
-
-
-class BankAdmin(admin.ModelAdmin):
-    list_display = ['name', 'ac_name', 'ac_number', 'branch', 'status']
-    search_fields = ['name', 'ac_name', 'ac_number', 'branch']
-    list_filter = ['branch']
-
-
-class BankTransactionAdmin(admin.ModelAdmin):
-    list_display = ['account_type', 'transaction_type', 'amount', 'bank', 'date', 'status']
-    list_filter = ['account_type', 'transaction_type', 'bank', 'date', 'status']
-    date_hierarchy = 'date'
+    list_display = ["name", "description", "status"]
+    search_fields = ["name"]
 
 
 # admin.site.register(Chalan)
@@ -74,5 +71,3 @@ admin.site.register(Subcategory, SubcategoryAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(User, UserAdmin)
 admin.site.register(Warehouse, WarehouseAdmin)
-admin.site.register(Bank, BankAdmin)
-admin.site.register(BankTransaction, BankTransactionAdmin)

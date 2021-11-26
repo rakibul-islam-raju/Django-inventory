@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.urls import reverse
-from core.models import Product, User, Bank
+from core.models import Product, User
 
 from datetime import date
 

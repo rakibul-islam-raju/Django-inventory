@@ -41,39 +41,14 @@
                                 <div class="col-md-2">
                                     {{form.quantity|as_crispy_field}}
                                 </div>
-                                <div class="col-md-2">
-                                    {% comment %} {{form.payment_type|as_crispy_field}} {% endcomment %}
-                                    <label for="id_payment_type" class=" requiredField"> Payment type<span class="asteriskField">*</span></label>
-                                    <select name="payment_type" class="select form-control" required="" id="id_payment_type" v-model="paymentMethod" @change="paymentBank()">
-                                        <option value="">---------</option>
-                                        <option value="bank">Bank</option>
-                                        <option value="cash">Cash</option>
-                                    </select>
-
-                                </div>
-
                             </div>
-
-                                <!-- if payment method is bank -->
-                            <div class="row" v-if="bankOption">
-                                <div class="col-md-4">
-                                    {{form.bank|as_crispy_field}}
-                                </div>
-                                <div class="col-md-4">
-                                    {{form.check_no|as_crispy_field}}
-                                </div>
-                                <div class="col-md-4">
-                                    {{form.check_date|as_crispy_field}}
-                                </div>
-                            </div>
-                                <!-- endif -->
 
                             <div class="row">
 
                                 <div class="col-md-6">
                                     {{form.remark|as_crispy_field}}
                                 </div>
-                            </>
+                            </div>
                         </div>
 
                         <div class="buttons-right">

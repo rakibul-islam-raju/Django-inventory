@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 from core.models import *
 
-# Create serializer
+
 class WarehouseSerializer(serializers.ModelSerializer):
     """
     create serializer
@@ -95,44 +95,4 @@ class ProductEditSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        exclude = ["date_added", "date_updated"]
-
-
-class BankSerializer(serializers.ModelSerializer):
-    """
-    Create serializer
-    """
-
-    class Meta:
-        model = Bank
-        exclude = ["status", "date_added"]
-
-
-class BankEditSerializer(serializers.ModelSerializer):
-    """
-    edit serializer
-    """
-
-    class Meta:
-        model = Bank
-        exclude = ["date_added"]
-
-
-class BankTransactionSerializer(serializers.ModelSerializer):
-    """
-    Create serializer
-    """
-
-    class Meta:
-        model = BankSerializer
-        exclude = ["status", "date_added", "date_updated"]
-
-
-class BankTransactionEditSerializer(serializers.ModelSerializer):
-    """
-    edit serializer
-    """
-
-    class Meta:
-        model = BankSerializer
         exclude = ["date_added", "date_updated"]

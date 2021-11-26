@@ -23,16 +23,11 @@ class PurchaseProductForm(forms.ModelForm):
             "product",
             "price",
             "quantity",
-            # "payment_type",
-            # "bank",
-            # "check_no",
-            # "check_date",
             "remark",
         ]
 
         widgets = {
             "remark": forms.Textarea(attrs={"rows": "2"}),
-            # 'check_date': forms.DateInput(attrs={'type': 'date'}, format='%d/%m/%Y')
         }
 
 
@@ -43,14 +38,9 @@ class PurchaseProductEditForm(forms.ModelForm):
             "product",
             "price",
             "quantity",
-            # "payment_type",
-            # "bank",
-            # "check_no",
-            # "check_date",
             "remark",
         ]
 
         widgets = {
             "remark": forms.Textarea(attrs={"rows": "2"}),
-            # "check_date": forms.DateInput(attrs={"type": "date"}, format="%d/%m/%Y"),
         }

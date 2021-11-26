@@ -49,6 +49,11 @@ class HomeView(LoginRequiredMixin, TemplateView):
         return context
 
 
+# =====================
+# === Profile Views ===
+# =====================
+
+
 class ProfileView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     template_name = "profile.html"
     slug_field = "username"
@@ -117,6 +122,11 @@ class EditUserManagent(
         return False
 
 
+# =====================
+# === Product Views ===
+# =====================
+
+
 class ProductView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = "product.html"
 
@@ -129,9 +139,6 @@ class ProductView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
         if self.request.user.is_staff:
             return True
         return False
-
-
-# >=========== create views =============>
 
 
 class ProductCreateView(
@@ -159,6 +166,51 @@ class ProductCreateView(
         if self.request.user.is_staff:
             return True
         return False
+
+
+class ProductUpdateView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView
+):
+    model = Product
+    form_class = ProductForm
+    template_name = "product_create.html"
+    success_url = "core:product"
+    success_message = "%(product_name)s was updated successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Edit product"
+        return context
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
+
+
+class ProductDeleteView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
+):
+    model = Product
+    template_name = "delete.html"
+    success_url = "core:product"
+    success_message = "%(name)s was deleted successfully"
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+
+# ======================
+# === Category Views ===
+# ======================
 
 
 class CategoryCreateView(
@@ -189,153 +241,6 @@ class CategoryCreateView(
         return False
 
 
-class SubCategoryCreateView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView
-):
-    model = Subcategory
-    template_name = "subcategory.html"
-    form_class = SubcategoryForm
-    success_url = "core:subcategory"
-    success_message = "%(name)s was created successfully"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Add new sub-category"
-        context["subcategories"] = Subcategory.objects.filter(status=True)
-        return context
-
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-
-    def test_func(self):
-        if self.request.user.is_staff:
-            return True
-        return False
-
-
-class WarehouseCreateView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView
-):
-    model = Warehouse
-    template_name = "warehouse.html"
-    form_class = WarehouseForm
-    success_url = "core:warehouse"
-    success_message = "%(name)s was created successfully"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["warehouses"] = Warehouse.objects.filter(status=True)
-        context["title"] = "New Warehouse"
-        return context
-
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-
-    def test_func(self):
-        if self.request.user.is_staff:
-            return True
-        return False
-
-
-class BankCreateView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView
-):
-    model = Bank
-    template_name = "bank.html"
-    form_class = BankForm
-    success_url = "core:bank"
-    success_message = "%(name)s was created successfully"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["banks"] = Bank.objects.filter(status=True)
-        context["title"] = "Add new bank"
-        return context
-
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-
-    def test_func(self):
-        if self.request.user.is_staff:
-            return True
-        return False
-
-
-class TransactionCreateView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView
-):
-    model = BankTransaction
-    template_name = "transaction.html"
-    form_class = BankTransactionForm
-    success_url = "core:transaction"
-    success_message = "Transaction was created successfully"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["transactions"] = BankTransaction.objects.filter(status=True)
-        context["title"] = "Add new transaction"
-        return context
-
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-
-    def test_func(self):
-        if self.request.user.is_staff:
-            return True
-        return False
-
-
-# >=========== update views =============>
-
-
-# class ChalanUpdateView(LoginRequiredMixin,
-#                         UserPassesTestMixin,
-#                         SuccessMessageMixin,
-#                         UpdateView):
-#     model = Chalan
-#     form_class = ChalanCreateForm
-#     template_name = 'chalan/chalan_create.html'
-#     success_url = 'core:chalan'
-#     success_message = "%(name)s was updated successfully"
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context["title"] = 'Edit Chalan'
-#         context["chalans"] = Chalan.objects.filter(status=True)
-#         return context
-
-#     def get_success_url(self, **kwargs):
-#         return reverse(self.success_url)
-
-#     def test_func(self):
-#         if self.request.user.is_staff:
-#             return True
-#         return False
-
-
-class ProductUpdateView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView
-):
-    model = Product
-    form_class = ProductForm
-    template_name = "product_create.html"
-    success_url = "core:product"
-    success_message = "%(product_name)s was updated successfully"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Edit product"
-        return context
-
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-
-    def test_func(self):
-        if self.request.user.is_staff:
-            return True
-        return False
-
-
 class CategoryUpdateView(
     LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView
 ):
@@ -349,6 +254,52 @@ class CategoryUpdateView(
         context = super().get_context_data(**kwargs)
         context["title"] = "Edit category"
         context["categories"] = Category.objects.filter(status=True)
+        return context
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
+
+
+class CategoryDeleteView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
+):
+    model = Category
+    template_name = "delete.html"
+    success_url = "core:category"
+    success_message = "%(name)s was deleted successfully"
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+
+# =========================
+# === Subcategory Views ===
+# =========================
+
+
+class SubCategoryCreateView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView
+):
+    model = Subcategory
+    template_name = "subcategory.html"
+    form_class = SubcategoryForm
+    success_url = "core:subcategory"
+    success_message = "%(name)s was created successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Add new sub-category"
+        context["subcategories"] = Subcategory.objects.filter(status=True)
         return context
 
     def get_success_url(self, **kwargs):
@@ -384,6 +335,52 @@ class SubCategoryUpdateView(
         return False
 
 
+class SubCategoryDeleteView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
+):
+    model = Subcategory
+    template_name = "delete.html"
+    success_url = "core:subcategory"
+    success_message = "%(name)s was deleted successfully"
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+    def test_func(self):
+        if self.request.user.is_superuser:
+            return True
+        return False
+
+
+# =======================
+# === Warehouse Views ===
+# =======================
+
+
+class WarehouseCreateView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView
+):
+    model = Warehouse
+    template_name = "warehouse.html"
+    form_class = WarehouseForm
+    success_url = "core:warehouse"
+    success_message = "%(name)s was created successfully"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["warehouses"] = Warehouse.objects.filter(status=True)
+        context["title"] = "New Warehouse"
+        return context
+
+    def get_success_url(self, **kwargs):
+        return reverse(self.success_url)
+
+    def test_func(self):
+        if self.request.user.is_staff:
+            return True
+        return False
+
+
 class WarehouseUpdateView(
     LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView
 ):
@@ -408,52 +405,49 @@ class WarehouseUpdateView(
         return False
 
 
-class BankUpdateView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView
+class WarehouseDeleteView(
+    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
 ):
-    model = Bank
-    template_name = "bank.html"
-    form_class = BankForm
-    success_url = "core:bank"
-    success_message = "%(name)s was Updated successfully"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["banks"] = Bank.objects.filter(status=True)
-        context["title"] = "Edit bank"
-        return context
+    model = Warehouse
+    template_name = "delete.html"
+    success_url = "core:warehouse"
+    success_message = "%(name)s was deleted successfully"
 
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
 
     def test_func(self):
-        if self.request.user.is_staff:
+        if self.request.user.is_superuser:
             return True
         return False
 
 
-class TransactionUpdateView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView
-):
-    model = BankTransaction
-    template_name = "transaction.html"
-    form_class = BankTransactionForm
-    success_url = "core:transaction"
-    success_message = "Transaction was Updated successfully"
+# >=========== update views =============>
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["transactions"] = BankTransaction.objects.filter(status=True)
-        context["title"] = "Edit transaction"
-        return context
 
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
+# class ChalanUpdateView(LoginRequiredMixin,
+#                         UserPassesTestMixin,
+#                         SuccessMessageMixin,
+#                         UpdateView):
+#     model = Chalan
+#     form_class = ChalanCreateForm
+#     template_name = 'chalan/chalan_create.html'
+#     success_url = 'core:chalan'
+#     success_message = "%(name)s was updated successfully"
 
-    def test_func(self):
-        if self.request.user.is_staff:
-            return True
-        return False
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context["title"] = 'Edit Chalan'
+#         context["chalans"] = Chalan.objects.filter(status=True)
+#         return context
+
+#     def get_success_url(self, **kwargs):
+#         return reverse(self.success_url)
+
+#     def test_func(self):
+#         if self.request.user.is_staff:
+#             return True
+#         return False
 
 
 # >=================== delete views ===============>
@@ -475,105 +469,3 @@ class TransactionUpdateView(
 #         if self.request.user.is_superuser:
 #             return True
 #         return False
-
-
-class ProductDeleteView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
-):
-    model = Product
-    template_name = "delete.html"
-    success_url = "core:home"
-    success_message = "%(name)s was deleted successfully"
-
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        return False
-
-
-class CategoryDeleteView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
-):
-    model = Category
-    template_name = "delete.html"
-    success_url = "core:category"
-    success_message = "%(name)s was deleted successfully"
-
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        return False
-
-
-class SubCategoryDeleteView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
-):
-    model = Subcategory
-    template_name = "delete.html"
-    success_url = "core:home"
-    success_message = "%(name)s was deleted successfully"
-
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        return False
-
-
-class WarehouseDeleteView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
-):
-    model = Warehouse
-    template_name = "delete.html"
-    success_url = "core:home"
-    success_message = "%(name)s was deleted successfully"
-
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        return False
-
-
-class BankDeleteView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
-):
-    model = Bank
-    template_name = "delete.html"
-    success_url = "core:bank"
-    success_message = "%(name)s was deleted successfully"
-
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        return False
-
-
-class TransactionDeleteView(
-    LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, DeleteView
-):
-    model = BankTransaction
-    template_name = "delete.html"
-    success_url = "core:transaction"
-    success_message = "%(transaction_type)s was deleted successfully"
-
-    def get_success_url(self, **kwargs):
-        return reverse(self.success_url)
-
-    def test_func(self):
-        if self.request.user.is_superuser:
-            return True
-        return False
