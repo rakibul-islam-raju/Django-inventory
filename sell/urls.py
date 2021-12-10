@@ -12,8 +12,8 @@ urlpatterns = [
         CustomerDeleteView.as_view(),
         name="customer-delete",
     ),
-    path("sale/create/", SellCreateView.as_view(), name="sale-create"),
+    path("sale/create/", SellProductCreateView.as_view(), name="sale-create"),
     path("sale/edit/<pk>/", SellProductUpdateView.as_view(), name="sale-edit"),
     path("sale/delete/<pk>/", SellProductDeleteView.as_view(), name="sale-delete"),
-    path("sales/", SellListView.as_view(), name="sales"),
+    path("sales/", SellProductListView.as_view(), name="sales"),
 ]

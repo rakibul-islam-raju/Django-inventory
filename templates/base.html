@@ -10,7 +10,7 @@
     <meta name="author" content="" />
     <title>
         {% block title %}{% endblock title %}
-         IMS
+        IMS
     </title>
     <!-- Main CSS -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
@@ -28,7 +28,9 @@
     <!-- vuejs -->
     <script src="{% static 'js/vue3.js' %}"></script>
     <!-- axios -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js" integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"
+        integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ=="
+        crossorigin="anonymous"></script>
 
     {% block extra_head %}
     {% endblock %}
@@ -41,7 +43,7 @@
 
         <!-- Sidebar -->
         {% include 'includes/sidebar.html' %}
-        
+
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
 
@@ -100,7 +102,7 @@
                     <form method="post" action="{% url 'account_logout' %}">
                         {% csrf_token %}
                         {% if redirect_field_value %}
-                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                         {% endif %}
                         <button type="submit" class="btn btn-primary">Logout</button>
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
@@ -114,7 +116,7 @@
     <!-- extra scripts -->
     {% block custom_script %}
     {% endblock custom_script %}
-    
+
     <!-- Bootstrap core JavaScript-->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

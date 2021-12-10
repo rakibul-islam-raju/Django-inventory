@@ -1,8 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
 from django.urls import reverse
 from django.views.generic import (
-    TemplateView,
     CreateView,
     UpdateView,
     DeleteView,
@@ -11,18 +9,18 @@ from django.views.generic import (
 )
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from .models import Customer, Sell, SellProductItem
-from .forms import CustomerForm, SellForm, SellProductItemForm, SellInlineFormset
+from .models import Customer, SellProduct
+from .forms import CustomerForm, SellProductForm
 from core.models import User, Product
 
 
 # ======================
-# === Sale Views ===
+# ===== Sale Views =====
 # ======================
 
 
-class SellListView(UserPassesTestMixin, LoginRequiredMixin, ListView):
-    queryset = Sell.objects.filter(status=True)
+class SellProductListView(UserPassesTestMixin, LoginRequiredMixin, ListView):
+    queryset = SellProduct.objects.filter(status=True)
     template_name = "sell/sales.html"
     paginate_by = "20"
 
@@ -32,28 +30,27 @@ class SellListView(UserPassesTestMixin, LoginRequiredMixin, ListView):
         return False
 
 
-class SellCreateView(
+class SellProductCreateView(
     UserPassesTestMixin, LoginRequiredMixin, SuccessMessageMixin, CreateView
 ):
-    model = SellProductItem
+    model = SellProduct
     template_name = "sell/product-create.html"
-    form_class = SellForm
-    success_url = "sell:sales"
-    success_message = "Order was created successfully"
+    form_class = SellProductForm
+    success_url = "sell:sale-create"
+    success_message = "%(product)s was successfully"
 
-    def post(self, request, *args, **kwargs):
-        sell_form = self.get_form_class(request.POST or None)
-        sell_item_form = SellProductItemForm(request.POST or None)
+    def form_valid(self, form):
+        print("form is valid", form)
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
 
-        if sell_form.is_valid() and sell_item_form.is_valid():
-            # sell = sell_form.cleaned_data.get('sell')
-            pass
+    def form_invalid(self, form):
+        print("invalid===========", form.errors)
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "New Sale"
-        context["sale_item_form"] = SellProductItemForm()
-        context["sell_formset"] = SellInlineFormset()
         return context
 
     def get_success_url(self, **kwargs):
@@ -66,9 +63,9 @@ class SellCreateView(
 
 
 class SellProductUpdateView(SuccessMessageMixin, UpdateView):
-    model = SellProductItem
+    model = SellProduct
     template_name = "sell/product-create.html"
-    form_class = SellProductItemForm
+    form_class = SellProductForm
     success_url = "sell:sales"
     success_message = "%(product)s was updated successfully"
 
@@ -82,7 +79,7 @@ class SellProductUpdateView(SuccessMessageMixin, UpdateView):
 
 
 class SellProductDeleteView(SuccessMessageMixin, DeleteView):
-    model = SellProductItem
+    model = SellProduct
     template_name = "delete.html"
     success_url = "sell:sales"
     success_message = "%(name)s was deleted successfully"

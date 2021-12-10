@@ -19,7 +19,7 @@ from .models import *
 from .forms import *
 from .resources import ProductResource
 
-from sell.models import Customer, SellProductItem
+from sell.models import Customer, SellProduct
 from purchase.models import PurchaseProduct
 from order.models import Order
 
@@ -43,7 +43,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
         context["total_products"] = products.count()
         context["total_customer"] = Customer.objects.filter(status=True).count()
-        context["total_sell"] = SellProductItem.objects.all().count()
+        context["total_sell"] = SellProduct.objects.all().count()
         context["total_Purchase"] = PurchaseProduct.objects.all().count()
         context["orders"] = Order.objects.filter(order_status=False)
         return context

@@ -16,8 +16,11 @@
                         <thead>
                             <tr>
                                 <th>Invoice</th>
-                                <th>Customer</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
                                 <th>Total Price</th>
+                                <th>Customer</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -25,8 +28,11 @@
                             {% for sale in object_list %}
                                 <tr>
                                     <td>{{ sale.invoice_number }}</td>
-                                    <td>{{ sale.customer }}</td>
+                                    <td>{{ sale.product }}</td>
+                                    <td>{{ sale.quantity }}</td>
+                                    <td>{{ sale.price }}</td>
                                     <td>{{ sale.total_price }}</td>
+                                    <td>{{ sale.customer }}</td>
                                     <td>
                                         {% if request.user.is_staff %}
                                         <div class="btn-group" role="group" aria-label="First group">

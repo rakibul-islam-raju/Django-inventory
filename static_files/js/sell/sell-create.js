@@ -11,6 +11,11 @@ const productPrice = document.getElementById("productPrice");
 const productQuantity = document.getElementById("productQuantity");
 const loading = document.getElementById("loading");
 const message = document.getElementById("message");
+const sellSubmit = document.getElementById("sellSubmit");
+
+let customerId = null;
+
+const csrf = document.getElementsByName("csrfmiddlewaretoken");
 
 dropdown.style.display = "none";
 loading.style.display = "none";
@@ -51,6 +56,7 @@ const getCustomer = async (phone) => {
 	let data = await response.json();
 	if (data.customer) {
 		customerName.value = data?.customer?.name;
+		customerId = data.customer.id;
 	} else {
 		customerName.value = "";
 		showMessage("danger", "Customer not found.");
@@ -217,3 +223,39 @@ customerPhone.onblur = () => {
 		}
 	}
 };
+
+sellSubmit.addEventListener("click", async () => {
+	console.log("ok");
+	const sellData = {
+		customer_id: customerId,
+		customer_name: customerName.value,
+		customer_phone: customerPhone.value,
+		sell_items: cart,
+	};
+
+	console.log("selldata", sellData);
+	try {
+		const config = {
+			method: "POST",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+				"X-CSRFToken": csrf[0].value,
+			},
+			body: JSON.stringify(sellData),
+			credentials: "same-origin",
+		};
+		const response = await fetch(`/api/v1/sell`, config);
+
+		if (response.status === 201) {
+			const json = await response.json();
+			console.log("json >>>", json);
+			// reset form and clean errors
+			// e.target.reset();
+			// productModalClose.click();
+			// displayError.classList.add("d-none");
+		}
+	} catch (error) {
+		console.log(error);
+	}
+});

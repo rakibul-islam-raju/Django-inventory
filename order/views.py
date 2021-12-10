@@ -1,3 +1,4 @@
+from django.http import request
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.contrib import messages
 from django.views.generic import View, ListView, UpdateView, DeleteView, CreateView
@@ -8,8 +9,8 @@ from .models import *
 from .forms import *
 
 from core.models import Product
-from sell.models import SellProductItem, Customer
-from sell.forms import SellProductItemForm, SellForm, CustomerForm
+from sell.models import SellProduct, Customer
+from sell.forms import SellProductForm, CustomerForm
 
 
 # class AllOrdersView(LoginRequiredMixin,
@@ -130,15 +131,15 @@ class OrderDeleteView(
 class SellOrderItem(
     LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView
 ):
-    model = SellProductItem
+    model = SellProduct
     template_name = "order/order_sell.html"
-    form_class = SellProductItemForm
+    form_class = SellProductForm
     success_url = "sell:sales"
     success_message = "Order was created successfully"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["products"] = SellProductItem.objects.all()
+        context["products"] = SellProduct.objects.all()
         return context
 
     def get_success_url(self, **kwargs):
@@ -147,68 +148,51 @@ class SellOrderItem(
     def get(self, *args, **kwargs):
         order_instance = get_object_or_404(Order, pk=self.kwargs["pk"])
         customer = Customer.objects.get(phone=order_instance.user.phone)
-        sale_item_form = SellProductItemForm(
+        sale_item_form = SellProductForm(
             initial={
+                "customer": customer,
                 "product": order_instance.product,
                 "price": order_instance.product.sell_price,
                 "quantity": order_instance.quantity,
             }
         )
-        sale_form = SellForm(initial={"customer": customer})
 
         context = {
             "sale_item_form": sale_item_form,
             "customer": customer,
-            "sale_form": sale_form,
         }
         return render(self.request, "order/order_sell.html", context)
 
     def post(self, *args, **kwargs):
         order_instance = get_object_or_404(Order, pk=self.kwargs["pk"])
         product_instance = get_object_or_404(Product, pk=order_instance.product.pk)
-        customer = Customer.objects.get(phone=order_instance.user.phone)
 
-        sale_item_form = SellProductItemForm(self.request.POST)
-        sale_form = SellForm(self.request.POST)
+        sell_form = SellProductForm(self.request.POST)
 
-        print(sale_form)
+        if sell_form.is_valid():
+            quantity = sell_form.cleaned_data.get("quantity")
 
-        if sale_item_form.is_valid():
-            if sale_form.is_valid():
-                quantity = sale_item_form.cleaned_data.get("quantity")
-
-                if quantity <= product_instance.quantity:
-                    new_qntty = product_instance.quantity - quantity
-                    product_instance.quantity = new_qntty
-                else:
-                    messages.error(self.request, "Insufficient product quantity")
-                    return redirect("./")
-
-                sale_item = sale_item_form.save(commit=False)
-                sale = sale_form.save(commit=False)
-                sale.added_by = self.request.user
-                sale.save()
-                sale_item.sell = sale
-                sale_item.save()
-                product_instance.save(update_fields=["quantity"])
-
-                order_instance.order_status = True
-                order_instance.save()
-
-                messages.success(self.request, "Order created successfully")
-                return redirect("order:order-list")
+            if quantity <= product_instance.quantity:
+                new_qntty = product_instance.quantity - quantity
+                product_instance.quantity = new_qntty
             else:
-                print("invalid...")
-                print(
-                    "sale_form",
-                    sale_form.errors,
-                )
-                messages.warning(self.request, "Invalid form data")
+                messages.error(self.request, "Insufficient product quantity")
                 return redirect("./")
+
+            sell_item = sell_form.save(commit=False)
+            sell_item.added_by = self.request.user
+            sell_item.save()
+            product_instance.save(update_fields=["quantity"])
+
+            order_instance.order_status = True
+            order_instance.save()
+
+            messages.success(self.request, "Order created successfully")
+            return redirect("order:order-list")
         else:
             print(
                 "sale_item_form",
-                sale_item_form.errors,
+                sell_form.errors,
             )
 
             messages.warning(self.request, "Invalid form data")

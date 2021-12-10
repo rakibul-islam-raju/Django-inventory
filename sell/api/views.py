@@ -8,9 +8,10 @@ from sell.api.serializers import *
 
 
 class CustomerListCreate(generics.ListCreateAPIView):
-    '''
-        create view
-    '''
+    """
+    create view
+    """
+
     model = Customer
     serializer_class = CustomerSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -18,9 +19,10 @@ class CustomerListCreate(generics.ListCreateAPIView):
 
 
 class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
-    '''
-        detail view
-    '''
+    """
+    detail view
+    """
+
     model = Customer
     serializer_class = CustomerEditSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -28,21 +30,24 @@ class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class CustomerSingleObject(APIView):
-    '''
-        single object
-    '''
+    """
+    single object
+    """
 
     def get(self, request, *args, **kwargs):
-        phone = request.GET.get('phone')
+        phone = request.GET.get("phone")
         customer = get_object_or_404(Customer, phone=phone)
-        return response.Response({'customer': CustomerSerializer(instance=customer).data})
+        return response.Response(
+            {"customer": CustomerSerializer(instance=customer).data}
+        )
 
 
 class SellProductListCreate(generics.ListCreateAPIView):
-    '''
-        create view
-    '''
-    model = SellProductItem
+    """
+    create view
+    """
+
+    model = SellProduct
     serializer_class = SellProductSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -51,12 +56,20 @@ class SellProductListCreate(generics.ListCreateAPIView):
 
 
 class SellProductDetail(generics.RetrieveUpdateDestroyAPIView):
-    '''
-        detail view
-    '''
+    """
+    detail view
+    """
+
     serializer_class = SellProductEditSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = SellProductItem.objects.all()
+    queryset = SellProduct.objects.all()
 
     def perform_update(self, serializer):
         serializer.save(added_by=self.request.user)
+
+
+class SellView(APIView):
+    def post(self, request, *args, **kwargs):
+        data = self.request.data
+        print("customer_id", data["customer_id"])
+        return response.Response({"status": "ok"})
