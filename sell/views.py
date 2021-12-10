@@ -40,13 +40,13 @@ class SellProductCreateView(
     success_message = "%(product)s was successfully"
 
     def form_valid(self, form):
-        print("form is valid", form)
         form.instance.added_by = self.request.user
-        return super().form_valid(form)
+        # update stock quatity
+        product_instance = get_object_or_404(Product, id=form.instance.product.pk)
+        product_instance.quantity -= form.instance.quantity
 
-    def form_invalid(self, form):
-        print("invalid===========", form.errors)
-        return super().form_invalid(form)
+        product_instance.save()
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -62,12 +62,35 @@ class SellProductCreateView(
         return False
 
 
-class SellProductUpdateView(SuccessMessageMixin, UpdateView):
+class SellProductUpdateView(
+    UserPassesTestMixin, LoginRequiredMixin, SuccessMessageMixin, UpdateView
+):
     model = SellProduct
     template_name = "sell/product-create.html"
     form_class = SellProductForm
     success_url = "sell:sales"
     success_message = "%(product)s was updated successfully"
+
+    def form_valid(self, form):
+        print()
+        instance = get_object_or_404(SellProduct, id=form.instance.pk)
+        stock_product = get_object_or_404(Product, id=instance.product.pk)
+        quantity_before = int(instance.quantity)
+        quantity_after = int(form.instance.quantity)
+
+        # calculate updated quantity
+        qty_diff = 0
+        if quantity_before != quantity_after:
+            qty_diff = quantity_before - quantity_after
+
+        # # update stock quantity
+        if qty_diff != 0:
+            stock_product.quantity = stock_product.quantity + qty_diff
+
+        # update stock
+        stock_product.save()
+
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -76,6 +99,11 @@ class SellProductUpdateView(SuccessMessageMixin, UpdateView):
 
     def get_success_url(self, **kwargs):
         return reverse(self.success_url)
+
+    def test_func(self, *args, **kwargs):
+        if self.request.user.is_staff:
+            return True
+        return False
 
 
 class SellProductDeleteView(SuccessMessageMixin, DeleteView):
